@@ -343,9 +343,14 @@ var datashift_audio = {
     // ajax request to back-end to get data about track/playlist/radio 
     // and save it to local variables
     //
-    load: function(url, is_new= false) {
+    load: function(url, is_new=false) {
         var self = this;
-        $.post( url, { user_token: this.user_token, client_token: this.client_token, random: this.settings.random } ).done(function( pure_data ) {
+        $.ajax(
+            {   method: "POST",
+                url: url,
+                dataType: "script",
+                data: { user_token: this.user_token, client_token: this.client_token, random: this.settings.random }
+            }).done(function( pure_data ) {
             var data = JSON.parse(pure_data);
 
             self.playlist = data.tracks;
@@ -464,9 +469,10 @@ var datashift_audio = {
         this.engine = WaveSurfer.create({
                 container: '#waveform',
                 waveColor: 'grey',
-                progressColor: 'black',
-                cursorColor: 'red',
-                barWidth: 3
+                progressColor: 'white',
+                cursorColor: '#dafcff',
+                barWidth: 3,
+                hideScrollbar: true
             });
                 
         var track = this.playlist[this.audio_data.track];
@@ -529,7 +535,7 @@ var datashift_audio = {
         this.engine = document.getElementById('radio');
     },
 
-    // MAIN AUDIO CONTROLLS
+    // MAIN AUDIO CONTROLS
     play: function() {
         this.visual.play.addClass('hide');
         this.visual.pause.removeClass('hide');
@@ -729,19 +735,6 @@ var datashift_audio = {
         });
     },
 }
-
-$(document).ready(function(){
-    datashift_audio.init();
-
-    // datashift.audio.audio_data.playlist + page
-    // or datashift_audio.audio_data.track 
-    //
-    // datashift_audio.load('audios/:id');
-    datashift_audio.load('playlist/:id.page');
-
-    datashift_audio.render_wave_from_audio_file();    
-    // datashift_audio.render_wave_from_pure_data(test_audio_data_json.radio.radio_url);
-});
 
 function formatTime(time_in_seconds){
     var seconds = Math.floor(time_in_seconds);
