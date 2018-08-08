@@ -1,0 +1,32 @@
+.datashift-audio-player .datashift-audio-track-cover {
+    display: inline-block;
+    width: 75px;
+    height: 75px;
+
+    min-width: 75px;
+    min-height: 75px;
+
+    margin-left: 15px;
+    background-image: linear-gradient(red, grey, black);
+    box-shadow: 0px 0px 5px black;
+    cursor: pointer;
+}
+
+.datashift-audio-track-cover .datashift-audio-cover-play{
+  display: inline-block;
+  position: fixed; 
+  padding: 18px; 
+  font-size: 40px;
+
+  background-color: rgba(255, 255, 255, 0); 
+  color: rgba(255, 255, 255, 0);
+
+  /* color: white;  */
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.datashift-audio-track-cover:hover .datashift-audio-cover-play{
+  background-color: rgba(255, 255, 255, 0.5); 
+  color: rgba(255, 255, 255, 1);
+}
