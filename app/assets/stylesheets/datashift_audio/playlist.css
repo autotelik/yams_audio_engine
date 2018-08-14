@@ -1,0 +1,119 @@
+.datashift-audio-track-playlist{
+  display: inline-block;
+
+  width: 70px;
+
+  /* text-align: center; */
+  vertical-align: center;
+}
+
+.datashift-audio-track-playlist i{
+  font-size: 40px;
+  transition: 0.25s;
+  color: grey;
+}
+
+.datashift-audio-track-playlist i:hover{
+  /* color: red; */
+  cursor: pointer;
+}
+
+.datashift-audio-track-playlist i.datashift-audio-active{
+  box-shadow: 0px 0px 5px black;
+  color: black;
+}
+
+.datashift-audio-playlist-content{
+  position: fixed;
+  display: inline-block;
+
+  right: 0px;
+  top: 120px;
+
+  background-color: white;
+  box-shadow: 0px 0px 5px black;
+}
+
+.datashift-audio-playlist{
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.datashift-audio-playlist li{
+  display: block;
+  transition: 0.25s;
+  padding: 10px;
+  color: black;
+}
+
+.datashift-audio-playlist li *{
+  display: inline-block;
+  font-size: 16px !important;
+  padding-left: 5px;
+  cursor: pointer;
+}
+
+.datashift-audio-playlist li .datashift-audio-duration{
+  color: white;
+  background-color: black;
+  
+  padding: 0px 10px;
+}
+
+.datashift-audio-playlist li i{
+  color: black;
+}
+
+.datashift-audio-playlist li:hover i{
+  color: white;
+}
+
+.datashift-audio-playlist li .datashift-audio-full-name{
+  padding: 0px 10px;
+}
+
+.datashift-audio-playlist li:hover{
+  background-color: grey;
+  color: white;
+  cursor: pointer;
+}
+
+.datashift-audio-playlist li.datashift-audio-active{
+  background-color: black;
+  color: white;
+}
+
+.datashift-audio-playlist li.datashift-audio-active:hover{
+  background-color: red;
+  color: white;
+}
+
+.datashift-audio-playlist .datashift-audio-current-track{
+  background-color: black;
+  color: white;
+}
+
+
+/********************************************************/
+
+.datashift-audio-player .datashift-audio-page-selectors{
+  text-align: center;
+}
+
+.datashift-audio-player .datashift-audio-pages{
+  display: inline-block;
+}
+
+.datashift-audio-player .datashift-audio-pages li{
+  display: inline-block;
+  padding: 5px;
+}
+
+.datashift-audio-player .datashift-audio-pages li:hover{
+  cursor: pointer;
+  color: red;
+}
+
+.datashift-audio-player .datashift-audio-pages li.datashift-audio-active{
+  color: red;
+  font-size: 24px;
+}

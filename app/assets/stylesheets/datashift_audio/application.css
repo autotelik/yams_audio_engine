@@ -10,86 +10,56 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require_tree .
+ * require_tree .
+ *
+ *= require datashift_audio/cover
+ *= require datashift_audio/icons
+ *= require datashift_audio/playlist
+ * require datashift_audio/volume
  *= require_self
  */
 
  /* fallback */
-@font-face {
-  font-family: 'Material Icons';
-  font-style: normal;
-  font-weight: 400;
-  src: url(https://fonts.gstatic.com/s/materialicons/v38/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
-}
 
-.material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-}
 
- .datashift-audio-player.bar {
+.datashift-audio-player.datashift-audio-bar {
     display: block;
     width: 100%;
     left: 0px;
     position: fixed;
     padding: 15px 0px;
     background-color: white;
-  }
-  .datashift-audio-player.bar.top {
+}
+
+.datashift-audio-player.datashift-audio-bar.datashift-audio-top {
     top: 0px;
     box-shadow: 5px 0px 10px black;
-  }
-  .datashift-audio-player.bar.bottom {
+}
+
+.datashift-audio-player.datashift-audio-bar.datashift-audio-bottom {
     bottom: 0px;
     box-shadow: -5px 0px 10px black;
-  }
-  .datashift-audio-player .track-cover {
-    display: inline-block;
-    width: 75px;
-    height: 75px;
-    margin-left: 15px;
-    background-image: linear-gradient(red, grey, black);
-    box-shadow: 0px 0px 5px black;
-    cursor: pointer;
-  }
-  .datashift-audio-player .info-block {
+}
+
+.datashift-audio-player .datashift-audio-info-block {
     display: inline-block;
     width: 10%;
     height: 75px;
-  }
-  .datashift-audio-player .wave-block {
+}
+
+.datashift-audio-player .datashift-audio-wave-block {
     display: inline-block;
     width: 70%;
     height: 75px;
     max-height: 75px !important;
     margin: 0px 10px;
-  }
+}
 
-  wave{
-      max-height: 75px;
-  }
+.datashift-audio-wave {
+    max-height: 75px;
+}
 
-  .datashift-audio-player .track-volume {
-    display: inline-block;
-    width: 3%;
-    height: 75px;
-
-    padding: 0px 10px;
-  }
-
-
-.track-controls i{ 
+.datashift-audio-track-controls i{ 
   font-size: 40px !important;
   padding: 5px;
 
@@ -98,196 +68,41 @@
   cursor: pointer;
 }
 
-.track-controls i:hover{
+.datashift-audio-track-controls i:hover{
   transform:rotate(360deg);
   color: red;
 }
 
-.track-volume i{
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.track-volume i:hover{
-  cursor: pointer;
-  transform:rotate(360deg);
-  color: red;
-}
-
-.track-basic-info{
+.datashift-audio-track-basic-info {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   padding: 5px;
 }
 
-.track-basic-info .author-name{
+.datashift-audio-track-basic-info .datashift-audio-author-name{
   color: grey;
 }
 
-.track-basic-info *{
+.datashift-audio-track-basic-info *{
   cursor: pointer;
 }
 
-.track-basic-info .author-name:hover{
+.datashift-audio-track-basic-info .datashift-audio-author-name:hover{
   text-decoration: underline;
 }
 
-.track-basic-info .track-name:hover{
+.datashift-audio-track-basic-info .datashift-audio-track-name:hover{
   text-decoration: underline;
 }
 
-input[type=range][orient=vertical]
-{
-    writing-mode: bt-lr; /* IE */
-    -webkit-appearance: slider-vertical; /* WebKit */
-    width: 8px;
-    height: 75px;
-    /* padding: 0 50px; */
-}
-
-.hide{
+.datashift-audio-hide{
   display: none !important;
 }
 
-.current-position{
+.datashift-audio-current-position{
   display: inline;
 }
 
-.total-duration{
+.datashift-audio-total-duration{
   display: inline;
 }
 
-.track-playlist{
-  display: inline-block;
-
-  width: 70px;
-
-  /* text-align: center; */
-  vertical-align: center;
-}
-
-.track-playlist i{
-  font-size: 40px;
-  transition: 0.25s;
-  color: grey;
-}
-
-.track-playlist i:hover{
-  /* color: red; */
-  cursor: pointer;
-}
-
-.track-playlist i.active{
-  box-shadow: 0px 0px 5px black;
-  color: black;
-}
-
-.datashift-audio-playlist-content{
-  position: fixed;
-  display: inline-block;
-
-  right: 0px;
-  top: 120px;
-
-  background-color: white;
-  box-shadow: 0px 0px 5px black;
-}
-
-.datashift-audio-player .page-selectors{
-  text-align: center;
-}
-
-.datashift-audio-player .pages{
-  display: inline-block;
-}
-
-.datashift-audio-player .pages li{
-  display: inline-block;
-  padding: 5px;
-}
-
-.datashift-audio-player .pages li:hover{
-  cursor: pointer;
-  color: red;
-}
-
-.datashift-audio-player .pages li.active{
-  color: red;
-  font-size: 24px;
-}
-
-.datashift-audio-playlist{
-  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
-
-.datashift-audio-playlist li{
-  display: block;
-  transition: 0.25s;
-  padding: 10px;
-  color: black;
-}
-
-.datashift-audio-playlist li *{
-  display: inline-block;
-  font-size: 16px !important;
-  padding-left: 5px;
-  cursor: pointer;
-}
-
-.datashift-audio-playlist li .duration{
-  color: white;
-  background-color: black;
-  
-  padding: 0px 10px;
-}
-
-.datashift-audio-playlist li i{
-  color: black;
-}
-
-.datashift-audio-playlist li:hover i{
-  color: white;
-}
-
-.datashift-audio-playlist li .full-name{
-  padding: 0px 10px;
-}
-
-.datashift-audio-playlist li:hover{
-  background-color: grey;
-  color: white;
-  cursor: pointer;
-}
-
-.datashift-audio-playlist li.active{
-  background-color: black;
-  color: white;
-}
-
-.datashift-audio-playlist li.active:hover{
-  background-color: red;
-  color: white;
-}
-
-.datashift-audio-playlist .current-track{
-  background-color: black;
-  color: white;
-}
-
-.track-cover .cover-play{
-  display: inline-block;
-  position: fixed; 
-  padding: 18px; 
-  font-size: 40px;
-
-  background-color: rgba(255, 255, 255, 0); 
-  color: rgba(255, 255, 255, 0);
-
-  /* color: white;  */
-  cursor: pointer;
-  transition: 0.25s;
-}
-
-.track-cover:hover .cover-play{
-  background-color: rgba(255, 255, 255, 0.5); 
-  color: rgba(255, 255, 255, 1);
-}
