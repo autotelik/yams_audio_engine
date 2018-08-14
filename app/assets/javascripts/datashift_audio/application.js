@@ -14,105 +14,6 @@
 //= require activestorage
 //= require_tree .
 
-var test_audio_data_json = {
-    user_token: '1234567890',
-    client_token: '0987654321',
-
-    playlist: '0',
-
-    page: '1',
-    total_pages: '3',
-
-    track: '0',
-    position: '0',
-
-    tracks: [
-        {
-            id: '1',
-
-            author: 'Full Name',
-            name: 'First Track Name',
-
-            cover_image: 'http://localhost:3000/images/1.jpeg',
-            audio_url: 'http://localhost:3000/audio/1.mp3',
-
-            duration: 100,
-        },
-
-        {
-            id: '2',
-    
-            author: 'Full Name 2',
-            name: 'Second Track Name',
-
-            cover_image: 'http://localhost:3000/images/1.jpeg',
-            audio_url: 'http://localhost:3000/audio/1.mp3',
-
-            duration: 100,
-        },
-
-        {
-            id: '3',
-    
-            author: 'Full Name 3',
-            name: 'Third Track Name',
-
-            cover_image: 'http://localhost:3000/images/1.jpeg',
-            audio_url: 'http://localhost:3000/audio/1.mp3',
-
-            duration: 100,
-        }
-    ],
-
-    radio: {
-        radio_url: 'http://air2.radiorecord.ru:805/rr_320',
-        
-        author: 'Full Name 3',
-        track: 'Third Track Name',
-
-        cover_image: 'http://localhost:3000/images/1.jpeg',
-        audio_url: 'http://localhost:3000/audio/1.mp3',
-        
-        duration: 100,
-        position: 0,
-        
-        // or
-
-        audio_data_pack: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-    },
-
-    saved: {
-        service: {
-            user_token: '1234567890',
-            client_token: '0987654321',
-        },
-
-        audio_player: {
-            color_schema: {
-                main: 'white',
-                secondary: 'black',
-                accent: 'red',
-                additional: 'grey',
-
-            },
-            autoplay: false,
-            random: false,
-            repeat: null,
-            volume: 1,
-        },
-
-        audio: {
-            playlist: 'id',
-            
-            page: '1',
-            total_pages: '3',
-            
-            track: 0,
-            position: 0,
-        }
-    }, 
-}
-
 var audio_player = document.querySelector('#datashift-audio-player');
 var wave_controller = '';
 
@@ -129,10 +30,13 @@ var datashift_audio = {
         repeat: null,
         volume: 1,
     },
+
+    waveform_colors: {},
     
     user_token: null,
     client_token: null,
 
+    playlist_id: 0,
     playlist: {},
     audio_data: {},
     visual: {},
@@ -191,6 +95,13 @@ var datashift_audio = {
             if (self.audio_data.track == null || self.audio_data.track == NaN) self.audio_data.track = 0;
             if (self.audio_data.position == null || self.audio_data.position == NaN) self.audio_data.position = 0;
 
+            self.waveform_colors = {
+                wave_color: data.saved.waveform_colors.wave_color,
+                progress_color: data.saved.waveform_colors.progress_color,
+                cursor_color: data.saved.waveform_colors.cursor_color,
+                bar_width: data.saved.waveform_colors.bar_width,
+            }
+
             self.state = 'inited';
             console.log(self.state);
         }).fail(function(){
@@ -199,9 +110,18 @@ var datashift_audio = {
             self.audio_data.track = 0;
             self.audio_data.position = 0;
 
+            self.waveform_colors = {
+                wave_color: 'grey',
+                progress_color: 'white',
+                cursor_color: '#dafcff',
+                bar_width: 2,
+            }
+
             self.state = 'fail inited';
             console.error(self.state);
         });
+
+        
 
         //
         // Visual update
@@ -211,25 +131,25 @@ var datashift_audio = {
             play: $('#datashift-audio-player .play'),
             pause: $('#datashift-audio-player .pause'),
 
-            prev: $('#datashift-audio-player .track-controls .previous'),
-            next: $('#datashift-audio-player .track-controls .next'),
+            prev: $('#datashift-audio-player .datashift-audio-track-controls .previous'),
+            next: $('#datashift-audio-player .datashift-audio-track-controls .next'),
     
-            volume: $('#datashift-audio-player .track-volume input[type=range]'),
+            volume: $('#datashift-audio-player .datashift-audio-track-volume input[type=range].datashift-audio-input-range'),
     
-            author_name: $('#datashift-audio-player .track-basic-info .author-name'),
-            track_name: $('#datashift-audio-player .track-basic-info .track-name'),
+            author_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-author-name'),
+            track_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-track-name'),
     
-            cover_image: $('#datashift-audio-player .track-cover'),
+            cover_image: $('#datashift-audio-player .datashift-audio-track-cover'),
 
             playlist: $('.datashift-audio-playlist'),
             waveform: $('#datashift-audio-player #waveform'),
 
-            current_position: $('#datashift-audio-player .current-position'),
-            total_duration: $('#datashift-audio-player .total-duration'),
+            current_position: $('#datashift-audio-player .datashift-audio-current-position'),
+            total_duration: $('#datashift-audio-player .datashift-audio-total-duration'),
 
-            pages: $('#datashift-audio-player .pages'),
+            pages: $('#datashift-audio-player .datashift-audio-pages'),
 
-            btn_playlist: $('#datashift-audio-player .track-playlist .view_list'),
+            btn_playlist: $('#datashift-audio-player .datashift-audio-track-playlist .view_list'),
         }
 
         //
@@ -253,16 +173,16 @@ var datashift_audio = {
         });
 
         this.visual.btn_playlist.on('click', function(){
-            if(self.visual.btn_playlist.hasClass('active')){
-                self.visual.btn_playlist.removeClass('active');
-                self.visual.playlist.parent().addClass('hide');
+            if(self.visual.btn_playlist.hasClass('datashift-audio-active')){
+                self.visual.btn_playlist.removeClass('datashift-audio-active');
+                self.visual.playlist.parent().addClass('datashift-audio-hide');
             } else {
-                self.visual.btn_playlist.addClass('active');
-                self.visual.playlist.parent().removeClass('hide');
+                self.visual.btn_playlist.addClass('datashift-audio-active');
+                self.visual.playlist.parent().removeClass('datashift-audio-hide');
             }
         });
 
-        $('#datashift-audio-player .track-volume i').on('click', function(){
+        $('#datashift-audio-player .datashift-audio-track-volume i').on('click', function(){
             var current_value = parseInt(datashift_audio.visual.volume.attr('value'));
             var audio_dom_el = datashift_audio.visual.volume.get(0);
             console.log( 'volume: ' + current_value );
@@ -277,8 +197,8 @@ var datashift_audio = {
                 datashift_audio.engine.setVolume(0);
                 
                 if(audio_dom_el.value == 0) {
-                    $('.track-volume i').addClass('hide');
-                    $('.track-volume i.volume_off').removeClass('hide')
+                    $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                    $('.datashift-audio-track-volume i.datashift-audio-volume_off').removeClass('datashift-audio-hide')
                 }
                 console.log(datashift_audio.visual.volume.get(0).value);
             } else {
@@ -294,18 +214,18 @@ var datashift_audio = {
                 datashift_audio.volume(datashift_audio.settings.volume);
 
                 if(audio_dom_el.value >= 75) {
-                    $('.track-volume i').addClass('hide');
-                    $('.track-volume i.volume_up').removeClass('hide')
+                    $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                    $('.datashift-audio-track-volume i.volume_up').removeClass('datashift-audio-hide')
                 }
         
                 if(audio_dom_el.value >= 50 && audio_dom_el.value < 75) {
-                    $('.track-volume i').addClass('hide');
-                    $('.track-volume i.volume_down').removeClass('hide')
+                    $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                    $('.datashift-audio-track-volume i.volume_down').removeClass('datashift-audio-hide')
                 }
         
                 if(audio_dom_el.value >= 25 && audio_dom_el.value < 50) {
-                    $('.track-volume i').addClass('hide');
-                    $('.track-volume i.volume_mute').removeClass('hide')
+                    $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                    $('.datashift-audio-track-volume i.volume_mute').removeClass('datashift-audio-hide')
                 }    
 
                 console.log(datashift_audio.visual.volume.attr('value'));
@@ -314,23 +234,23 @@ var datashift_audio = {
 
         this.visual.volume.on('input change', function(update = true) { 
             if(this.value >= 75) {
-                $('.track-volume i').addClass('hide');
-                $('.track-volume i.volume_up').removeClass('hide')
+                $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                $('.datashift-audio-track-volume i.volume_up').removeClass('datashift-audio-hide')
             }
     
             if(this.value >= 50 && this.value < 75) {
-                $('.track-volume i').addClass('hide');
-                $('.track-volume i.volume_down').removeClass('hide')
+                $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                $('.datashift-audio-track-volume i.volume_down').removeClass('datashift-audio-hide')
             }
     
             if(this.value >= 25 && this.value < 50) {
-                $('.track-volume i').addClass('hide');
-                $('.track-volume i.volume_mute').removeClass('hide')
+                $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                $('.datashift-audio-track-volume i.volume_mute').removeClass('datashift-audio-hide')
             }
     
             if(this.value == 0) {
-                $('.track-volume i').addClass('hide');
-                $('.track-volume i.volume_off').removeClass('hide')
+                $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
+                $('.datashift-audio-track-volume i.volume_off').removeClass('datashift-audio-hide')
             }
     
             if (update)
@@ -346,18 +266,25 @@ var datashift_audio = {
     load: function(url, is_new=false) {
         var self = this;
         $.ajax(
-            {   method: "POST",
+            {   method: "GET",
                 url: url,
                 dataType: "script",
-                data: { user_token: this.user_token, client_token: this.client_token, random: this.settings.random }
+                data: { 
+                    user_token: this.user_token, 
+                    client_token: 
+                    this.client_token, 
+                    random: this.settings.random 
+                }
             }).done(function( pure_data ) {
             var data = JSON.parse(pure_data);
 
             self.playlist = data.tracks;
 
+            console.log(data)
+
             self.playlist.forEach((track, index) => {          
-                var duration = '<div class="duration">' + formatTime(track.duration) + '</div>';
-                var full_name = '<div class="full-name">' + track.author + " - " + track.name + '</div>';
+                var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
+                var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
 
                 var track_set = duration + full_name;
                 self.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>')
@@ -371,6 +298,17 @@ var datashift_audio = {
             
             self.audio_data.playlist = parseInt(data.playlist);
             self.audio_data.total_pages = parseInt(data.total_pages);
+
+            for(counter = 1; counter <= self.audio_data.total_pages; counter++){
+                $('.page-selectors .pages').append('<li id="page-'+ counter +'" >' + counter + '</li>')
+            }
+
+            datashift_audio.visual.pages.children('li').on('click', function(){ 
+                datashift_audio.audio_data.page = parseInt(this.id.split('-')[1]); 
+                var next_page = parseInt(this.id.split('-')[1]);
+                var url = 'radio/' + next_page + '.json'
+                datashift_audio.new_page(url) 
+            });
 
             if (is_new == true){
                 self.audio_data.page = 1;
@@ -392,56 +330,10 @@ var datashift_audio = {
 
             self.state = 'playlist loaded';
             console.log(self.state);
+
+            self.render_wave_from_audio_file()
         }).fail(function(){
-            self.playlist = test_audio_data_json.tracks;
-
-            self.playlist.forEach((track, index) => {
-                var duration = '<div class="duration">' + formatTime(track.duration) + '</div>';
-                var full_name = '<div class="full-name">' + track.author + " - " + track.name + '</div>';
-
-                var track_set = duration + full_name;
-                self.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>');
-            });  
-
-            datashift_audio.visual.playlist.children('li').on('click', function(){ 
-                datashift_audio.audio_data.track = parseInt(this.id.split('-')[1]); 
-                datashift_audio.settings.autoplay = true;
-                datashift_audio.render_wave_from_audio_file() 
-            });
-
-            self.audio_data.playlist = parseInt(test_audio_data_json.playlist);
-            self.audio_data.total_pages = parseInt(test_audio_data_json.total_pages);
-            
-            for(counter = 1; counter <= self.audio_data.total_pages; counter++){
-                $('.page-selectors .pages').append('<li id="page-'+ counter +'" >' + counter + '</li>')
-            }
-
-            datashift_audio.visual.pages.children('li').on('click', function(){ 
-                datashift_audio.audio_data.page = parseInt(this.id.split('-')[1]); 
-                var next_page = parseInt(this.id.split('-')[1]);
-                var url = 'playlists/' + datashift_audio.playlist + '.' + next_page
-                datashift_audio.new_page(url) 
-            });
-
-            if (is_new == true){
-                self.audio_data.page = 1;
-                self.audio_data.track = 0;
-                self.audio_data.position = 0;
-
-                console.log('is new playlist');
-            } else {
-                self.audio_data.page = parseInt(test_audio_data_json.page);
-                self.audio_data.track = parseInt(test_audio_data_json.track);
-                self.audio_data.position = parseFloat(test_audio_data_json.position);
-    
-            }
-
-            if (self.audio_data.playlist == null || self.audio_data.playlist == NaN) self.audio_data.playlist = 0;
-            if (self.audio_data.page == null || self.audio_data.page == NaN) self.audio_data.page = 0;
-            if (self.audio_data.total_pages == null || self.audio_data.total_pages == NaN) self.audio_data.total_pages = 0;
-            if (self.audio_data.track == null || self.audio_data.track == NaN) self.audio_data.track = 0;
-            if (self.audio_data.position == null || self.audio_data.position == NaN) self.audio_data.position = 0;
-
+            self.playlist = [];
             self.state = 'fail playlist loaded';
             console.error(self.state);
         });     
@@ -462,28 +354,28 @@ var datashift_audio = {
         clearInterval(this.timer);
 
         this.is_radio = false;
-        this.visual.prev.removeClass('hide');
-        this.visual.next.removeClass('hide');
+        this.visual.prev.removeClass('datashift-audio-hide');
+        this.visual.next.removeClass('datashift-audio-hide');
 
         // init new
         this.engine = WaveSurfer.create({
                 container: '#waveform',
-                waveColor: 'grey',
-                progressColor: 'white',
-                cursorColor: '#dafcff',
+                waveColor: this.waveform_colors.wave_color,
+                progressColor: this.waveform_colors.progress_color,
+                cursorColor: this.waveform_colors.cursor_color,
                 barWidth: 3,
                 hideScrollbar: true
             });
                 
         var track = this.playlist[this.audio_data.track];
 
-        this.visual.playlist.children('.datashift-audio-playlist li').removeClass('active');
+        this.visual.playlist.children('.datashift-audio-playlist li').removeClass('datashift-audio-active');
         var visual_track = $('#track-' + this.audio_data.track);
-        visual_track.addClass('active');
+        visual_track.addClass('datashift-audio-active');
 
-        this.visual.pages.children('li').removeClass('active');
+        this.visual.pages.children('li').removeClass('datashift-audio-active');
         var visual_page = $('#page-' + this.audio_data.page);
-        visual_page.addClass('active')
+        visual_page.addClass('datashift-audio-active')
 
         this.engine.load(track.audio_url);
         
@@ -526,8 +418,8 @@ var datashift_audio = {
         // adapt data for render and play
         this.visual.waveform.html('');
         this.is_radio = true;
-        this.visual.prev.addClass('hide');
-        this.visual.next.addClass('hide');
+        this.visual.prev.addClass('datashift-audio-hide');
+        this.visual.next.addClass('datashift-audio-hide');
         this.radio_url = url;
         
         this.visual.waveform.append("<audio id='radio' ><source src='" + url +  "' type='audio/mpeg' ></audio>");
@@ -537,8 +429,8 @@ var datashift_audio = {
 
     // MAIN AUDIO CONTROLS
     play: function() {
-        this.visual.play.addClass('hide');
-        this.visual.pause.removeClass('hide');
+        this.visual.play.addClass('datashift-audio-hide');
+        this.visual.pause.removeClass('datashift-audio-hide');
         
         if (this.is_radio == false) {
             this.audio_data.autoplay = true;
@@ -554,9 +446,9 @@ var datashift_audio = {
 
                     console.log('update radio metadata');
                 }).fail(function(){
-                    datashift_audio.visual.cover_image.css('background-image', 'url("'+ test_audio_data_json.radio.cover_image +'")');
-                    datashift_audio.visual.author_name.html(test_audio_data_json.radio.author);
-                    datashift_audio.visual.track_name.html(test_audio_data_json.radio.track);
+                    // datashift_audio.visual.cover_image.css('background-image', 'url("'+ test_audio_data_json.radio.cover_image +'")');
+                    datashift_audio.visual.author_name.html('Not Found');
+                    datashift_audio.visual.track_name.html('Not Found');
 
                     console.log('fail update radio metadata');
                 });
@@ -567,8 +459,8 @@ var datashift_audio = {
     },
 
     pause: function() {
-        this.visual.pause.addClass('hide');
-        this.visual.play.removeClass('hide');
+        this.visual.pause.addClass('datashift-audio-hide');
+        this.visual.play.removeClass('datashift-audio-hide');
 
         if (this.is_radio == false) {
             this.audio_data.autoplay = false;
@@ -592,7 +484,7 @@ var datashift_audio = {
             this.save_current_state();
         } else {
             if (this.audio_data.page > 1)
-            this.new_page('playlist/:id.new_page', false)
+                this.new_page('playlist/:id.new_page', false);
         }
     }, 
 
@@ -615,22 +507,26 @@ var datashift_audio = {
 
     // url = 'playlist/:id.new_page'
     new_page: function(url, fromBeginning = true){
-        $.post(url).done(function(pure_data){
+        $.get(url).done(function(pure_data){
             console.log('render new page and select new track');
 
-            var data = JSON.parse(pure_data);
+            // console.log(JSON.parse(pure_data));
+
+            // var data = JSON.parse(pure_data);
+
+            var data = pure_data;
             datashift_audio.playlist = data.tracks;
             datashift_audio.page = parseInt(data.page);
 
             datashift_audio.visual.playlist.html('');
             
-            datashift_audio.visual.pages.children('li').removeClass('active');
+            datashift_audio.visual.pages.children('li').removeClass('datashift-audio-active');
             var visual_page = $('#page-' + data.page);
-            visual_page.addClass('active')
+            visual_page.addClass('datashift-audio-active')
 
             datashift_audio.playlist.forEach((track, index) => {
-                var duration = '<div class="duration">' + formatTime(track.duration) + '</div>';
-                var full_name = '<div class="full-name">' + track.author + " - " + track.name + '</div>';
+                var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
+                var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
 
                 var track_set = duration + full_name;
                 datashift_audio.visual.playlist.append('<li id="track-' + index + '" onClick="" >' + track_set + '</li>')
@@ -651,44 +547,6 @@ var datashift_audio = {
             }
         }).fail(function(){
             console.error('page not found');
-
-            if (fromBeginning == true)
-                test_audio_data_json.page = parseInt(test_audio_data_json.page) + 1;
-            else
-                test_audio_data_json.page = parseInt(test_audio_data_json.page) - 1;
-
-            var data = test_audio_data_json;
-            datashift_audio.playlist = data.tracks;
-            datashift_audio.audio_data.page = parseInt(data.page);
-
-            datashift_audio.visual.playlist.html('');
-            
-            datashift_audio.visual.pages.children('li').removeClass('active');
-            var visual_page = $('#page-' + data.page);
-            visual_page.addClass('active')
-
-            datashift_audio.playlist.forEach((track, index) => {
-                var duration = '<div class="duration">' + formatTime(track.duration) + '</div>';
-                var full_name = '<div class="full-name">' + track.author + " - " + track.name + '</div>';
-
-                var track_set = duration + full_name;
-                datashift_audio.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>')
-            });      
-
-            datashift_audio.visual.playlist.children('li').on('click', function(){ 
-                datashift_audio.audio_data.track = parseInt(this.id.split('-')[1]); 
-                datashift_audio.settings.autoplay = true;
-                datashift_audio.render_wave_from_audio_file() 
-            });
-
-            if (fromBeginning == true){
-                datashift_audio.audio_data.track = -1;
-                datashift_audio.next();
-            } else {
-                datashift_audio.audio_data.track = datashift_audio.playlist.length;
-                datashift_audio.previous();    
-            }
-
             console.log('page: ' + datashift_audio.audio_data.page)
         });
     },
