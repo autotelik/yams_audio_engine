@@ -7,7 +7,7 @@ Audio player for Rails apps.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'datashift_audio'
+gem 'datashift_audio_engine'
 ```
 
 And then execute:
@@ -17,26 +17,104 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install datashift_audio
+$ gem install datashift_audio_engine
 ```
 
 ## Usage
 
-### How do I add the player to any particular view
+### Adding a Player
 
-Add suitable markup to the view - can you  document the CSS/HTML markup required ?
-
-The main target for the player is a div with id datashift-audio-player
-
-CSS classes are availae to place the player at the `top` or `bottom` of the page
+#### @Sloboda  Is this correct HTML for adding the full player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
 
 ```
-  <div id="datashift-audio-player" class="datashift-audio-player bar bottom">
+<div id="datashift-audio-player" class="col-12 datashift-audio-player pt-2 pb-2">
+
+  <div class="row">
+
+    <div class="col-1">
+      <div class="datashift-audio-track-cover">
+        <i class="material-icons datashift-audio-cover-play play" >play_circle_outline</i>
+        <i class="material-icons datashift-audio-cover-play pause datashift-audio-hide">pause_circle_outline</i>
+      </div>
+    </div>
+
+    <div class="col-1">
+      <div class="datashift-audio-track-basic-info text-small">
+        <div class="datashift-audio-track-name">Current Track Name</div>
+        <div class="datashift-audio-author-name">Author Name</div>
+      </div>
+    </div>
+
+    <div class="col-9">
+      <div class="row">
+        <div class="datashift-audio-wave-block col-12" id="waveform"></div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="datashift-audio-current-position col-11 text-sm-left">00:00</div>
+            <div class="datashift-audio-total-duration col-1 text-sm-right pull-right">00:00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-1 datashift-audio-track-volume p-0 pull-right">
+      <input type="range" orient="vertical" min="0" max="100" value="100" step="1" class="datashift-audio-input-range" />
+      <i class="material-icons volume_up">volume_up</i>
+      <i class="material-icons volume_down datashift-audio-hide">volume_down</i>
+      <i class="material-icons volume_mute datashift-audio-hide">volume_mute</i>
+      <i class="material-icons volume_off  datashift-audio-hide">volume_off</i>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <div class="col-1 track-playlist">
+          <i class="material-icons view_list active">view_list</i>
+        </div>
+        <div class="col-8">
+          <div class=" playlist-content p-1">
+            <ol class="datashift-audio-playlist p-1"></ol>
+            <div class="datashift-audio-page-selectors">
+              <ol class='datashift-audio-pages'></ol>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
 ```
+
+CSS classes are available to place the player at the `top` or `bottom` of the page ???
+
+#### @Sloboda  What is the HTML for adding the embedded button with on hover appearance player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
+
+#### @Sloboda  What is the HTML for adding the single thin banner player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
+
+#### @Sloboda  - Is the main target for the player a div ALWAYS with id="datashift-audio-player"  regardless of Player Type
+
+#### @Sloboda  - Is this the way to load track data regardless of whether player is full width, hover button, thin main  player ?
+ 
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+        datashift_audio.init();
+        
+        datashift_audio.load('<%= radio_index_url %>.json');
+    });
+</script>
+
+
 
 Create a POST route that returns the JSON playlist data
 
-  post 'radio', to: 'radio#show'
+  post 'radio', to: 'radio#index'
 
 Now we can access route helper : radio_url
 
@@ -69,12 +147,10 @@ Add the following javascript to the actions erb template, calling load with the 
         datashift_audio.load('<%= radio_url %>');
 
         datashift_audio.render_wave_from_audio_file();
- 
     });
 </script>
 ```
 
-What is the purpose of the init function and how does it differ from the load function ?
 
 How do I create the different styles in a view ?
 
@@ -85,228 +161,228 @@ How do I create the different styles in a view ?
 How to style the player .. e.g is there a rails script to copy over the CSS from engine to app
 so it can be over ridden ?
 
-### Save 
+### Save Callback
 
 When playing a track the player can send back information to the server via the does the save callback
 
 Info could be stored in session or in a DB table connected with User on BE side
 
-For each callback should be related to route on BE side which connected with 
-controller method that related user data 
+For each callback should be related to route on BE side which connected with
+controller method that related user data
 
-init - 	it sends request during datashift_audio.init() function 
+init -     it sends request during datashift_audio.init() function
 
-	call once when we need to sync basic player settings
+    call once when we need to sync basic player settings
 
-	possible url structure 'user/get_state'
-	
-	it sends local variables of {user_token} and {client_token}
-	and should obtain JSON with sync data of player
-	The structure of answer is:
+    possible url structure 'user/get_state'
+    
+    it sends local variables of {user_token} and {client_token}
+    and should obtain JSON with sync data of player
+    The structure of answer is:
 
-	{
-	   saved: {
-		service: {
-		    user_token: '1234567890',
-		    client_token: '0987654321',
-		},
+    {
+       saved: {
+        service: {
+            user_token: '1234567890',
+            client_token: '0987654321',
+        },
 
-		audio_player: {
-		    autoplay: false,
-		    random: false,
-		    repeat: null,
-		    volume: 1,
-		},
+        audio_player: {
+            autoplay: false,
+            random: false,
+            repeat: null,
+            volume: 1,
+        },
 
-		audio: {
-		    playlist: 'id',
-		    
-		    page: '1',
-		    total_pages: '3',
-		    
-		    track: 0,
-		    position: 0,
-		}
-	   }	
-	}
+        audio: {
+            playlist: 'id',
+            
+            page: '1',
+            total_pages: '3',
+            
+            track: 0,
+            position: 0,
+        }
+       }    
+    }
 
-load - 	it sends url and post characteristics of searchable playlist
-	
-	call once when we need to load playlist and set it into basic state on first open
+load -     it sends url and post characteristics of searchable playlist
+    
+    call once when we need to load playlist and set it into basic state on first open
 
-	possible url structure 'playlist/:id.page' or 'audio/:id'
+    possible url structure 'playlist/:id.page' or 'audio/:id'
 
-	request: { user_token, client_token, random }
-	expected strucuture of answer:
+    request: { user_token, client_token, random }
+    expected strucuture of answer:
 
-	{
-	    user_token: '1234567890',
-	    client_token: '0987654321',
+    {
+        user_token: '1234567890',
+        client_token: '0987654321',
 
-	    playlist: '0',
+        playlist: '0',
 
-	    page: '1',
-	    total_pages: '3',
+        page: '1',
+        total_pages: '3',
 
-	    track: '0',
-	    position: '0',
+        track: '0',
+        position: '0',
 
-	    tracks: [
-		{
-		    id: '1',
+        tracks: [
+        {
+            id: '1',
 
-		    author: 'Full Name 1',
-		    name: 'First Track Name',
+            author: 'Full Name 1',
+            name: 'First Track Name',
 
-		    cover_image: 'http://localhost:3000/images/1.jpeg',
-		    audio_url: 'http://localhost:3000/audio/1.mp3',
+            cover_image: 'http://localhost:3000/images/1.jpeg',
+            audio_url: 'http://localhost:3000/audio/1.mp3',
 
-		    duration: 100,
-		},
+            duration: 100,
+        },
 
-		{
-		    id: '2',
-	    
-		    author: 'Full Name 2',
-		    name: 'Second Track Name',
+        {
+            id: '2',
+        
+            author: 'Full Name 2',
+            name: 'Second Track Name',
 
-		    cover_image: 'http://localhost:3000/images/2.jpeg',
-		    audio_url: 'http://localhost:3000/audio/2.mp3',
+            cover_image: 'http://localhost:3000/images/2.jpeg',
+            audio_url: 'http://localhost:3000/audio/2.mp3',
 
-		    duration: 100,
-		},
+            duration: 100,
+        },
 
-		{
-		    id: '3',
-	    
-		    author: 'Full Name 3',
-		    name: 'Third Track Name',
+        {
+            id: '3',
+        
+            author: 'Full Name 3',
+            name: 'Third Track Name',
 
-		    cover_image: 'http://localhost:3000/images/3.jpeg',
-		    audio_url: 'http://localhost:3000/audio/3.mp3',
+            cover_image: 'http://localhost:3000/images/3.jpeg',
+            audio_url: 'http://localhost:3000/audio/3.mp3',
 
-		    duration: 100,
-		}
-	    ],
-	}
+            duration: 100,
+        }
+        ],
+    }
 
-new_page -	it sends url and post characteristics of searchable playlist
-	
-		it calls when we need to load new page (manualy or automaticaly when page of 
-		audios is ends) and updates playlist accordingly to flow
+new_page -    it sends url and post characteristics of searchable playlist
+    
+        it calls when we need to load new page (manualy or automaticaly when page of
+        audios is ends) and updates playlist accordingly to flow
 
-		possible url structure 'playlist/:id.page'
+        possible url structure 'playlist/:id.page'
 
-		request: url only
-		expected strucuture of answer:
+        request: url only
+        expected strucuture of answer:
 
-		{
-			page: '2',
+        {
+            page: '2',
 
-			tracks: [
-				{
-				    id: '1',
+            tracks: [
+                {
+                    id: '1',
 
-				    author: 'Full Name 1',
-				    name: 'First Track Name',
+                    author: 'Full Name 1',
+                    name: 'First Track Name',
 
-				    cover_image: 'http://localhost:3000/images/1.jpeg',
-				    audio_url: 'http://localhost:3000/audio/1.mp3',
+                    cover_image: 'http://localhost:3000/images/1.jpeg',
+                    audio_url: 'http://localhost:3000/audio/1.mp3',
 
-				    duration: 100,
-				},
+                    duration: 100,
+                },
 
-				{
-				    id: '2',
-			    
-				    author: 'Full Name 2',
-				    name: 'Second Track Name',
+                {
+                    id: '2',
+                
+                    author: 'Full Name 2',
+                    name: 'Second Track Name',
 
-				    cover_image: 'http://localhost:3000/images/2.jpeg',
-				    audio_url: 'http://localhost:3000/audio/2.mp3',
+                    cover_image: 'http://localhost:3000/images/2.jpeg',
+                    audio_url: 'http://localhost:3000/audio/2.mp3',
 
-				    duration: 100,
-				},
+                    duration: 100,
+                },
 
-				{
-				    id: '3',
-			    
-				    author: 'Full Name 3',
-				    name: 'Third Track Name',
+                {
+                    id: '3',
+                
+                    author: 'Full Name 3',
+                    name: 'Third Track Name',
 
-				    cover_image: 'http://localhost:3000/images/3.jpeg',
-				    audio_url: 'http://localhost:3000/audio/3.mp3',
+                    cover_image: 'http://localhost:3000/images/3.jpeg',
+                    audio_url: 'http://localhost:3000/audio/3.mp3',
 
-				    duration: 100,
-				}
-			    ],
-		}
+                    duration: 100,
+                }
+                ],
+        }
 
-save - 	it sends data of current state of player and playlist
-	
-	it calls:
-		a) each second during playing current track
+save -     it sends data of current state of player and playlist
+    
+    it calls:
+        a) each second during playing current track
 
-		b) player finished to play current track
-		c) on pause() click
-		d) on previous() click
-		e) on next() click
-		f) on seek() of track
+        b) player finished to play current track
+        c) on pause() click
+        d) on previous() click
+        e) on next() click
+        f) on seek() of track
 
-	possible url structure 'user/set_state'
+    possible url structure 'user/set_state'
 
-	request: {
+    request: {
             user_token
             client_token
             random
             audio_data: {
-		service: {
-		    user_token: '1234567890',
-		    client_token: '0987654321',
-		},
+        service: {
+            user_token: '1234567890',
+            client_token: '0987654321',
+        },
 
-		audio_player: {
-		    autoplay: false,
-		    random: false,
-		    repeat: null,
-		    volume: 1,
-		},
+        audio_player: {
+            autoplay: false,
+            random: false,
+            repeat: null,
+            volume: 1,
+        },
 
-		audio: {
-		    playlist: 'id',
-		    
-		    page: '1',
-		    total_pages: '3',
-		    
-		    track: 0,
-		    position: 0,
-		}
-	    }
+        audio: {
+            playlist: 'id',
+            
+            page: '1',
+            total_pages: '3',
+            
+            track: 0,
+            position: 0,
         }
-	expected strucuture of answer: 200 OK, or any error code u like
+        }
+        }
+    expected strucuture of answer: 200 OK, or any error code u like
 
-radio -	it gets description of current radio state
+radio -    it gets description of current radio state
 
-	it calls each second during radio playing
-	
-	possible url structure 'radio/:id'
+    it calls each second during radio playing
+    
+    possible url structure 'radio/:id'
 
-	request: { radio_url }
+    request: { radio_url }
 
-	expected strucuture of answer:
+    expected strucuture of answer:
 
-	radio: {
-		radio_url: 'http://air2.radiorecord.ru:805/rr_320',
-		
-		author: 'Full Name 3',
-		track: 'Third Track Name',
+    radio: {
+        radio_url: 'http://air2.radiorecord.ru:805/rr_320',
+        
+        author: 'Full Name 3',
+        track: 'Third Track Name',
 
-		cover_image: 'http://localhost:3000/images/1.jpeg',
-		audio_url: 'http://localhost:3000/audio/1.mp3',
-		
-		duration: 100,
-		position: 0,
-	    },
+        cover_image: 'http://localhost:3000/images/1.jpeg',
+        audio_url: 'http://localhost:3000/audio/1.mp3',
+        
+        duration: 100,
+        position: 0,
+        },
 
 
 How to make list own list of audio tracks?
@@ -315,8 +391,207 @@ How to make list own list of audio tracks?
 2. Create place and styles for items of tracks with squere look like in MixCloud but without inner items
 3. Create items based on JSON list of tracks
 4. Hang callbacks on items for play and pause btns
-	This callbacks should set state of datashif_audio.audio_data.track to id of selected one
-	set autoplay to true and call render_wave_from_audio_file() method to render player with selected audio
+    This callbacks should set state of datashif_audio.audio_data.track to id of selected one
+    set autoplay to true and call render_wave_from_audio_file() method to render player with selected audio
+    
+    
+    
+#### ORIGINAL README
+    
+    Routes
+    =
+    initialization: ```'init'```
+    
+    load: ```'playlist/:id.new_page'```
+    
+    radio_stream: ```'radio_data'```
+    
+    save current state: ```'save'```
+    
+    
+    setup routes
+    ===
+    
+    u can do it in current version of lib
+    just by setting
+    
+    ```javascript
+    datashift_audio.routes = {
+            init_url: 'init',
+            save_url: 'save',
+    
+            radio_url: 'radio_data'
+    };
+    ```
+    
+    or separate
+    ======
+    
+    ```javascript
+        datashift_audio.routes.init_url = 'init';
+        datashift_audio.routes.save_url = 'save';
+        datashift_audio.routes.radio_url = 'radio_data';
+    ```
+    
+    **routes for load should be set up on load phace manualy**
+    
+    JSON format
+    =
+    
+    for initialization
+    ===
+    
+    request:
+    
+    ```
+        {
+            user_token: 'asdf1234',
+            client_token: '4321fdsa'
+    
+            random: true,
+            audio_data: {
+                
+            },
+        }
+    ```
+    
+    answer example:
+    
+    ```
+        {
+            saved: {
+                service: {
+                    user_token: '1234567890',
+                    client_token: '0987654321',
+                },
+    
+                audio: {
+                    playlist: '1',
+                    
+                    page: '1',
+                    total_pages: '3',
+                    
+                    track: 0,
+                    position: 0,
+                }
+            },
+        }
+    ```
+    
+    for load
+    ===
+    
+    request:
+    
+    url: ``` 'playlist/:id.new_page' ```
+    
+    ```playlist``` - playlist controller route name
+    
+    ```/:id``` - ID of loadable playlist
+    
+    ```.new_page``` - number of tracks page in this playlist for load
+    
+    ```
+        {
+            user_token: 'asdf1234',
+            client_token: '4321fdsa',
+    
+            random: true
+        }
+    ```
+    
+    answer example:
+    
+    ```
+        {
+            playlist: 1
+            total_pages: 3,
+            
+            page: 1,
+            track: 1,
+            position: 0,
+    
+            tracks: [
+                {
+                    id: 1,
+    
+                    author: 'Full Name',
+                    name: 'First Track Name',
+    
+                    cover_image: 'http://localhost:3000/images/1.jpeg',
+                    audio_url: 'http://localhost:3000/audio/1.mp3',
+    
+                    duration: 100,
+                },
+            ]
+        }
+    ```
+    
+    for radio
+    ===
+    
+    request:
+    
+    url: ``` 'radio_data' ```
+    
+    ```
+        {
+            user_token: 'asdf1234',
+            client_token: '4321fdsa',
+        }
+    ```
+    
+    answer example:
+    
+    ```
+        {
+            radio: {
+                radio_url: 'http://air2.radiorecord.ru:805/rr_320',
+                
+                author: 'Full Name 3',
+                track: 'Third Track Name',
+    
+                cover_image: 'http://localhost:3000/images/1.jpeg',
+                audio_url: 'http://localhost:3000/audio/1.mp3',
+                
+                duration: 100,
+                position: 0,            
+            },
+        }
+        
+    ```
+    
+    for save
+    ===
+    
+    request:
+    
+    ```
+        {
+            user_token: 'asdf1234',
+            client_token: '4321fdsa'
+    
+            random: true,
+    
+            audio_data: {
+                    playlist: '1',
+                    
+                    page: '1',
+                    total_pages: '3',
+                    
+                    track: 1,
+                    position: 55.5,
+            }
+        }
+    ```
+    
+    answer example:
+    
+    ```
+        {
+            status: 200
+        }
+    ```
 
 
 

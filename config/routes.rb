@@ -1,2 +1,2 @@
-DatashiftAudio::Engine.routes.draw do
+DatashiftAudioEngine::Engine.routes.draw do
 end
