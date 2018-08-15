@@ -7,7 +7,7 @@ Audio player for Rails apps.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'datashift_audio_engine'
+gem 'datashift_audio'
 ```
 
 And then execute:
@@ -17,14 +17,24 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install datashift_audio_engine
+$ gem install datashift_audio
 ```
 
 ## Usage
 
 ### Adding a Player
 
-#### @Sloboda  Is this correct HTML for adding the full player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
+#### Views - HTML Markup and CSS
+
+- full width, track with waveform style (example, see sound cloud)
+
+- embedded button with on hover appearance/play (example, see emusic.com)
+
+- single thin banner for radio or linked to embedded button (example, see mixcloud, soundcloud)
+
+##### ERB - HTML
+
+ @Sloboda  Is this correct HTML for adding the full waveform player to any particular view -
 
 ```
 <div id="datashift-audio-player" class="col-12 datashift-audio-player pt-2 pb-2">
@@ -92,8 +102,6 @@ $ gem install datashift_audio_engine
 </div>
 ```
 
-CSS classes are available to place the player at the `top` or `bottom` of the page ???
-
 #### @Sloboda  What is the HTML for adding the embedded button with on hover appearance player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
 
 #### @Sloboda  What is the HTML for adding the single thin banner player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
@@ -102,17 +110,29 @@ CSS classes are available to place the player at the `top` or `bottom` of the pa
 
 #### @Sloboda  - Is this the way to load track data regardless of whether player is full width, hover button, thin main  player ?
  
+Now create a Javascript snippet as follows, using the load function to call your Rails route and return the playlist JSON
+
+```
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){
-        datashift_audio.init();
-        
-        datashift_audio.load('<%= radio_index_url %>.json');
+        datashift_audio_engine.init();
+
+        datashift_audio_engine.load('<%= radio_index_url %>.json');
     });
 </script>
+```
 
+##### Styling - CSS
 
+@Sloboda How to style the player .. e.g is there a rails script to copy over the CSS from engine to app so it can be over ridden or what stylesheet should be created where ?
 
-Create a POST route that returns the JSON playlist data
+What CSS can be used to change look and feel of the player ?
+
+CSS classes are available to place the player at the `top` or `bottom` of the page ???
+
+#### Rails- routes and actions
+
+Create a POST ?? route that returns the JSON playlist data
 
   post 'radio', to: 'radio#index'
 
@@ -135,7 +155,7 @@ Sample snippet for creating the JSON playlist :
         ]
       }.to_json }
     end
-  ```
+```
     
 Add the following javascript to the actions erb template, calling load with the playlist data url defined above
 
@@ -151,15 +171,7 @@ Add the following javascript to the actions erb template, calling load with the 
 </script>
 ```
 
-
-How do I create the different styles in a view ?
-
-- embedded button with on hover appearance/play (example, see emusic.com)
-- full width, track with waveform style (example, see sound cloud)
-- single thin banner for radio or linked to embedded button (example, see mixcloud, soundcloud)
-
-How to style the player .. e.g is there a rails script to copy over the CSS from engine to app
-so it can be over ridden ?
+#### Call backs
 
 ### Save Callback
 
@@ -398,7 +410,7 @@ How to make list own list of audio tracks?
     
 #### ORIGINAL README
     
-    Routes
+Routes
     =
     initialization: ```'init'```
     
@@ -561,12 +573,12 @@ How to make list own list of audio tracks?
         
     ```
     
-    for save
-    ===
+for save
+===
     
     request:
     
-    ```
+```
         {
             user_token: 'asdf1234',
             client_token: '4321fdsa'
@@ -583,58 +595,15 @@ How to make list own list of audio tracks?
                     position: 55.5,
             }
         }
-    ```
+```
     
     answer example:
     
-    ```
+```
         {
             status: 200
         }
-    ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
 
 
 
