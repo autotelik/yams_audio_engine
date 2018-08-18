@@ -21,6 +21,8 @@ var datashift_audio = {
     state: null,
     engine: null,
 
+    save_interval: 1000,
+
     is_radio: false,
     radio_url: null,
 
@@ -28,7 +30,7 @@ var datashift_audio = {
         autoplay: false,
         random: false,
         repeat: null,
-        volume: 1,
+        volume: 1
     },
 
     waveform_colors: {},
@@ -198,7 +200,7 @@ var datashift_audio = {
                 
                 if(audio_dom_el.value == 0) {
                     $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-                    $('.datashift-audio-track-volume i.datashift-audio-volume_off').removeClass('datashift-audio-hide')
+                    $('.datashift-audio-track-volume i.volume_off').removeClass('datashift-audio-hide')
                 }
                 console.log(datashift_audio.visual.volume.get(0).value);
             } else {
@@ -290,7 +292,11 @@ var datashift_audio = {
                 self.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>')
             });
 
-            datashift_audio.visual.playlist.children('li').on('click', function(){ 
+            datashift_audio.visual.playlist.children('li').on('click', function(){
+                console.log(datashift_audio.audio_data.position);
+
+                self.audio_data.position = 0;
+
                 datashift_audio.audio_data.track = parseInt(this.id.split('-')[1]); 
                 datashift_audio.settings.autoplay = true;
                 datashift_audio.render_wave_from_audio_file() 
@@ -434,7 +440,7 @@ var datashift_audio = {
         
         if (this.is_radio == false) {
             this.audio_data.autoplay = true;
-            this.timer = setInterval(this.save_current_state, 1000);
+            this.timer = setInterval(this.save_current_state, this.save_interval);
         } else {
             this.timer = setInterval(function(){
                 $.post('radio_data', { radio_url: this.radio_url }).done(function(pure_data){
@@ -522,7 +528,7 @@ var datashift_audio = {
             
             datashift_audio.visual.pages.children('li').removeClass('datashift-audio-active');
             var visual_page = $('#page-' + data.page);
-            visual_page.addClass('datashift-audio-active')
+            visual_page.addClass('datashift-audio-active');
 
             datashift_audio.playlist.forEach((track, index) => {
                 var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
@@ -535,7 +541,7 @@ var datashift_audio = {
             datashift_audio.visual.playlist.children('li').on('click', function(){ 
                 datashift_audio.audio_data.track = parseInt(this.id.split('-')[1]); 
                 datashift_audio.settings.autoplay = true;
-                datashift_audio.render_wave_from_audio_file() 
+                datashift_audio.render_wave_from_audio_file()
             });
 
             if (fromBeginning == true){
@@ -583,7 +589,7 @@ var datashift_audio = {
             client_token: datashift_audio.client_token,
             random: datashift_audio.settings.random,
             audio_data: datashift_audio.audio_data,
-        }
+        };
 
         $.post( 'save', data )
         .done(function(){
@@ -591,8 +597,8 @@ var datashift_audio = {
         }).fail(function(){
             console.log('fail to save');
         });
-    },
-}
+    }
+};
 
 function formatTime(time_in_seconds){
     var seconds = Math.floor(time_in_seconds);

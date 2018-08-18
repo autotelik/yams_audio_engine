@@ -20,6 +20,34 @@ Or install it yourself as:
 $ gem install datashift_audio
 ```
 
+### Including assets to project
+
+in `application.js`
+
+```js
+//= require datashift_audio/application
+```
+
+in `application.css`
+
+```css
+/*
+ *= require datashift_audio/application
+ */
+```
+
+or in `application.css`
+
+```css
+/*
+ *= require datashift_audio/cover
+ *= require datashift_audio/icons
+ *= require datashift_audio/playlist
+ *= require datashift_audio/volume
+ *= require datashift_audio/player
+ */
+```
+
 ## Usage
 
 ### How do I add the player to any particular view
