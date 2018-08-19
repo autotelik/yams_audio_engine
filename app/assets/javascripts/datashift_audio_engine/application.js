@@ -22,6 +22,8 @@ var datashift_audio_engine = {
     state: null,
     engine: null,
 
+    save_interval: 1000,
+
     is_radio: false,
     radio_url: null,
 
@@ -29,7 +31,7 @@ var datashift_audio_engine = {
         autoplay: false,
         random: false,
         repeat: null,
-        volume: 1,
+        volume: 1
     },
 
     waveform_colors: {},
@@ -199,7 +201,7 @@ var datashift_audio_engine = {
                 
                 if(audio_dom_el.value == 0) {
                     $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-                    $('.datashift-audio-track-volume i.datashift-audio-volume_off').removeClass('datashift-audio-hide')
+                    $('.datashift-audio-track-volume i.volume_off').removeClass('datashift-audio-hide')
                 }
                 console.log(datashift_audio_engine.visual.volume.get(0).value);
             } else {
@@ -435,7 +437,7 @@ var datashift_audio_engine = {
         
         if (this.is_radio == false) {
             this.audio_data.autoplay = true;
-            this.timer = setInterval(this.save_current_state, 1000);
+            this.timer = setInterval(this.save_current_state, this.save_interval);
         } else {
             this.timer = setInterval(function(){
                 $.post('radio_data', { radio_url: this.radio_url }).done(function(pure_data){
@@ -523,7 +525,7 @@ var datashift_audio_engine = {
             
             datashift_audio_engine.visual.pages.children('li').removeClass('datashift-audio-active');
             var visual_page = $('#page-' + data.page);
-            visual_page.addClass('datashift-audio-active')
+            visual_page.addClass('datashift-audio-active');
 
             datashift_audio_engine.playlist.forEach((track, index) => {
                 var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
@@ -592,8 +594,8 @@ var datashift_audio_engine = {
         }).fail(function(){
             console.log('fail to save');
         });
-    },
-}
+    }
+};
 
 function formatTime(time_in_seconds){
     var seconds = Math.floor(time_in_seconds);
