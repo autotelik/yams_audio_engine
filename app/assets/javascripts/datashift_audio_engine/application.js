@@ -12,7 +12,7 @@
 //
 //= require rails-ujs
 //= require activestorage
-//= require_tree .
+//= require wavesurfer.min
 
 // TODO are these defunct - do not seem to be used ?
 var audio_player = document.querySelector('#datashift-audio-player');
