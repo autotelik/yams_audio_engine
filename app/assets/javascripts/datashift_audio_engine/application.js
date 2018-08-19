@@ -12,12 +12,13 @@
 //
 //= require rails-ujs
 //= require activestorage
-//= require_tree .
+//= require wavesurfer.min
 
+// TODO are these defunct - do not seem to be used ?
 var audio_player = document.querySelector('#datashift-audio-player');
 var wave_controller = '';
 
-var datashift_audio = {
+var datashift_audio_engine = {
     state: null,
     engine: null,
 
@@ -185,35 +186,35 @@ var datashift_audio = {
         });
 
         $('#datashift-audio-player .datashift-audio-track-volume i').on('click', function(){
-            var current_value = parseInt(datashift_audio.visual.volume.attr('value'));
-            var audio_dom_el = datashift_audio.visual.volume.get(0);
+            var current_value = parseInt(datashift_audio_engine.visual.volume.attr('value'));
+            var audio_dom_el = datashift_audio_engine.visual.volume.get(0);
             console.log( 'volume: ' + current_value );
 
 
             if (current_value > 0){
                 console.log('current_value > 0');
                 
-                datashift_audio.visual.volume.get(0).value = 0;
-                datashift_audio.visual.volume.attr('value', 0);
+                datashift_audio_engine.visual.volume.get(0).value = 0;
+                datashift_audio_engine.visual.volume.attr('value', 0);
 
-                datashift_audio.engine.setVolume(0);
+                datashift_audio_engine.engine.setVolume(0);
                 
                 if(audio_dom_el.value == 0) {
                     $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
                     $('.datashift-audio-track-volume i.volume_off').removeClass('datashift-audio-hide')
                 }
-                console.log(datashift_audio.visual.volume.get(0).value);
+                console.log(datashift_audio_engine.visual.volume.get(0).value);
             } else {
                 console.log('current_value == 0');
 
-                if (current_value == 0 && datashift_audio.settings.volume == 0){
+                if (current_value == 0 && datashift_audio_engine.settings.volume == 0){
                     current_value = 1;
-                    datashift_audio.settings.volume = current_value;
+                    datashift_audio_engine.settings.volume = current_value;
                 }
 
-                audio_dom_el.value = datashift_audio.settings.volume * 100;
-                datashift_audio.visual.volume.attr('value',  datashift_audio.settings.volume * 100);
-                datashift_audio.volume(datashift_audio.settings.volume);
+                audio_dom_el.value = datashift_audio_engine.settings.volume * 100;
+                datashift_audio_engine.visual.volume.attr('value',  datashift_audio_engine.settings.volume * 100);
+                datashift_audio_engine.volume(datashift_audio_engine.settings.volume);
 
                 if(audio_dom_el.value >= 75) {
                     $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
@@ -230,7 +231,7 @@ var datashift_audio = {
                     $('.datashift-audio-track-volume i.volume_mute').removeClass('datashift-audio-hide')
                 }    
 
-                console.log(datashift_audio.visual.volume.attr('value'));
+                console.log(datashift_audio_engine.visual.volume.attr('value'));
             }
         });
 
@@ -256,7 +257,7 @@ var datashift_audio = {
             }
     
             if (update)
-                datashift_audio.volume(this.value / 100.0);
+                datashift_audio_engine.volume(this.value / 100.0);
         });
     },
 
@@ -292,14 +293,10 @@ var datashift_audio = {
                 self.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>')
             });
 
-            datashift_audio.visual.playlist.children('li').on('click', function(){
-                console.log(datashift_audio.audio_data.position);
-
-                self.audio_data.position = 0;
-
-                datashift_audio.audio_data.track = parseInt(this.id.split('-')[1]); 
-                datashift_audio.settings.autoplay = true;
-                datashift_audio.render_wave_from_audio_file() 
+            datashift_audio_engine.visual.playlist.children('li').on('click', function(){
+                datashift_audio_engine.audio_data.track = parseInt(this.id.split('-')[1]);
+                datashift_audio_engine.settings.autoplay = true;
+                datashift_audio_engine.render_wave_from_audio_file()
             });
             
             self.audio_data.playlist = parseInt(data.playlist);
@@ -309,11 +306,11 @@ var datashift_audio = {
                 $('.page-selectors .pages').append('<li id="page-'+ counter +'" >' + counter + '</li>')
             }
 
-            datashift_audio.visual.pages.children('li').on('click', function(){ 
-                datashift_audio.audio_data.page = parseInt(this.id.split('-')[1]); 
+            datashift_audio_engine.visual.pages.children('li').on('click', function(){
+                datashift_audio_engine.audio_data.page = parseInt(this.id.split('-')[1]);
                 var next_page = parseInt(this.id.split('-')[1]);
                 var url = 'radio/' + next_page + '.json'
-                datashift_audio.new_page(url) 
+                datashift_audio_engine.new_page(url)
             });
 
             if (is_new == true){
@@ -446,15 +443,15 @@ var datashift_audio = {
                 $.post('radio_data', { radio_url: this.radio_url }).done(function(pure_data){
                     var data = JSON.parse(pure_data);
     
-                    datashift_audio.visual.cover_image.css('background-image', 'url("'+ data.radio.cover_image +'")');
-                    datashift_audio.visual.author_name.html(data.radio.author);
-                    datashift_audio.visual.track_name.html(data.radio.track);
+                    datashift_audio_engine.visual.cover_image.css('background-image', 'url("'+ data.radio.cover_image +'")');
+                    datashift_audio_engine.visual.author_name.html(data.radio.author);
+                    datashift_audio_engine.visual.track_name.html(data.radio.track);
 
                     console.log('update radio metadata');
                 }).fail(function(){
-                    // datashift_audio.visual.cover_image.css('background-image', 'url("'+ test_audio_data_json.radio.cover_image +'")');
-                    datashift_audio.visual.author_name.html('Not Found');
-                    datashift_audio.visual.track_name.html('Not Found');
+                    // datashift_audio_engine.visual.cover_image.css('background-image', 'url("'+ test_audio_data_json.radio.cover_image +'")');
+                    datashift_audio_engine.visual.author_name.html('Not Found');
+                    datashift_audio_engine.visual.track_name.html('Not Found');
 
                     console.log('fail update radio metadata');
                 });
@@ -521,39 +518,39 @@ var datashift_audio = {
             // var data = JSON.parse(pure_data);
 
             var data = pure_data;
-            datashift_audio.playlist = data.tracks;
-            datashift_audio.page = parseInt(data.page);
+            datashift_audio_engine.playlist = data.tracks;
+            datashift_audio_engine.page = parseInt(data.page);
 
-            datashift_audio.visual.playlist.html('');
+            datashift_audio_engine.visual.playlist.html('');
             
-            datashift_audio.visual.pages.children('li').removeClass('datashift-audio-active');
+            datashift_audio_engine.visual.pages.children('li').removeClass('datashift-audio-active');
             var visual_page = $('#page-' + data.page);
             visual_page.addClass('datashift-audio-active');
 
-            datashift_audio.playlist.forEach((track, index) => {
+            datashift_audio_engine.playlist.forEach((track, index) => {
                 var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
                 var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
 
                 var track_set = duration + full_name;
-                datashift_audio.visual.playlist.append('<li id="track-' + index + '" onClick="" >' + track_set + '</li>')
+                datashift_audio_engine.visual.playlist.append('<li id="track-' + index + '" onClick="" >' + track_set + '</li>')
             });
 
-            datashift_audio.visual.playlist.children('li').on('click', function(){ 
-                datashift_audio.audio_data.track = parseInt(this.id.split('-')[1]); 
-                datashift_audio.settings.autoplay = true;
-                datashift_audio.render_wave_from_audio_file()
+            datashift_audio_engine.visual.playlist.children('li').on('click', function(){
+                datashift_audio_engine.audio_data.track = parseInt(this.id.split('-')[1]);
+                datashift_audio_engine.settings.autoplay = true;
+                datashift_audio_engine.render_wave_from_audio_file()
             });
 
             if (fromBeginning == true){
-                datashift_audio.audio_data.track = -1;
-                datashift_audio.next();
+                datashift_audio_engine.audio_data.track = -1;
+                datashift_audio_engine.next();
             } else {
-                datashift_audio.audio_data.track = datashift_audio.playlist.length;
-                datashift_audio.previous();    
+                datashift_audio_engine.audio_data.track = datashift_audio_engine.playlist.length;
+                datashift_audio_engine.previous();
             }
         }).fail(function(){
             console.error('page not found');
-            console.log('page: ' + datashift_audio.audio_data.page)
+            console.log('page: ' + datashift_audio_engine.audio_data.page)
         });
     },
 
@@ -578,18 +575,18 @@ var datashift_audio = {
 
     // Save current state of a player and send it to the back-end to sync it
     save_current_state: function(){
-        if ( datashift_audio.state == undefined ) return;
+        if ( datashift_audio_engine.state == undefined ) return;
 
-        datashift_audio.update_info();
+        datashift_audio_engine.update_info();
 
-        datashift_audio.visual.current_position.html(formatTime(datashift_audio.audio_data.position));
+        datashift_audio_engine.visual.current_position.html(formatTime(datashift_audio_engine.audio_data.position));
 
         var data = {
-            user_token: datashift_audio.user_token,
-            client_token: datashift_audio.client_token,
-            random: datashift_audio.settings.random,
-            audio_data: datashift_audio.audio_data,
-        };
+            user_token: datashift_audio_engine.user_token,
+            client_token: datashift_audio_engine.client_token,
+            random: datashift_audio_engine.settings.random,
+            audio_data: datashift_audio_engine.audio_data,
+        }
 
         $.post( 'save', data )
         .done(function(){

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    datashift_audio (0.1.0)
+    datashift_audio_engine (0.1.0)
       rails (~> 5.2.0)
 
 GEM
@@ -120,7 +120,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  datashift_audio!
+  datashift_audio_engine!
   sqlite3
 
 BUNDLED WITH

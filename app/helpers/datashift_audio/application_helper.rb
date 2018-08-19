@@ -1,4 +1,4 @@
-module DatashiftAudio
+module DatashiftAudioEngine
   module ApplicationHelper
 
     def datashift_audio_player_tag
