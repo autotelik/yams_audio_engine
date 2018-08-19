@@ -12,11 +12,11 @@
  *
  * require_tree .
  *
- *= require datashift_audio/cover
- *= require datashift_audio/icons
- *= require datashift_audio/playlist
- *= require datashift_audio/volume
- *= require datashift_audio/player
+ *= require datashift_audio_engine/cover
+ *= require datashift_audio_engine/icons
+ *= require datashift_audio_engine/playlist
+ *= require datashift_audio_engine/volume
+ *= require datashift_audio_engine/player
  *= require_self
  */
 

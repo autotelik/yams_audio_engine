@@ -7,7 +7,7 @@ Audio player for Rails apps.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'datashift_audio'
+gem 'datashift_audio_engine'
 ```
 
 And then execute:
@@ -17,34 +17,43 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install datashift_audio
+$ gem install datashift_audio_engine
+```
+
+### <a name="Configuration">Configuration</a>
+
+Configuration of datashift audio engine can be done through a typical Rails initialiser under config.
+The easiest way to create this global configuration file, is to run our rail's install generator : 
+
+```bash
+rails g datashift_audio_engine:install
 ```
 
 ### Including assets to project
 
-in `application.js`
+In `application.js` add
 
 ```js
-//= require datashift_audio/application
+//= require datashift_audio_engine/application
 ```
 
-in `application.css`
+In `application.css` add
 
 ```css
 /*
- *= require datashift_audio/application
+ *= require datashift_audio_engine/application
  */
 ```
 
-or in `application.css`
+Or in `application.css` add
 
 ```css
 /*
- *= require datashift_audio/cover
- *= require datashift_audio/icons
- *= require datashift_audio/playlist
- *= require datashift_audio/volume
- *= require datashift_audio/player
+ *= require datashift_audio_engine/cover
+ *= require datashift_audio_engine/icons
+ *= require datashift_audio_engine/playlist
+ *= require datashift_audio_engine/volume
+ *= require datashift_audio_engine/player
  */
 ```
 
@@ -150,11 +159,11 @@ Now create a Javascript snippet as follows, using the load function to call your
 </script>
 ```
 
+@Sloboda - Could you please document here what init does and what configuration can be passed to it 
+
 ##### Styling - CSS
 
-@Sloboda How to style the player .. e.g is there a rails script to copy over the CSS from engine to app so it can be over ridden or what stylesheet should be created where ?
-
-What CSS can be used to change look and feel of the player ?
+@Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
 
 CSS classes are available to place the player at the `top` or `bottom` of the page ???
 
@@ -190,11 +199,11 @@ Add the following javascript to the actions erb template, calling load with the 
 ```
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){
-        datashift_audio.init();
+        datashift_audio_engine.init();
 
-        datashift_audio.load('<%= radio_url %>');
+        datashift_audio_engine.load('<%= radio_url %>');
 
-        datashift_audio.render_wave_from_audio_file();
+        datashift_audio_engine.render_wave_from_audio_file();
     });
 </script>
 ```
@@ -210,7 +219,7 @@ Info could be stored in session or in a DB table connected with User on BE side
 For each callback should be related to route on BE side which connected with
 controller method that related user data
 
-init -     it sends request during datashift_audio.init() function
+init -     it sends request during datashift_audio_engine.init() function
 
     call once when we need to sync basic player settings
 
@@ -456,7 +465,7 @@ Routes
     just by setting
     
     ```javascript
-    datashift_audio.routes = {
+    datashift_audio_engine.routes = {
             init_url: 'init',
             save_url: 'save',
     
@@ -468,9 +477,9 @@ Routes
     ======
     
     ```javascript
-        datashift_audio.routes.init_url = 'init';
-        datashift_audio.routes.save_url = 'save';
-        datashift_audio.routes.radio_url = 'radio_data';
+        datashift_audio_engine.routes.init_url = 'init';
+        datashift_audio_engine.routes.save_url = 'save';
+        datashift_audio_engine.routes.radio_url = 'radio_data';
     ```
     
     **routes for load should be set up on load phace manualy**
