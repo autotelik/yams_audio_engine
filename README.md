@@ -72,6 +72,8 @@ Or in `application.css` add
 ##### ERB - HTML
 
  @Sloboda  Is this correct HTML for adding the full waveform player to any particular view -
+ 
+ #TODO - Is this is a shared partial ? It should be
 
 ```
 <div id="datashift-audio-player" class="col-12 datashift-audio-player pt-2 pb-2">
@@ -161,15 +163,10 @@ Now create a Javascript snippet as follows, using the load function to call your
 
 @Sloboda - Could you please document here what init does and what configuration can be passed to it 
 
-##### Styling - CSS
-
-@Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
-
-CSS classes are available to place the player at the `top` or `bottom` of the page ???
-
 #### Rails- routes and actions
 
-Create a POST ?? route that returns the JSON playlist data
+Create a POST ?? route that satisifies the radio_index_url used to create the javascript snippet, and 
+that will return the JSON playlist data.
 
   post 'radio', to: 'radio#index'
 
@@ -194,31 +191,66 @@ Sample snippet for creating the JSON playlist :
     end
 ```
     
-Add the following javascript to the actions erb template, calling load with the playlist data url defined above
+##### Styling - CSS
 
-```
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
-        datashift_audio_engine.init();
+@Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
 
-        datashift_audio_engine.load('<%= radio_url %>');
+CSS classes are available to place the player at the `top` or `bottom` of the page ???
 
-        datashift_audio_engine.render_wave_from_audio_file();
-    });
-</script>
-```
+#### Javascript methods and call-backs
 
-#### Call backs
+Each callback should be related to a route in the main Rails app side, connected to a suitable
+controller method that can parse or store the supplied  data.
 
 ### Save Callback
 
-When playing a track the player can send back information to the server via the does the save callback
+When playing a track the player can send back information to the server via a save callback
 
 Info could be stored in session or in a DB table connected with User on BE side
 
-For each callback should be related to route on BE side which connected with
-controller method that related user data
+save -     it sends data of current state of player and playlist
+    
+    it calls:
+        a) interval is configurable via datashift_audio.save_interval = 1000; // in milliseconds
 
+        b) player finished to play current track
+        c) on pause() click
+        d) on previous() click
+        e) on next() click
+        f) on seek() of track
+
+    possible url structure 'user/set_state'
+
+    request: {
+            user_token
+            client_token
+            random
+            audio_data: {
+        service: {
+            user_token: '1234567890',
+            client_token: '0987654321',
+        },
+
+        audio_player: {
+            autoplay: false,
+            random: false,
+            repeat: null,
+            volume: 1,
+        },
+
+        audio: {
+            playlist: 'id',
+            
+            page: '1',
+            total_pages: '3',
+            
+            track: 0,
+            position: 0,
+        }
+        }
+        }
+    expected strucuture of answer: 200 OK, or any error code u like
+    
 init -     it sends request during datashift_audio_engine.init() function
 
     call once when we need to sync basic player settings
@@ -367,48 +399,7 @@ new_page -    it sends url and post characteristics of searchable playlist
                 ],
         }
 
-save -     it sends data of current state of player and playlist
-    
-    it calls:
-        a) each second during playing current track
 
-        b) player finished to play current track
-        c) on pause() click
-        d) on previous() click
-        e) on next() click
-        f) on seek() of track
-
-    possible url structure 'user/set_state'
-
-    request: {
-            user_token
-            client_token
-            random
-            audio_data: {
-        service: {
-            user_token: '1234567890',
-            client_token: '0987654321',
-        },
-
-        audio_player: {
-            autoplay: false,
-            random: false,
-            repeat: null,
-            volume: 1,
-        },
-
-        audio: {
-            playlist: 'id',
-            
-            page: '1',
-            total_pages: '3',
-            
-            track: 0,
-            position: 0,
-        }
-        }
-        }
-    expected strucuture of answer: 200 OK, or any error code u like
 
 radio -    it gets description of current radio state
 

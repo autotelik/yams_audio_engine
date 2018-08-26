@@ -22,6 +22,8 @@ var datashift_audio_engine = {
     state: null,
     engine: null,
 
+    save_url: 'player_save_callback',
+
     save_interval: 1000,
 
     is_radio: false,
@@ -588,7 +590,7 @@ var datashift_audio_engine = {
             audio_data: datashift_audio_engine.audio_data,
         }
 
-        $.post( 'save', data )
+        $.post(datashift_audio_engine.save_url, data )
         .done(function(){
             console.log('saved');
         }).fail(function(){
