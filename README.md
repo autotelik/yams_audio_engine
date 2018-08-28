@@ -161,11 +161,54 @@ Now create a Javascript snippet as follows, using the load function to call your
 </script>
 ```
 
-@Sloboda - Could you please document here what init does and what configuration can be passed to it 
-
 #### Rails- routes and actions
 
-Create a POST ?? route that satisifies the radio_index_url used to create the javascript snippet, and 
+@Sloboda - I don't thoink thios worlks as you docuemneted ? I did not see any way to set these two. I have added save_url myself to gem
+
+=begin Original README
+
+     init_url: 'init',
+     save_url: 'save',
+            
+Routes
+    =
+    initialization: ```'init'```
+    
+    load: ```'playlist/:id.new_page'```
+    
+    radio_stream: ```'radio_data'```
+    
+    save current state: ```'save'```
+    
+    
+    setup routes
+    ===
+    
+    u can do it in current version of lib
+    just by setting
+    
+    ```javascript
+    datashift_audio_engine.routes = {
+            init_url: 'init',
+            save_url: 'save',
+    
+            radio_url: 'radio_data'
+    };
+    ```
+   
+    or separate
+    ======
+    
+    ```javascript
+        datashift_audio_engine.routes.init_url = 'init';
+        datashift_audio_engine.routes.save_url = 'save';
+        datashift_audio_engine.routes.radio_url = 'radio_data';
+    ```
+    
+    **routes for load should be set up on load phace manualy**
+=end
+    
+Create a POST ?? route that satisfies the radio_index_url used to create the javascript snippet, and 
 that will return the JSON playlist data.
 
   post 'radio', to: 'radio#index'
@@ -191,27 +234,24 @@ Sample snippet for creating the JSON playlist :
     end
 ```
     
-##### Styling - CSS
-
-@Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
-
-CSS classes are available to place the player at the `top` or `bottom` of the page ???
-
 #### Javascript methods and call-backs
 
 Each callback should be related to a route in the main Rails app side, connected to a suitable
 controller method that can parse or store the supplied  data.
 
-### Save Callback
+##### Save Callback
 
-When playing a track the player can send back information to the server via a save callback
+When playing a track the player can send back information such as current state of player and playlist, to the server via a save callback
 
-Info could be stored in session or in a DB table connected with User on BE side
+Info could be stored in session or in a DB table connected with User on BE side.
 
-save -     it sends data of current state of player and playlist
-    
+The host app needs to setup client tokens ? https://github.com/waiting-for-dev/devise-jwt
+
+
     it calls:
         a) interval is configurable via datashift_audio.save_interval = 1000; // in milliseconds
+        
+@Sloboda - How to pass such configuration from the Ruby world to the Javascript world ?
 
         b) player finished to play current track
         c) on pause() click
@@ -219,36 +259,40 @@ save -     it sends data of current state of player and playlist
         e) on next() click
         f) on seek() of track
 
-    possible url structure 'user/set_state'
+@Sloboda - What is this url and is this really the save callback json ?
 
+Possible url structure 'user/set_state'
+
+```
     request: {
             user_token
             client_token
             random
             audio_data: {
-        service: {
-            user_token: '1234567890',
-            client_token: '0987654321',
-        },
-
-        audio_player: {
-            autoplay: false,
-            random: false,
-            repeat: null,
-            volume: 1,
-        },
-
-        audio: {
-            playlist: 'id',
-            
-            page: '1',
-            total_pages: '3',
-            
-            track: 0,
-            position: 0,
-        }
-        }
-        }
+                service: {
+                    user_token: '1234567890',
+                    client_token: '0987654321',
+                },
+        
+                audio_player: {
+                    autoplay: false,
+                    random: false,
+                    repeat: null,
+                    volume: 1,
+                },
+        
+                audio: {
+                    playlist: 'id',
+                    
+                    page: '1',
+                    total_pages: '3',
+                    
+                    track: 0,
+                    position: 0,
+                }
+            }
+    }
+```
     expected strucuture of answer: 200 OK, or any error code u like
     
 init -     it sends request during datashift_audio_engine.init() function
@@ -434,7 +478,11 @@ How to make list own list of audio tracks?
     This callbacks should set state of datashif_audio.audio_data.track to id of selected one
     set autoplay to true and call render_wave_from_audio_file() method to render player with selected audio
     
-    
+##### Styling - CSS
+
+@Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
+
+CSS classes are available to place the player at the `top` or `bottom` of the page ???    
     
 #### ORIGINAL README
     
