@@ -285,15 +285,20 @@ var datashift_audio_engine = {
 
             self.playlist = data.tracks;
 
-            console.log(data)
+            console.log(data);
 
-            self.playlist.forEach((track, index) => {          
-                var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
-                var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
+            if(data.hasOwnProperty('playlist_partial')){
+                self.visual.playlist.html(data.playlist_partial)
+            }
+            else {
+                self.playlist.forEach((track, index) => {
+                    var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
+                    var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
 
-                var track_set = duration + full_name;
-                self.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>')
-            });
+                    var track_set = duration + full_name;
+                    self.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>');
+                });
+            }
 
             datashift_audio_engine.visual.playlist.children('li').on('click', function(){
                 datashift_audio_engine.audio_data.track = parseInt(this.id.split('-')[1]);
