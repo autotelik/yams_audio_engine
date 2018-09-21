@@ -482,7 +482,20 @@ How to make list own list of audio tracks?
 
 @Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
 
-CSS classes are available to place the player at the `top` or `bottom` of the page ???    
+CSS classes are available to place the player at the `top` or `bottom` of the page ???   
+
+###### Key Classes
+
+Track Controls :
+
+- #datashift-audio-player .play
+- #datashift-audio-player .pause
+
+- #datashift-audio-player .datashift-audio-track-controls .previous
+- #datashift-audio-player .datashift-audio-track-controls .next
+    
+    
+Cover image : `datashift-audio-track-cover` 
     
 #### ORIGINAL README
     
