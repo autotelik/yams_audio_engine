@@ -2,42 +2,20 @@
 
 Audio player for Rails apps.
 
-
-## Installation
-Add this line to your application's Gemfile:
+## How to install?
+Add to Gemfile:
 
 ```ruby
 gem 'datashift_audio_engine'
 ```
 
-And then execute:
-```bash
-$ bundle
-```
+Add to application javascript file
 
-Or install it yourself as:
-```bash
-$ gem install datashift_audio_engine
-```
-
-### <a name="Configuration">Configuration</a>
-
-Configuration of datashift audio engine can be done through a typical Rails initialiser under config.
-The easiest way to create this global configuration file, is to run our rail's install generator : 
-
-```bash
-rails g datashift_audio_engine:install
-```
-
-### Including assets to project
-
-In `application.js` add
-
-```js
+```javascript
 //= require datashift_audio_engine/application
 ```
 
-In `application.css` add
+Add to application style file
 
 ```css
 /*
@@ -45,7 +23,7 @@ In `application.css` add
  */
 ```
 
-Or in `application.css` add
+Or
 
 ```css
 /*
@@ -57,254 +35,92 @@ Or in `application.css` add
  */
 ```
 
-## Usage
-
-### Adding a Player
-
-#### Views - HTML Markup and CSS
-
-- full width, track with waveform style (example, see sound cloud)
-
-- embedded button with on hover appearance/play (example, see emusic.com)
-
-- single thin banner for radio or linked to embedded button (example, see mixcloud, soundcloud)
-
-##### ERB - HTML
-
- @Sloboda  Is this correct HTML for adding the full waveform player to any particular view -
- 
- #TODO - Is this is a shared partial ? It should be
-
-```
-<div id="datashift-audio-player" class="col-12 datashift-audio-player pt-2 pb-2">
-
-  <div class="row">
-
-    <div class="col-1">
-      <div class="datashift-audio-track-cover">
-        <i class="material-icons datashift-audio-cover-play play" >play_circle_outline</i>
-        <i class="material-icons datashift-audio-cover-play pause datashift-audio-hide">pause_circle_outline</i>
-      </div>
-    </div>
-
-    <div class="col-1">
-      <div class="datashift-audio-track-basic-info text-small">
-        <div class="datashift-audio-track-name">Current Track Name</div>
-        <div class="datashift-audio-author-name">Author Name</div>
-      </div>
-    </div>
-
-    <div class="col-9">
-      <div class="row">
-        <div class="datashift-audio-wave-block col-12" id="waveform"></div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="row">
-            <div class="datashift-audio-current-position col-11 text-sm-left">00:00</div>
-            <div class="datashift-audio-total-duration col-1 text-sm-right pull-right">00:00</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-1 datashift-audio-track-volume p-0 pull-right">
-      <input type="range" orient="vertical" min="0" max="100" value="100" step="1" class="datashift-audio-input-range" />
-      <i class="material-icons volume_up">volume_up</i>
-      <i class="material-icons volume_down datashift-audio-hide">volume_down</i>
-      <i class="material-icons volume_mute datashift-audio-hide">volume_mute</i>
-      <i class="material-icons volume_off  datashift-audio-hide">volume_off</i>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="row">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-1 track-playlist">
-          <i class="material-icons view_list active">view_list</i>
-        </div>
-        <div class="col-8">
-          <div class=" playlist-content p-1">
-            <ol class="datashift-audio-playlist p-1"></ol>
-            <div class="datashift-audio-page-selectors">
-              <ol class='datashift-audio-pages'></ol>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-</div>
+And then execute:
+```bash
+$ bundle install
 ```
 
-#### @Sloboda  What is the HTML for adding the embedded button with on hover appearance player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
+and 
 
-#### @Sloboda  What is the HTML for adding the single thin banner player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
-
-#### @Sloboda  - Is the main target for the player a div ALWAYS with id="datashift-audio-player"  regardless of Player Type
-
-#### @Sloboda  - Is this the way to load track data regardless of whether player is full width, hover button, thin main  player ?
- 
-Now create a Javascript snippet as follows, using the load function to call your Rails route and return the playlist JSON
-
-```
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
-        datashift_audio_engine.init();
-
-        datashift_audio_engine.load('<%= radio_index_url %>.json');
-    });
-</script>
+```bash
+bundle exec rails generate datashift_audio_engine:install
 ```
 
-#### Rails- routes and actions
+AND
 
-@Sloboda - I don't thoink thios worlks as you docuemneted ? I did not see any way to set these two. I have added save_url myself to gem
+Add helper to the radio view
 
-=begin Original README
-
-     init_url: 'init',
-     save_url: 'save',
-            
-Routes
-    =
-    initialization: ```'init'```
-    
-    load: ```'playlist/:id.new_page'```
-    
-    radio_stream: ```'radio_data'```
-    
-    save current state: ```'save'```
-    
-    
-    setup routes
-    ===
-    
-    u can do it in current version of lib
-    just by setting
-    
-    ```javascript
-    datashift_audio_engine.routes = {
-            init_url: 'init',
-            save_url: 'save',
-    
-            radio_url: 'radio_data'
-    };
-    ```
-   
-    or separate
-    ======
-    
-    ```javascript
-        datashift_audio_engine.routes.init_url = 'init';
-        datashift_audio_engine.routes.save_url = 'save';
-        datashift_audio_engine.routes.radio_url = 'radio_data';
-    ```
-    
-    **routes for load should be set up on load phace manualy**
-=end
-    
-Create a POST ?? route that satisfies the radio_index_url used to create the javascript snippet, and 
-that will return the JSON playlist data.
-
-  post 'radio', to: 'radio#index'
-
-Now we can access route helper : radio_url
-
-Sample snippet for creating the JSON playlist :
-
-```ruby
-  respond_to do |format|
-     format.js   { render  json: {
-        tracks: [
-          {
-              id: @track.id,
-              author: 'aqwan',
-              name: @track.title,
-              audio_url: @track.audio.url(@track.audio.default_style, timestamp: false),
-              cover_image: @track.cover_image,
-              duration: 100
-          }
-        ]
-      }.to_json }
-    end
+```erb
+<%= datashift_audio_player_tag %>
 ```
+
+and now 
+create a Javascript snippet as follows, using the load function 
+to call your Rails route and return the playlist JSON
+
+```javascript
+$(document).ready(function(){
+    datashift_audio_engine.init();
+    datashift_audio_engine.load();
+});
+```
+
+## How to configure?
+
+```
+state           - current state of player
+engine          - variable where will be spawned wave player
+
+is_radio        - true .. false
+save_interval   - in milliseconds
+
+routes.
+    init_url    - url of action wich will authorize user and will load personalized 
+                  information about player right for current user
+    load_url    - url of action wich will form playlist load action with params
+    save_url    - url of action wich will controll save action
+    radio_url   - url of action wich will controll save action
     
-#### Javascript methods and call-backs
+settings.
+    autoplay    - true .. false
+    random      - true .. false
+    repeat      - true .. false
+    volume      - 0 .. 1
+    
+waveform_colors.
+    wave_color          - regular css colors
+    progress_color      - regular css colors
+    cursor_color        - regular css colors
+    bar_width           - width in pixels
+    
+playlist_id     - id of selected playlist
+playlist:   {}  - content of playlist
+
+audio_data: {}  - main storage of current state of player
+    visual: {}  - interface for interation with all visual elements connected with
+                  this player
+        
+timer           - variable for management of regular actions ( save )
+```
+
+# Javascript methods and call-backs
 
 Each callback should be related to a route in the main Rails app side, connected to a suitable
 controller method that can parse or store the supplied  data.
 
-##### Save Callback
-
-When playing a track the player can send back information such as current state of player and playlist, to the server via a save callback
-
-Info could be stored in session or in a DB table connected with User on BE side.
-
-The host app needs to setup client tokens ? https://github.com/waiting-for-dev/devise-jwt
-
-
-    it calls:
-        a) interval is configurable via datashift_audio.save_interval = 1000; // in milliseconds
-        
-@Sloboda - How to pass such configuration from the Ruby world to the Javascript world ?
-
-        b) player finished to play current track
-        c) on pause() click
-        d) on previous() click
-        e) on next() click
-        f) on seek() of track
-
-@Sloboda - What is this url and is this really the save callback json ?
-
-Possible url structure 'user/set_state'
+## How to init?
 
 ```
-    request: {
-            user_token
-            client_token
-            random
-            audio_data: {
-                service: {
-                    user_token: '1234567890',
-                    client_token: '0987654321',
-                },
-        
-                audio_player: {
-                    autoplay: false,
-                    random: false,
-                    repeat: null,
-                    volume: 1,
-                },
-        
-                audio: {
-                    playlist: 'id',
-                    
-                    page: '1',
-                    total_pages: '3',
-                    
-                    track: 0,
-                    position: 0,
-                }
-            }
-    }
+init -  it sends request during 
+        datashift_audio_engine.init() function call once 
+        when we need to sync basic player settings possible 
+        url structure 'user/get_state'
+        it sends local variables of {user_token} and {client_token}
+        and should obtain JSON with sync data of player
+        The structure of answer is:
 ```
-    expected strucuture of answer: 200 OK, or any error code u like
-    
-init -     it sends request during datashift_audio_engine.init() function
 
-    call once when we need to sync basic player settings
-
-    possible url structure 'user/get_state'
-    
-    it sends local variables of {user_token} and {client_token}
-    and should obtain JSON with sync data of player
-    The structure of answer is:
-
+```
     {
        saved: {
         service: {
@@ -330,16 +146,19 @@ init -     it sends request during datashift_audio_engine.init() function
         }
        }    
     }
+```
 
-load -     it sends url and post characteristics of searchable playlist
+## How to load?
+
+```
+load - it sends url and post characteristics of searchable playlist
+       call once when we need to load playlist and set it into basic state on first open
+       possible url structure 'playlist/:id.page' or 'audio/:id'
+       request: { user_token, client_token, random }
+       expected strucuture of answer:
+```
     
-    call once when we need to load playlist and set it into basic state on first open
-
-    possible url structure 'playlist/:id.page' or 'audio/:id'
-
-    request: { user_token, client_token, random }
-    expected strucuture of answer:
-
+```
     {
         user_token: '1234567890',
         client_token: '0987654321',
@@ -390,171 +209,31 @@ load -     it sends url and post characteristics of searchable playlist
         }
         ],
     }
+```
 
-new_page -    it sends url and post characteristics of searchable playlist
-    
-        it calls when we need to load new page (manualy or automaticaly when page of
-        audios is ends) and updates playlist accordingly to flow
+## How to get/set state (save)?
+structure of user state
 
-        possible url structure 'playlist/:id.page'
-
-        request: url only
-        expected strucuture of answer:
-
-        {
-            page: '2',
-
-            tracks: [
-                {
-                    id: '1',
-
-                    author: 'Full Name 1',
-                    name: 'First Track Name',
-
-                    cover_image: 'http://localhost:3000/images/1.jpeg',
-                    audio_url: 'http://localhost:3000/audio/1.mp3',
-
-                    duration: 100,
-                },
-
-                {
-                    id: '2',
-                
-                    author: 'Full Name 2',
-                    name: 'Second Track Name',
-
-                    cover_image: 'http://localhost:3000/images/2.jpeg',
-                    audio_url: 'http://localhost:3000/audio/2.mp3',
-
-                    duration: 100,
-                },
-
-                {
-                    id: '3',
-                
-                    author: 'Full Name 3',
-                    name: 'Third Track Name',
-
-                    cover_image: 'http://localhost:3000/images/3.jpeg',
-                    audio_url: 'http://localhost:3000/audio/3.mp3',
-
-                    duration: 100,
-                }
-                ],
-        }
-
-
-
-radio -    it gets description of current radio state
-
-    it calls each second during radio playing
-    
-    possible url structure 'radio/:id'
-
-    request: { radio_url }
-
-    expected strucuture of answer:
-
-    radio: {
-        radio_url: 'http://air2.radiorecord.ru:805/rr_320',
-        
-        author: 'Full Name 3',
-        track: 'Third Track Name',
-
-        cover_image: 'http://localhost:3000/images/1.jpeg',
-        audio_url: 'http://localhost:3000/audio/1.mp3',
-        
-        duration: 100,
-        position: 0,
-        },
-
-
-How to make list own list of audio tracks?
-
-1. Get JSON list of tracks from BE
-2. Create place and styles for items of tracks with squere look like in MixCloud but without inner items
-3. Create items based on JSON list of tracks
-4. Hang callbacks on items for play and pause btns
-    This callbacks should set state of datashif_audio.audio_data.track to id of selected one
-    set autoplay to true and call render_wave_from_audio_file() method to render player with selected audio
-    
-##### Styling - CSS
-
-@Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
-
-CSS classes are available to place the player at the `top` or `bottom` of the page ???    
-    
-#### ORIGINAL README
-    
-Routes
-    =
-    initialization: ```'init'```
-    
-    load: ```'playlist/:id.new_page'```
-    
-    radio_stream: ```'radio_data'```
-    
-    save current state: ```'save'```
-    
-    
-    setup routes
-    ===
-    
-    u can do it in current version of lib
-    just by setting
-    
-    ```javascript
-    datashift_audio_engine.routes = {
-            init_url: 'init',
-            save_url: 'save',
-    
-            radio_url: 'radio_data'
-    };
-    ```
-    
-    or separate
-    ======
-    
-    ```javascript
-        datashift_audio_engine.routes.init_url = 'init';
-        datashift_audio_engine.routes.save_url = 'save';
-        datashift_audio_engine.routes.radio_url = 'radio_data';
-    ```
-    
-    **routes for load should be set up on load phace manualy**
-    
-    JSON format
-    =
-    
-    for initialization
-    ===
-    
-    request:
-    
-    ```
-        {
-            user_token: 'asdf1234',
-            client_token: '4321fdsa'
-    
-            random: true,
+```
+    request: {
+            user_token
+            client_token
+            random
             audio_data: {
-                
-            },
-        }
-    ```
-    
-    answer example:
-    
-    ```
-        {
-            saved: {
                 service: {
                     user_token: '1234567890',
                     client_token: '0987654321',
                 },
-    
+        
+                audio_player: {
+                    autoplay: false,
+                    random: false,
+                    repeat: null,
+                    volume: 1,
+                },
+        
                 audio: {
-                    playlist: '1',
+                    playlist: 'id',
                     
                     page: '1',
                     total_pages: '3',
@@ -562,127 +241,359 @@ Routes
                     track: 0,
                     position: 0,
                 }
-            },
-        }
-    ```
-    
-    for load
-    ===
-    
-    request:
-    
-    url: ``` 'playlist/:id.new_page' ```
-    
-    ```playlist``` - playlist controller route name
-    
-    ```/:id``` - ID of loadable playlist
-    
-    ```.new_page``` - number of tracks page in this playlist for load
-    
-    ```
-        {
-            user_token: 'asdf1234',
-            client_token: '4321fdsa',
-    
-            random: true
-        }
-    ```
-    
-    answer example:
-    
-    ```
-        {
-            playlist: 1
-            total_pages: 3,
-            
-            page: 1,
-            track: 1,
-            position: 0,
-    
-            tracks: [
-                {
-                    id: 1,
-    
-                    author: 'Full Name',
-                    name: 'First Track Name',
-    
-                    cover_image: 'http://localhost:3000/images/1.jpeg',
-                    audio_url: 'http://localhost:3000/audio/1.mp3',
-    
-                    duration: 100,
-                },
-            ]
-        }
-    ```
-    
-    for radio
-    ===
-    
-    request:
-    
-    url: ``` 'radio_data' ```
-    
-    ```
-        {
-            user_token: 'asdf1234',
-            client_token: '4321fdsa',
-        }
-    ```
-    
-    answer example:
-    
-    ```
-        {
-            radio: {
-                radio_url: 'http://air2.radiorecord.ru:805/rr_320',
-                
-                author: 'Full Name 3',
-                track: 'Third Track Name',
-    
+            }
+    }
+```
+
+## How to do pagination?
+
+```
+new_page -      it sends url and post characteristics of searchable playlist
+                it calls when we need to load new page (manualy or automaticaly when page of
+                audios is ends) and updates playlist accordingly to flow
+                possible url structure 'playlist/:id.page'
+                request: url only
+                expected strucuture of answer:
+```
+                    
+```
+    {
+        page: '2',
+
+        tracks: [
+            {
+                id: '1',
+
+                author: 'Full Name 1',
+                name: 'First Track Name',
+
                 cover_image: 'http://localhost:3000/images/1.jpeg',
                 audio_url: 'http://localhost:3000/audio/1.mp3',
-                
+
                 duration: 100,
-                position: 0,            
             },
-        }
+
+            {
+                id: '2',
+                
+                author: 'Full Name 2',
+                name: 'Second Track Name',
+
+                cover_image: 'http://localhost:3000/images/2.jpeg',
+                audio_url: 'http://localhost:3000/audio/2.mp3',
+
+                duration: 100,
+            },
+
+            {
+                id: '3',
+                
+                author: 'Full Name 3',
+                name: 'Third Track Name',
+
+                cover_image: 'http://localhost:3000/images/3.jpeg',
+                audio_url: 'http://localhost:3000/audio/3.mp3',
+
+                duration: 100,
+            }
+        ],
+    }
+```
+
+## How to get stream radio?
+
+```
+radio -   it gets description of current radio state
+          it calls each second during radio playing
+          possible url structure 'radio/:id'
+          request: { radio_url }
+          expected strucuture of answer:
+```
+
+```
+    radio: {
+        radio_url: 'http://air2.radiorecord.ru:805/rr_320',
         
-    ```
+        author: 'Full Name 3',
+        track: 'Third Track Name',
+
+        cover_image: 'http://link.to/images/1.jpeg',
+        audio_url: 'http://link.to/audio/1.mp3',
+        
+        duration: 100,
+        position: 0,
+    },
+```
+
+## How to pin to top/bottom?
+
+default value is TOP
+
+```
+<%= datashift_audio_player_tag(pin_to: :top) %>
+```
+
+or 
+
+```
+<%= datashift_audio_player_tag(pin_to: :bottom) %>
+```
+
+
+#### How to modify js/css?
+
+## How to make list own list of audio tracks?
+
+1. Get JSON list of tracks from Back-End
+2. Go through player instalation
+3. Create items based on JSON list of tracks
+4. Hang callbacks on items for play and pause btns
+    This callbacks should set state of datashif_audio.audio_data.track to id of selected one
+    set autoplay to true and call ```render_wave_from_audio_file()``` method to render player with selected audio
+    
+
+#### Views - HTML Markup and CSS
+
+- full width, track with waveform style (example, see sound cloud)
+
+- embedded button with on hover appearance/play (example, see emusic.com)
+
+- single thin banner for radio or linked to embedded button (example, see mixcloud, soundcloud)
+
+#### @Sloboda  What is the HTML for adding the embedded button with on hover appearance player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
+#### Answer - 
+```
+<div class="datashift-audio-player">
+  <div class="datashift-audio-track-cover">
+    <i class="material-icons datashift-audio-cover-play play" >play_circle_outline</i>
+    <i class="material-icons datashift-audio-cover-play pause datashift-audio-hide">pause_circle_outline</i>
+  </div>
+</div>
+```
+
+Create a POST ?? route that satisfies the radio_index_url used to create the javascript snippet, and 
+that will return the JSON playlist data.
+
+  post 'radio', to: 'radio#index'
+
+Now we can access route helper : radio_url
+
+Sample snippet for creating the JSON playlist :
+
+```ruby
+  respond_to do |format|
+     format.js   { render  json: {
+        tracks: [
+          {
+              id: @track.id,
+              author: 'aqwan',
+              name: @track.title,
+              audio_url: @track.audio.url(@track.audio.default_style, timestamp: false),
+              cover_image: @track.cover_image,
+              duration: 100
+          }
+        ]
+      }.to_json }
+    end
+```
+
+##### Save Callback
+
+When playing a track the player can send back information such as current state of player and playlist, to the server via a save callback
+
+Info could be stored in session or in a DB table connected with User on BE side.
+
+The host app needs to setup client tokens ? https://github.com/waiting-for-dev/devise-jwt
+
+
+    it calls:
+        a) interval is configurable via datashift_audio.save_interval = 1000; // in milliseconds
+        b) player finished to play current track
+        c) on pause() click
+        d) on previous() click
+        e) on next() click
+        f) on seek() of track
+
+    
+# BackEnd part
+    
+for initialization
+===
+request:
+    
+```
+    {
+        user_token: 'asdf1234',
+        client_token: '4321fdsa'
+    
+        random: true,
+        audio_data: {
+                
+        },
+    }
+```
+    
+answer example:
+    
+```
+    {
+        saved: {
+            service: {
+                user_token: '1234567890',
+                client_token: '0987654321',
+            },
+    
+            audio: {
+                playlist: '1',
+                    
+                page: '1',
+                total_pages: '3',
+                    
+                track: 0,
+                position: 0,
+            }
+        },
+    }
+```
+    
+for load
+===
+    
+request:
+url: ``` 'playlist/:id.new_page' ```    
+```playlist``` - playlist controller route name
+```/:id``` - ID of loadable playlist
+```.new_page``` - number of tracks page in this playlist for load
+```
+    {
+        user_token: 'asdf1234',
+        client_token: '4321fdsa',
+    
+        random: true
+    }
+```
+    
+answer example:
+    
+```
+    {
+        playlist: 1
+        total_pages: 3,
+            
+        page: 1,
+        track: 1,
+        position: 0,
+    
+        tracks: [
+            {
+                id: 1,
+    
+                author: 'Full Name',
+                name: 'First Track Name',
+    
+                cover_image: 'http://link.to/images/1.jpeg',
+                audio_url: 'http://link.to/audio/1.mp3',
+    
+                duration: 100,
+            },
+        ]
+    }
+```
+    
+for radio
+===
+request: url: ``` 'radio_data' ```
+    
+```
+    {
+        user_token: 'asdf1234',
+        client_token: '4321fdsa',
+    }
+```
+    
+answer example:
+    
+```
+    {
+        radio: {
+            radio_url: 'http://air2.radiorecord.ru:805/rr_320',
+                
+            author: 'Full Name 3',
+            track: 'Third Track Name',
+    
+            cover_image: 'http://link.to/images/1.jpeg',
+            audio_url: 'http://link.to/audio/1.mp3',
+                
+            duration: 100,
+            position: 0,            
+        },
+    }
+```
     
 for save
 ===
+request:
     
-    request:
+``` 
+    {
+        user_token: 'asdf1234',
+        client_token: '4321fdsa'
     
-```
-        {
-            user_token: 'asdf1234',
-            client_token: '4321fdsa'
+        random: true,
     
-            random: true,
-    
-            audio_data: {
-                    playlist: '1',
+        audio_data: {
+            playlist: '1',
                     
-                    page: '1',
-                    total_pages: '3',
+            page: '1',
+            total_pages: '3',
                     
-                    track: 1,
-                    position: 55.5,
-            }
+            track: 1,
+            position: 55.5,
         }
+    }
 ```
     
-    answer example:
+answer example:
     
 ```
-        {
-            status: 200
-        }
+    {
+        status: 200
+    }
 ```
 
+#Q/A
 
 
+#### @Sloboda  What is the HTML for adding the single thin banner player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
+#### Answer - For including player to any page just use helper
+              For updating of styles -> check wich file of styles u need to include and type it in application.css and
+              modify all data u need in separate file imported after datashift_audio_engine/application.css
+
+#### @Sloboda  - Is the main target for the player a div ALWAYS with id="datashift-audio-player"  regardless of Player Type
+#### Answer - Yes
+
+#### @Sloboda  - Is this the way to load track data regardless of whether player is full width, hover button, thin main  player ?
+#### Answer - Yes
+
+#### @Sloboda - What is this url and is this really the save callback json ? ('user/set_state')
+#### Answer - Yes, its save call back with ability to get/set state
+
+#### @Sloboda - How to pass such configuration from the Ruby world to the Javascript world ?
+#### Answer - erb, json, ajax
+
+#### @Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
+#### Answer - 
+
+```
+.datashift-audio-player
+    datashift-audio-track-cover
+    .datashift-audio-track-basic-info
+        .datashift-audio-track-name
+        .datashift-audio-author-name
+    .datashift-audio-wave-block
+    ol.datashift-audio-playlist
+    ol.datashift-audio-pages
+```
 
 
 ## Contributing

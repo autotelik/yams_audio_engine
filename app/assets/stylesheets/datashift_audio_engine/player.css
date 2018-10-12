@@ -1,4 +1,8 @@
 
+.datashift-audio-player{
+  position: fixed;
+}
+
 .datashift-audio-player.datashift-audio-bar {
     display: block;
     width: 100%;
@@ -32,7 +36,7 @@
     margin: 0px 10px;
 }
 
-.datashift-audio-wave {
+wave {
     max-height: 75px;
 }
 
