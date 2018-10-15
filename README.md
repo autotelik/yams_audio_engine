@@ -354,72 +354,67 @@ or
 
 #### Views - HTML Markup and CSS
 
-- full width, track with waveform style (example, see sound cloud)
+CSS classes are available to place the player at the `top` or `bottom` of the page ???   
 
-- embedded button with on hover appearance/play (example, see emusic.com)
+###### Key Classes
 
-- single thin banner for radio or linked to embedded button (example, see mixcloud, soundcloud)
+Track Controls :
 
-#### @Sloboda  What is the HTML for adding the embedded button with on hover appearance player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
-#### Answer - 
-```
-<div class="datashift-audio-player">
-  <div class="datashift-audio-track-cover">
-    <i class="material-icons datashift-audio-cover-play play" >play_circle_outline</i>
-    <i class="material-icons datashift-audio-cover-play pause datashift-audio-hide">pause_circle_outline</i>
-  </div>
-</div>
-```
+- #datashift-audio-player .play
+- #datashift-audio-player .pause
 
-Create a POST ?? route that satisfies the radio_index_url used to create the javascript snippet, and 
-that will return the JSON playlist data.
-
-  post 'radio', to: 'radio#index'
-
-Now we can access route helper : radio_url
-
-Sample snippet for creating the JSON playlist :
-
-```ruby
-  respond_to do |format|
-     format.js   { render  json: {
-        tracks: [
-          {
-              id: @track.id,
-              author: 'aqwan',
-              name: @track.title,
-              audio_url: @track.audio.url(@track.audio.default_style, timestamp: false),
-              cover_image: @track.cover_image,
-              duration: 100
-          }
-        ]
-      }.to_json }
-    end
-```
-
-##### Save Callback
-
-When playing a track the player can send back information such as current state of player and playlist, to the server via a save callback
-
-Info could be stored in session or in a DB table connected with User on BE side.
-
-The host app needs to setup client tokens ? https://github.com/waiting-for-dev/devise-jwt
-
-
-    it calls:
-        a) interval is configurable via datashift_audio.save_interval = 1000; // in milliseconds
-        b) player finished to play current track
-        c) on pause() click
-        d) on previous() click
-        e) on next() click
-        f) on seek() of track
-
+- #datashift-audio-player .datashift-audio-track-controls .previous
+- #datashift-audio-player .datashift-audio-track-controls .next
     
-# BackEnd part
     
-for initialization
-===
-request:
+Cover image : `datashift-audio-track-cover` 
+    
+#### ORIGINAL README
+    
+Routes
+    =
+    initialization: ```'init'```
+    
+    load: ```'playlist/:id.new_page'```
+    
+    radio_stream: ```'radio_data'```
+    
+    save current state: ```'save'```
+    
+    
+    setup routes
+    ===
+    
+    u can do it in current version of lib
+    just by setting
+    
+    ```javascript
+    datashift_audio_engine.routes = {
+            init_url: 'init',
+            save_url: 'save',
+    
+            radio_url: 'radio_data'
+    };
+    ```
+    
+    or separate
+    ======
+    
+    ```javascript
+        datashift_audio_engine.routes.init_url = 'init';
+        datashift_audio_engine.routes.save_url = 'save';
+        datashift_audio_engine.routes.radio_url = 'radio_data';
+    ```
+    
+    **routes for load should be set up on load phace manualy**
+    
+    JSON format
+    =
+    
+    for initialization
+    ===
+    
+    request:
     
 ```
     {

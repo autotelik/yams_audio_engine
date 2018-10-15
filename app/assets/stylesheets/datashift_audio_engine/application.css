@@ -12,8 +12,8 @@
  *
  * require_tree .
  *
- *= require datashift_audio_engine/cover
  *= require datashift_audio_engine/icons
+ *= require datashift_audio_engine/cover
  *= require datashift_audio_engine/playlist
  *= require datashift_audio_engine/volume
  *= require datashift_audio_engine/player
