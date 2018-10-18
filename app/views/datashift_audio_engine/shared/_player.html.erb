@@ -12,33 +12,5 @@
 
   <%= render partial: 'datashift_audio_engine/shared/track_playlist' %>
 
-  <div class="row">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-1 datashift-audio-track-playlist">
-          <i class="material-icons view_list datashift-audio-active">view_list</i>
-        </div>
-        <div class="col-8">
-          <div class="datashift-audio-playlist-content p-1">
-            <ol class="datashift-audio-playlist p-1"></ol>
-            <div class="datashift-audio-page-selectors">
-              <ol class='datashift-audio-pages'></ol>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
-
-<% init_url = local_assigns.has_key?(:init_url) ? init_url : nil %>
-<% load_url = local_assigns.has_key?(:load_url) ? load_url : nil %>
-
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
-        datashift_audio_engine.init('<%= init_url %>');
-        datashift_audio_engine.load('<%= load_url %>');
-    });
-</script>
 

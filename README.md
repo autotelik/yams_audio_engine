@@ -2,7 +2,11 @@
 
 Audio player for Rails apps.
 
-Add an audio player partial to any page. Configure playlist via JSON.
+Add an audio player partial to any page. 
+
+Configure playlist via JSON.
+
+Receive player data vis callbacks.
 
 ## Installation
 
@@ -43,28 +47,30 @@ And then execute:
 $ bundle install
 ```
 
-and 
+### Setup 
+
+Summary - To add an audio player
+
+- Configure - includes the URLs required to initialise the player and load a playlist, or track to play.
+
+- Add player and script partials to Views
+
+- Create helper to convert your DB representation, or track listings into JSON format expected by the player.
+
+
+#### Configuration 
+
+The following variables can be used in the Javascript to configure the player.
+
+To generate a configuration block, in Rails app's initializers, you can run the following rails generator
 
 ```bash
 bundle exec rails generate datashift_audio_engine:install
 ```
 
-To add a player needs a few steps.
-
-- Configration - includes the URLs required to initialise the player and load a playlist. or track to play.
-- Add player partial to Views
-- Convert your DB representaion, or track listings into JSON format expected by the player.
-
-### Setup 
-
-#### Configuration 
-
-The following variables can be set in the Javascript 
+Each has an analogous setting in the Rails configuration block.
 
 ```
-state           - current state of player
-engine          - variable where will be spawned wave player
-
 is_radio        - true .. false
 save_interval   - in milliseconds
 
@@ -99,9 +105,11 @@ timer           - variable for management of regular actions ( save )
 
 
 #### Views 
-To add the player to any view, render the `datashift_audio_player_tag` helper 
 
-This will probably rquire you to pull in the engine's helpers in a relevant controller or ApplicationController
+To add the player to any view, render the `datashift_audio_player_tag` helper, to generate the markup,
+and the `datashift_audio_player_script` helper, to init the javascript and load JSOn defining the audio to play.
+
+To access these engine helpers, you'll probably need to pull the engine's helper module into a relevant controller or ApplicationController
 
 Controller
 
@@ -113,9 +121,11 @@ Partial
   
 ```erb
 <%= datashift_audio_player_tag %>
+
+<%= datashift_audio_player_script( load_url: "#{radio_index_url}.json" )  %>
 ```
 
-For reference, this will also insert a Javascript snippet to the view, to init and load the player
+For reference, these are the 2 Javascript calls snippet to the view, to init and load the player. Both take an optional url.
 
 ```javascript
 <script type="text/javascript" charset="utf-8">
@@ -128,8 +138,8 @@ For reference, this will also insert a Javascript snippet to the view, to init a
 
 The helper take optional urls, which will over ride the init and load urls specified in config. For example, you can specify Rails named routes
 
-```javascript
-<%= datashift_audio_player_tag(init_url: player_setp_url, load_url: "#{radio_index_url}.json")  %>
+```erb
+<%= datashift_audio_player_script(init_url: init_player__url, load_url: "#{radio_index_url}.json")  %>
 ```
 
 
