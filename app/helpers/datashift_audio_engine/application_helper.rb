@@ -5,5 +5,9 @@ module DatashiftAudioEngine
       render partial: 'datashift_audio_engine/shared/player', locals: {pin_to: pin_to}
     end
 
+    def test
+      'test'
+    end
+
   end
 end
