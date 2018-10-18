@@ -1,0 +1,16 @@
+<% style = local_assigns.has_key?(:css) ? css : 'col-9' %>
+
+<div class="<%= style %>">
+  <div class="row">
+    <div class="datashift-audio-wave-block col-12" id="waveform"></div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="row">
+        <div class="datashift-audio-current-position col-11 text-sm-left">00:00</div>
+        <div class="datashift-audio-total-duration col-1 text-sm-right pull-right">00:00</div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -16,10 +16,6 @@
 //
 
 
-// TODO are these defunct - do not seem to be used ?
-// var audio_player = document.querySelector('#datashift-audio-player');
-// var wave_controller = '';
-
 var datashift_audio_engine = {
     state: null,
     engine: null,

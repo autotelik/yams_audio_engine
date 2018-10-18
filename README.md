@@ -2,7 +2,10 @@
 
 Audio player for Rails apps.
 
-## How to install?
+Add an audio player partial to any page. Configure playlist via JSON.
+
+## Installation
+
 Add to Gemfile:
 
 ```ruby
@@ -15,7 +18,7 @@ Add to application javascript file
 //= require datashift_audio_engine/application
 ```
 
-Add to application style file
+Add the full application style file
 
 ```css
 /*
@@ -23,7 +26,7 @@ Add to application style file
  */
 ```
 
-Or
+Or bring in the individual items
 
 ```css
 /*
@@ -46,26 +49,17 @@ and
 bundle exec rails generate datashift_audio_engine:install
 ```
 
-AND
+To add a player needs a few steps.
 
-Add helper to the radio view
+- Configration - includes the URLs required to initialise the player and load a playlist. or track to play.
+- Add player partial to Views
+- Convert your DB representaion, or track listings into JSON format expected by the player.
 
-```erb
-<%= datashift_audio_player_tag %>
-```
+### Setup 
 
-and now 
-create a Javascript snippet as follows, using the load function 
-to call your Rails route and return the playlist JSON
+#### Configuration 
 
-```javascript
-$(document).ready(function(){
-    datashift_audio_engine.init();
-    datashift_audio_engine.load();
-});
-```
-
-## How to configure?
+The following variables can be set in the Javascript 
 
 ```
 state           - current state of player
@@ -103,7 +97,43 @@ audio_data: {}  - main storage of current state of player
 timer           - variable for management of regular actions ( save )
 ```
 
-# Javascript methods and call-backs
+
+#### Views 
+To add the player to any view, render the `datashift_audio_player_tag` helper 
+
+This will probably rquire you to pull in the engine's helpers in a relevant controller or ApplicationController
+
+Controller
+
+```ruby
+  helper DatashiftAudioEngine::ApplicationHelper
+```
+  
+Partial
+  
+```erb
+<%= datashift_audio_player_tag %>
+```
+
+For reference, this will also insert a Javascript snippet to the view, to init and load the player
+
+```javascript
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+        datashift_audio_engine.init();
+        datashift_audio_engine.load();
+    });
+</script">
+```
+
+The helper take optional urls, which will over ride the init and load urls specified in config. For example, you can specify Rails named routes
+
+```javascript
+<%= datashift_audio_player_tag(init_url: player_setp_url, load_url: "#{radio_index_url}.json")  %>
+```
+
+
+#### Javascript methods and call-backs
 
 Each callback should be related to a route in the main Rails app side, connected to a suitable
 controller method that can parse or store the supplied  data.
@@ -111,8 +141,7 @@ controller method that can parse or store the supplied  data.
 ## How to init?
 
 ```
-init -  it sends request during 
-        datashift_audio_engine.init() function call once 
+init -  it sends request during datashift_audio_engine.init() function call once 
         when we need to sync basic player settings possible 
         url structure 'user/get_state'
         it sends local variables of {user_token} and {client_token}
@@ -370,191 +399,7 @@ Track Controls :
 Cover image : `datashift-audio-track-cover` 
     
 #### ORIGINAL README
-    
-Routes
-    =
-    initialization: ```'init'```
-    
-    load: ```'playlist/:id.new_page'```
-    
-    radio_stream: ```'radio_data'```
-    
-    save current state: ```'save'```
-    
-    
-    setup routes
-    ===
-    
-    u can do it in current version of lib
-    just by setting
-    
-    ```javascript
-    datashift_audio_engine.routes = {
-            init_url: 'init',
-            save_url: 'save',
-    
-            radio_url: 'radio_data'
-    };
-    ```
-    
-    or separate
-    ======
-    
-    ```javascript
-        datashift_audio_engine.routes.init_url = 'init';
-        datashift_audio_engine.routes.save_url = 'save';
-        datashift_audio_engine.routes.radio_url = 'radio_data';
-    ```
-    
-    **routes for load should be set up on load phace manualy**
-    
-    JSON format
-    =
-    
-    for initialization
-    ===
-    
-    request:
-    
-```
-    {
-        user_token: 'asdf1234',
-        client_token: '4321fdsa'
-    
-        random: true,
-        audio_data: {
-                
-        },
-    }
-```
-    
-answer example:
-    
-```
-    {
-        saved: {
-            service: {
-                user_token: '1234567890',
-                client_token: '0987654321',
-            },
-    
-            audio: {
-                playlist: '1',
-                    
-                page: '1',
-                total_pages: '3',
-                    
-                track: 0,
-                position: 0,
-            }
-        },
-    }
-```
-    
-for load
-===
-    
-request:
-url: ``` 'playlist/:id.new_page' ```    
-```playlist``` - playlist controller route name
-```/:id``` - ID of loadable playlist
-```.new_page``` - number of tracks page in this playlist for load
-```
-    {
-        user_token: 'asdf1234',
-        client_token: '4321fdsa',
-    
-        random: true
-    }
-```
-    
-answer example:
-    
-```
-    {
-        playlist: 1
-        total_pages: 3,
-            
-        page: 1,
-        track: 1,
-        position: 0,
-    
-        tracks: [
-            {
-                id: 1,
-    
-                author: 'Full Name',
-                name: 'First Track Name',
-    
-                cover_image: 'http://link.to/images/1.jpeg',
-                audio_url: 'http://link.to/audio/1.mp3',
-    
-                duration: 100,
-            },
-        ]
-    }
-```
-    
-for radio
-===
-request: url: ``` 'radio_data' ```
-    
-```
-    {
-        user_token: 'asdf1234',
-        client_token: '4321fdsa',
-    }
-```
-    
-answer example:
-    
-```
-    {
-        radio: {
-            radio_url: 'http://air2.radiorecord.ru:805/rr_320',
-                
-            author: 'Full Name 3',
-            track: 'Third Track Name',
-    
-            cover_image: 'http://link.to/images/1.jpeg',
-            audio_url: 'http://link.to/audio/1.mp3',
-                
-            duration: 100,
-            position: 0,            
-        },
-    }
-```
-    
-for save
-===
-request:
-    
-``` 
-    {
-        user_token: 'asdf1234',
-        client_token: '4321fdsa'
-    
-        random: true,
-    
-        audio_data: {
-            playlist: '1',
-                    
-            page: '1',
-            total_pages: '3',
-                    
-            track: 1,
-            position: 55.5,
-        }
-    }
-```
-    
-answer example:
-    
-```
-    {
-        status: 200
-    }
-```
+
 
 #Q/A
 
