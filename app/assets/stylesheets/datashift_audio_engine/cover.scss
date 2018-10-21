@@ -1,22 +1,24 @@
 .datashift-audio-player .datashift-audio-track-cover {
     display: inline-block;
-    width: 75px;
-    height: 75px;
+    width: 120px;
+    height: 120px;
 
-    min-width: 75px;
-    min-height: 75px;
+    min-width: 120px;
+    min-height: 120px;
 
-    margin-left: 15px;
-    background-image: linear-gradient(red, grey, black);
+    background-image: linear-gradient(darkslategray, grey, black);
     box-shadow: 0px 0px 5px black;
     cursor: pointer;
 }
 
 .datashift-audio-track-cover .datashift-audio-cover-play{
   display: inline-block;
-  position: fixed; 
-  padding: 18px; 
-  font-size: 40px;
+  position: fixed;
+
+  margin: -60px 30px 30px 30px;
+
+  padding: 10px;
+  font-size: 40px;  /* determines the icon size */
 
   background-color: rgba(255, 255, 255, 0); 
   color: rgba(255, 255, 255, 0);

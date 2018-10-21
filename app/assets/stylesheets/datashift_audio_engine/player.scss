@@ -1,0 +1,50 @@
+wave {
+    max-height: 100px;
+}
+
+.datashift-audio-hide{
+  display: none !important;
+}
+
+.datashift-audio-track-controls i{
+    font-size: 40px !important;
+    padding: 5px;
+    transition: 0.25s;
+    cursor: pointer;
+}
+
+.datashift-audio-track-controls i:hover{
+    transform:rotate(360deg);
+    color: red;
+}
+
+.datashift-audio-track-basic-info {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 5px;
+}
+
+.datashift-audio-track-basic-info .datashift-audio-author-name{
+    color: grey;
+}
+
+.datashift-audio-track-basic-info *{
+    cursor: pointer;
+}
+
+.datashift-audio-track-basic-info .datashift-audio-author-name:hover{
+    text-decoration: underline;
+}
+
+.datashift-audio-track-basic-info .datashift-audio-track-name:hover{
+    text-decoration: underline;
+}
+
+.datashift-audio-current-position{
+    display: inline;
+}
+
+.datashift-audio-total-duration{
+    display: inline;
+}
+
+

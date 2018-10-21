@@ -82,6 +82,8 @@ var datashift_audio_engine = {
         // sync settings
         if (init_url != null)
             $.post( init_url, { user_token: user_token, client_token: client_token } ).done(function( pure_data ) {
+                console.log("my object: %o", pure_data)
+
                 // service
                 var data = JSON.parse(pure_data);
 
@@ -89,7 +91,7 @@ var datashift_audio_engine = {
                 self.client_token = data.saved.service.client_token;
 
                 window.localStorage.setItem('user_token', self.user_token);
-                window.localStorage.setItem('client_token', self.client_token);
+                window.localStorage.sestItem('client_token', self.client_token);
 
                 // track
                 self.audio_data.playlist = parseInt(data.saved.audio.playlist);
@@ -164,8 +166,9 @@ var datashift_audio_engine = {
             track_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-track-name'),
     
             cover_image: $('#datashift-audio-player .datashift-audio-track-cover'),
+            cover_image_img: $('#datashift-audio-track-cover-img'),
 
-            playlist: $('.datashift-audio-playlist'),
+            playlist: $('#datashift-audio-playlist'),
             waveform: $('#datashift-audio-player #waveform'),
 
             current_position: $('#datashift-audio-player .datashift-audio-current-position'),
@@ -173,7 +176,7 @@ var datashift_audio_engine = {
 
             pages: $('#datashift-audio-player .datashift-audio-pages'),
 
-            btn_playlist: $('#datashift-audio-player .datashift-audio-track-playlist .view_list'),
+            btn_toggle_playlist: $('#datashift-audio-toggle-playlist'),
         }
 
         //
@@ -196,13 +199,13 @@ var datashift_audio_engine = {
             self.next();
         });
 
-        this.visual.btn_playlist.on('click', function(){
-            if(self.visual.btn_playlist.hasClass('datashift-audio-active')){
-                self.visual.btn_playlist.removeClass('datashift-audio-active');
-                self.visual.playlist.parent().addClass('datashift-audio-hide');
+        this.visual.btn_toggle_playlist.on('click', function(){
+            if(self.visual.btn_toggle_playlist.hasClass('datashift-audio-active')){
+                self.visual.btn_toggle_playlist.removeClass('datashift-audio-active');
+                self.visual.playlist.addClass('datashift-audio-hide');
             } else {
-                self.visual.btn_playlist.addClass('datashift-audio-active');
-                self.visual.playlist.parent().removeClass('datashift-audio-hide');
+                self.visual.btn_toggle_playlist.addClass('datashift-audio-active');
+                self.visual.playlist.removeClass('datashift-audio-hide');
             }
         });
 
@@ -312,6 +315,7 @@ var datashift_audio_engine = {
                     if(data.hasOwnProperty('playlist_partial')){
                         self.visual.playlist.html(data.playlist_partial)
                     } else {
+                        // render default playlist
                         self.playlist.forEach((track, index) => {
                             var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
                             var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
@@ -413,8 +417,8 @@ var datashift_audio_engine = {
         visual_page.addClass('datashift-audio-active')
 
         this.engine.load(track.audio_url);
-        
-        this.visual.cover_image.css('background-image', 'url("'+ track.cover_image +'")');
+
+        this.visual.cover_image_img.html('<img class="img-fluid rounded" src="'+ track.cover_image +'">');
         this.visual.track_name.html(track.name);
         this.visual.author_name.html(track.author);
         
@@ -476,8 +480,8 @@ var datashift_audio_engine = {
             this.timer = setInterval(function(){
                 $.post('radio_data', { radio_url: this.radio_url }).done(function(pure_data){
                     var data = JSON.parse(pure_data);
-    
-                    datashift_audio_engine.visual.cover_image.css('background-image', 'url("'+ data.radio.cover_image +'")');
+
+                    datashift_audio_engine.visual.cover_image_img.html('<img class="img-fluid rounded" src="'+ data.radio.cover_image +'">');
                     datashift_audio_engine.visual.author_name.html(data.radio.author);
                     datashift_audio_engine.visual.track_name.html(data.radio.track);
 

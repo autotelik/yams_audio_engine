@@ -106,8 +106,9 @@ timer           - variable for management of regular actions ( save )
 
 #### Views 
 
-To add the player to any view, render the `datashift_audio_player_tag` helper, to generate the markup,
-and the `datashift_audio_player_script` helper, to init the javascript and load JSOn defining the audio to play.
+To add the player to any view, render the `datashift_audio_player_tag` helper, to generate the markup.
+
+Render the `datashift_audio_player_script` helper, to init the javascript and load JSON defining the audio to play.
 
 To access these engine helpers, you'll probably need to pull the engine's helper module into a relevant controller or ApplicationController
 
@@ -125,7 +126,7 @@ Partial
 <%= datashift_audio_player_script( load_url: "#{radio_index_url}.json" )  %>
 ```
 
-For reference, these are the 2 Javascript calls snippet to the view, to init and load the player. Both take an optional url.
+For reference, these are the 2 Javascript calls required in the view, to init and load the player. Both take an optional url.
 
 ```javascript
 <script type="text/javascript" charset="utf-8">
@@ -136,10 +137,14 @@ For reference, these are the 2 Javascript calls snippet to the view, to init and
 </script">
 ```
 
-The helper take optional urls, which will over ride the init and load urls specified in config. For example, you can specify Rails named routes
+The helper also takes these optional urls, which will over ride the init and load urls specified in config. 
+
+For example, you can specify Rails named routes
+
+> N.B Url format should be JSON
 
 ```erb
-<%= datashift_audio_player_script(init_url: init_player__url, load_url: "#{radio_index_url}.json")  %>
+<%= datashift_audio_player_script(init_url: "#{init_player_url}.json", load_url: "#{radio_index_url}.json")  %>
 ```
 
 
@@ -148,7 +153,13 @@ The helper take optional urls, which will over ride the init and load urls speci
 Each callback should be related to a route in the main Rails app side, connected to a suitable
 controller method that can parse or store the supplied  data.
 
-## How to init?
+Example route for the init callback - use the create action on an InitPlayerController
+
+```ruby
+  post 'init_player', to: 'init_player#create'
+```
+
+##### How to init?
 
 ```
 init -  it sends request during datashift_audio_engine.init() function call once 
@@ -187,17 +198,17 @@ init -  it sends request during datashift_audio_engine.init() function call once
     }
 ```
 
-## How to load?
+##### How to load?
 
-```
-load - it sends url and post characteristics of searchable playlist
+
+The load callback sends back track listing and audio uurl information.
        call once when we need to load playlist and set it into basic state on first open
        possible url structure 'playlist/:id.page' or 'audio/:id'
        request: { user_token, client_token, random }
        expected strucuture of answer:
-```
+
     
-```
+```json
     {
         user_token: '1234567890',
         client_token: '0987654321',
@@ -213,44 +224,37 @@ load - it sends url and post characteristics of searchable playlist
         tracks: [
         {
             id: '1',
-
             author: 'Full Name 1',
             name: 'First Track Name',
-
             cover_image: 'http://localhost:3000/images/1.jpeg',
             audio_url: 'http://localhost:3000/audio/1.mp3',
-
             duration: 100,
         },
-
         {
             id: '2',
-        
+      
             author: 'Full Name 2',
             name: 'Second Track Name',
-
             cover_image: 'http://localhost:3000/images/2.jpeg',
             audio_url: 'http://localhost:3000/audio/2.mp3',
-
             duration: 100,
-        },
-
-        {
-            id: '3',
-        
-            author: 'Full Name 3',
-            name: 'Third Track Name',
-
-            cover_image: 'http://localhost:3000/images/3.jpeg',
-            audio_url: 'http://localhost:3000/audio/3.mp3',
-
-            duration: 100,
-        }
+        }, etc
         ],
     }
 ```
 
-## How to get/set state (save)?
+You can also provide your own your own track listing HTML in property - `playlist_partial` - which will over ride the auto generated listing
+
+For example, in the view rendering your playlist json also render a track listing partial and assign to json property `playlist_partial`
+
+```
+# app/views/radio/index.json.jbuilder
+
+json.playlist_partial json.partial! 'my_audio_app/playlist.html.erb', locals: { tracks: @tracks }
+``````
+
+
+##### How to get/set state (save)?
 structure of user state
 
 ```
@@ -302,39 +306,21 @@ new_page -      it sends url and post characteristics of searchable playlist
         tracks: [
             {
                 id: '1',
-
                 author: 'Full Name 1',
                 name: 'First Track Name',
-
                 cover_image: 'http://localhost:3000/images/1.jpeg',
                 audio_url: 'http://localhost:3000/audio/1.mp3',
-
                 duration: 100,
             },
-
             {
                 id: '2',
-                
+               
                 author: 'Full Name 2',
                 name: 'Second Track Name',
-
                 cover_image: 'http://localhost:3000/images/2.jpeg',
                 audio_url: 'http://localhost:3000/audio/2.mp3',
-
                 duration: 100,
-            },
-
-            {
-                id: '3',
-                
-                author: 'Full Name 3',
-                name: 'Third Track Name',
-
-                cover_image: 'http://localhost:3000/images/3.jpeg',
-                audio_url: 'http://localhost:3000/audio/3.mp3',
-
-                duration: 100,
-            }
+            }, ETC
         ],
     }
 ```
@@ -364,9 +350,13 @@ radio -   it gets description of current radio state
     },
 ```
 
-## How to pin to top/bottom?
+#### Views - HTML Markup and CSS
 
-default value is TOP
+##### How to pin to top/bottom?
+
+CSS classes are available to place the player at the `top` or `bottom` of the page.
+
+Default value is TOP
 
 ```
 <%= datashift_audio_player_tag(pin_to: :top) %>
@@ -378,25 +368,21 @@ or
 <%= datashift_audio_player_tag(pin_to: :bottom) %>
 ```
 
-
-#### How to modify js/css?
-
-## How to make list own list of audio tracks?
-
-1. Get JSON list of tracks from Back-End
-2. Go through player instalation
-3. Create items based on JSON list of tracks
-4. Hang callbacks on items for play and pause btns
-    This callbacks should set state of datashif_audio.audio_data.track to id of selected one
-    set autoplay to true and call ```render_wave_from_audio_file()``` method to render player with selected audio
-    
-
-#### Views - HTML Markup and CSS
-
-CSS classes are available to place the player at the `top` or `bottom` of the page ???   
-
+ 
 ###### Key Classes
 
+To show elements :
+
+```js
+    $('#item').removeClass('datashift-audio-hide');
+ ```  
+     
+To hide :
+
+```js      
+    $('#item').addClass('datashift-audio-hide');
+```
+                      
 Track Controls :
 
 - #datashift-audio-player .play

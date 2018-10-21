@@ -1,16 +1,15 @@
-<div id="datashift-audio-player" class="col-12 datashift-audio-player datashift-audio-bar pt-2 pb-2 <%= pin_to == :top ? 'datashift-audio-top' : 'datashift-audio-bottom' %>">
+<div class="row">
+  <div id="datashift-audio-player" class="datashift-audio-player datashift-audio-bar pt-2 pb-2 col-11">
 
-  <div class="row">
-    <%= render partial: 'datashift_audio_engine/shared/track_cover' %>
+    <div id="datashift-audio-player-wrapper-row" class="row">
+      <%= render partial: 'datashift_audio_engine/shared/track_cover' %>
 
-    <%= render partial: 'datashift_audio_engine/shared/track_basic_info' %>
+      <%= render partial: 'datashift_audio_engine/shared/track_basic_info' %>
 
-    <%= render partial: 'datashift_audio_engine/shared/wave_block' %>
+      <%= render partial: 'datashift_audio_engine/shared/wave_block' %>
 
-    <%= render partial: 'datashift_audio_engine/shared/track_volume' %>
+      <%= render partial: 'datashift_audio_engine/shared/track_volume' %>
+    </div>
   </div>
-
-  <%= render partial: 'datashift_audio_engine/shared/track_playlist' %>
-
 </div>
 
