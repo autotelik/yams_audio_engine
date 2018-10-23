@@ -3,14 +3,13 @@ input[type=range][orient=vertical].datashift-audio-input-range
     writing-mode: bt-lr; /* IE */
     -webkit-appearance: slider-vertical; /* WebKit */
     width: 8px;
-    height: 75px;
-    /* padding: 0 50px; */
+    height: $cover-size;
 }
 
 .datashift-audio-player .datashift-audio-track-volume {
     display: inline-block;
     width: 3%;
-    height: 75px;
+    height: $cover-size;
 
     padding: 0px 10px;
 }
@@ -23,5 +22,5 @@ input[type=range][orient=vertical].datashift-audio-input-range
 .datashift-audio-track-volume i:hover{
   cursor: pointer;
   transform:rotate(360deg);
-  color: red;
+  color: floralwhite;
 }
