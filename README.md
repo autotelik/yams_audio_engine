@@ -16,35 +16,35 @@ Add to Gemfile:
 gem 'datashift_audio_engine'
 ```
 
-Add to application javascript file
+And then execute:
+```bash
+$ bundle install
+```
+
+Add the JS to your application javascript file
 
 ```javascript
 //= require datashift_audio_engine/application
 ```
 
-Add the full application style file
+Some basic styles are provided in SASS, import the application style file
 
-```css
+```scss
 /*
- *= require datashift_audio_engine/application
+@import "datashift_audio_engine/datashift_audio_engine";
  */
 ```
 
-Or bring in the individual items
+Or you can bring in only the individual items required
 
-```css
+```scss
 /*
- *= require datashift_audio_engine/cover
- *= require datashift_audio_engine/icons
- *= require datashift_audio_engine/playlist
- *= require datashift_audio_engine/volume
- *= require datashift_audio_engine/player
+@import "cover";
+@import "icons";
+@import "player";
+@import "playlist";
+@import "volume";
  */
-```
-
-And then execute:
-```bash
-$ bundle install
 ```
 
 ### Setup 

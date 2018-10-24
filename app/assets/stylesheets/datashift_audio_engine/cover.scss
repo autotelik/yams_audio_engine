@@ -1,5 +1,7 @@
-.datashift-audio-player .datashift-audio-track-cover {
-    display: inline-block;
+.datashift-audio-player .datashift-audio-track-cover
+{
+    text-align: center;
+
     width: $cover-size;
     height: $cover-size;
 
@@ -11,14 +13,12 @@
     cursor: pointer;
 }
 
-.datashift-audio-track-cover .datashift-audio-cover-play{
-  display: inline-block;
-  position: fixed;
+.datashift-audio-track-cover > i
+{
+  position:relative;
+  top: -#{$cover-size-median};
 
-  margin: -60px 30px 30px 30px;
-
-  padding: 10px;
-  font-size: 40px;  /* determines the icon size */
+  font-size: $cover-font-size;  /* determines the icon size */
 
   background-color: rgba(255, 255, 255, 0); 
   color: rgba(255, 255, 255, 0);

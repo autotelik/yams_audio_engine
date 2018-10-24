@@ -458,8 +458,6 @@ var datashift_audio_engine = {
             var volume = parseInt(self.visual.volume.attr('value'));
             self.visual.volume.change();
 
-            alert(self.settings.autoplay);
-
             if (self.settings.autoplay) {
                 self.play();
             }
