@@ -26,13 +26,11 @@ DatashiftAudioEngine::Configuration.call do |config|
   config.repeat  = false;
   config.volume  = 0.5;     # - 0 .. 1
 
-  # Player will report back current status to a save callback.
+  # Player will report back current status to a save callback on parent app.
   # This parameter can be used to set the interval between reports in milliseconds.
   #
   # Default is 1000 milliseconds
-  config.save_callback_interval = 1000;
-
-  config.save_interval = 1000; #  - in milliseconds
+  config.save_interval = 1000;
 
   # Waveform colors.
   #

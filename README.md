@@ -62,14 +62,6 @@ Summary - To add an audio player
 
 The following variables can be used in the Javascript to configure the player.
 
-To generate a configuration block, in Rails app's initializers, you can run the following rails generator
-
-```bash
-bundle exec rails generate datashift_audio_engine:install
-```
-
-Each has an analogous setting in the Rails configuration block.
-
 ```
 is_radio        - true .. false
 save_interval   - in milliseconds
@@ -77,9 +69,10 @@ save_interval   - in milliseconds
 routes.
     init_url    - url of action wich will authorize user and will load personalized 
                   information about player right for current user
+                  
     load_url    - url of action wich will form playlist load action with params
-    save_url    - url of action wich will controll save action
-    radio_url   - url of action wich will controll save action
+    save_url    - url of action which will manage save status callback
+    radio_url   - url of action which will manage loading a radio stream
     
 settings.
     autoplay    - true .. false
@@ -103,20 +96,45 @@ audio_data: {}  - main storage of current state of player
 timer           - variable for management of regular actions ( save )
 ```
 
+These can be set directly in Rails views, for example 
+
+```erb
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+        datashift_audio_engine.settings.autoplay = true;
+        datashift_audio_engine.save_interval = 5000;
+    });
+</script>
+```
+
+To generate a Ruby configuration block, within the host Rails app's initializers, you can run the following rails generator
+
+```bash
+bundle exec rails generate datashift_audio_engine:install
+```
+
+Each of the settable javascript settings, has an analogous setting in the Rails configuration block,
+which can be used to set defaults or global values.
+
+At some point in the flow, the Ruby value has to be assigned to the javascript audio player, for example
+
+```erb
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+   config.autoplay = false;
+        datashift_audio_engine.settings.autoplay = DatashiftAudioEngine::Configuration.call.autoplay;
+        datashift_audio_engine.save_interval = DatashiftAudioEngine::Configuration.call.save_interval;
+  });
+</script>
+```
 
 #### Views 
 
-To add the player to any view, render the `datashift_audio_player_tag` helper, to generate the markup.
+To add the player to any view :
 
-Render the `datashift_audio_player_script` helper, to init the javascript and load JSON defining the audio to play.
+- Render the `datashift_audio_player_tag` helper, to generate the player HTML markup.
 
-To access these engine helpers, you'll probably need to pull the engine's helper module into a relevant controller or ApplicationController
-
-Controller
-
-```ruby
-  helper DatashiftAudioEngine::ApplicationHelper
-```
+- Render the `datashift_audio_player_script` helper, to init the javascript and load JSON defining the audio to play.
   
 Partial
   
@@ -126,7 +144,27 @@ Partial
 <%= datashift_audio_player_script( load_url: "#{radio_index_url}.json" )  %>
 ```
 
-For reference, these are the 2 Javascript calls required in the view, to init and load the player. Both take an optional url.
+The helper takes optional urls, which will over ride the init, load and save status urls specified in config. 
+
+> N.B init and load urls format should be JSON
+
+For example, you can specify Rails named routes, with json format :
+
+```erb
+    <%= datashift_audio_player_script(init_url: "#{player_init_url}.json", load_url: "#{track_url(@track)}.json", save_url: player_status_callback_url) %>
+```
+
+To access these engine helpers, you'll probably need to pull the engine's helper module into a relevant controller or ApplicationController
+
+Add following to your Controller
+
+```ruby
+  helper DatashiftAudioEngine::ApplicationHelper
+```
+
+For reference, the `datashift_audio_player_script` generates these 2 low level Javascript calls, to init and load the player. 
+
+Both take an optional url.
 
 ```javascript
 <script type="text/javascript" charset="utf-8">
@@ -141,10 +179,10 @@ The helper also takes these optional urls, which will over ride the init and loa
 
 For example, you can specify Rails named routes
 
-> N.B Url format should be JSON
+> N.B init and load urls format should be JSON
 
 ```erb
-<%= datashift_audio_player_script(init_url: "#{init_player_url}.json", load_url: "#{radio_index_url}.json")  %>
+    <%= datashift_audio_player_script(init_url: "#{player_init_url}.json", load_url: "#{track_url(@track)}.json", save_url: player_status_callback_url) %>
 ```
 
 
@@ -153,21 +191,19 @@ For example, you can specify Rails named routes
 Each callback should be related to a route in the main Rails app side, connected to a suitable
 controller method that can parse or store the supplied  data.
 
-Example route for the init callback - use the create action on an InitPlayerController
-
-```ruby
-  post 'init_player', to: 'init_player#create'
-```
-
 ##### How to init?
 
-```
 init -  it sends request during datashift_audio_engine.init() function call once 
         when we need to sync basic player settings possible 
         url structure 'user/get_state'
         it sends local variables of {user_token} and {client_token}
         and should obtain JSON with sync data of player
         The structure of answer is:
+
+Example route for the init callback - use the create action on an InitPlayerController
+
+```ruby
+  post 'init_player', to: 'init_player#create'
 ```
 
 ```
@@ -199,7 +235,6 @@ init -  it sends request during datashift_audio_engine.init() function call once
 ```
 
 ##### How to load?
-
 
 The load callback sends back track listing and audio uurl information.
        call once when we need to load playlist and set it into basic state on first open
@@ -254,8 +289,9 @@ json.playlist_partial json.partial! 'my_audio_app/playlist.html.erb', locals: { 
 ``````
 
 
-##### How to get/set state (save)?
-structure of user state
+##### How to get current state - save callback ?
+
+Structure of user state
 
 ```
     request: {

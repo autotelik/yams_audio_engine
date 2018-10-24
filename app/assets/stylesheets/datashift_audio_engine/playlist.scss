@@ -25,7 +25,6 @@
 
 .datashift-audio-playlist-content{
   display: inline-block;
-  background-color: white;
   box-shadow: 0px 0px 5px black;
 }
 
@@ -42,15 +41,12 @@
 
 .datashift-audio-playlist li *{
   display: inline-block;
-  font-size: 16px !important;
   padding-left: 5px;
   cursor: pointer;
 }
 
 .datashift-audio-playlist li .datashift-audio-duration{
   color: white;
-  background-color: black;
-  
   padding: 0px 10px;
 }
 

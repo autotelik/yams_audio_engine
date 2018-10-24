@@ -14,7 +14,7 @@ module DatashiftAudioEngine
         copy_file File.join(css_path, "cover.scss"),    File.join(css_path, "cover.scss")
         copy_file File.join(css_path, "icons.scss"),    File.join(css_path, "icons.scss")
         copy_file File.join(css_path, "player.scss"),   File.join(css_path, "player.scss")
-        copy_file File.join(css_path, "playlist.css"), File.join(css_path, "playlist.scss")
+        copy_file File.join(css_path, "playlist.scss"), File.join(css_path, "playlist.scss")
         copy_file File.join(css_path, "volume.scss"),   File.join(css_path, "volume.scss")
 
         # TODO: Append to application.js

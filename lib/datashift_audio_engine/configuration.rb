@@ -20,11 +20,31 @@ module DatashiftAudioEngine
     # Default is 1000 milliseconds
     # @return [Number]
     #
-    attr_accessor :save_callback_interval
+    attr_accessor :save_interval
+
+    # @param [Boolean] Shuffle playlist, on/off.
+    #
+    # @return [Boolean]
+    #
+    attr_accessor :random
+
+    # @param [Boolean] Repeat current track, on/off.
+    #
+    # @return [Boolean]
+    attr_accessor :repeat
+
+    # @param [Number] Volume level, min to max, 0 .. 1
+    #
+    # @return [Number]
+    attr_accessor :volume
+
 
     def initialize
       @autoplay = false
+      @random = false
+      @repeat = false
       @save_callback_interval = 1000
+      @volume = 0.5
     end
 
     # @return [DatashiftAudioEngine::Configuration] DataShift's current configuration
