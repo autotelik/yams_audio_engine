@@ -323,7 +323,6 @@ var datashift_audio_engine = {
                         random: this.settings.random
                     }
                 }).done(function( pure_data ) {
-                console.log(pure_data);
 
                 var data = pure_data;
 
@@ -331,7 +330,9 @@ var datashift_audio_engine = {
 
                 if(!data.hasOwnProperty('disable_playlist')) {
                     if (data.hasOwnProperty('playlist_partial')) {
+                        // TOOD: Probably a cecurity hole ? How can se safely render this on the Rails side but return to this Ajax call  ??
                         self.visual.playlist.html(data.playlist_partial)
+                        console.log('rendered supplied playlist partial');
                     } else {
                         // render default playlist
                         self.playlist.forEach((track, index) => {
@@ -341,9 +342,10 @@ var datashift_audio_engine = {
                             var track_set = duration + full_name;
                             self.visual.playlist.append('<li id="track-' + index + '" >' + track_set + '</li>');
                         });
+                        self.state = 'created playlist';
+                        console.log(self.state);
                     }
-                    self.state = 'playlist loaded';
-                    console.log(self.state);
+
                 }
 
                 datashift_audio_engine.visual.playlist.children('li').on('click', function(){
@@ -428,6 +430,8 @@ var datashift_audio_engine = {
         });
 
         var track = this.playlist[this.audio_data.track];
+
+        console.info("Rendering wav for Track");
 
         this.visual.playlist.children('.datashift-audio-playlist li').removeClass('datashift-audio-active');
         var visual_track = $('#track-' + this.audio_data.track);

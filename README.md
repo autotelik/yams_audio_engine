@@ -121,7 +121,6 @@ At some point in the flow, the Ruby value has to be assigned to the javascript a
 ```erb
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
-   config.autoplay = false;
         datashift_audio_engine.settings.autoplay = DatashiftAudioEngine::Configuration.call.autoplay;
         datashift_audio_engine.save_interval = DatashiftAudioEngine::Configuration.call.save_interval;
   });
