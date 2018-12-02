@@ -43,7 +43,7 @@ module DatashiftAudioEngine
       @autoplay = false
       @random = false
       @repeat = false
-      @save_callback_interval = 1000
+      @save_interval = 1000
       @volume = 0.5
     end
 

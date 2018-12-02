@@ -49,180 +49,44 @@ var datashift_audio_engine = {
 
     timer: null,
 
-    init: function(init_url = null){
-        if (init_url == null) init_url = this.routes.init_url;
-        //
-        // Load data from local storage first time
-        //
-        var self = this;
+    default_init_state: function() {
+        var _this = this;
 
-        // service
-        var user_token = window.localStorage.getItem('user_token');
-        var client_token = window.localStorage.getItem('client_token');
+        _this.audio_data.playlist = -1;
+        _this.audio_data.page = 0;
+        _this.audio_data.track = 0;
+        _this.audio_data.position = 0;
 
-        // player
-        var autoplay = window.localStorage.getItem('autoplay');
-        var random = window.localStorage.getItem('random');
-        var repeat = window.localStorage.getItem('repeat');
-        var volume = parseFloat(window.localStorage.getItem('volume'));
-
-        if (isNaN(volume)) volume = 1;
-
-        // normalize player settings
-        this.settings.autoplay = (autoplay == 'true');
-        this.settings.random = (random == 'true');
-        this.settings.repeat = repeat;
-        this.settings.volume = volume;
-
-        //
-        // Update settings
-        //
-
-        // sync settings
-        if (init_url != null)
-            $.ajax(
-                {
-                    method: "POST",
-                    url: init_url,
-                    type: "script",
-                    data: {
-                        user_token: this.user_token,
-                        client_token: this.client_token
-                    }
-                }).done(function( json_data ) {
-
-                var data = json_data;
-
-                console.log("In INIT - JSON:");
-                console.log(data);
-                self.user_token = data.saved.service.user_token;
-                self.client_token = data.saved.service.client_token;
-
-                window.localStorage.setItem('user_token', self.user_token);
-                window.localStorage.setItem('client_token', self.client_token);
-
-                // routes
-                if (data.routes) {
-                    if (data.routes.save_url) datashift_audio_engine.routes.save_url = data.routes.save_url;
-                    console.log('SET save_current_state - URL:');
-                    console.log(datashift_audio_engine.routes.save_url);
-                }
-
-                // track
-                if (data.saved.audio) {
-                    self.audio_data.playlist = parseInt(data.saved.audio.playlist);
-                    self.audio_data.page = parseInt(data.saved.audio.page);
-                    self.audio_data.total_pages = parseInt(data.saved.audio.total_pages);
-                    self.audio_data.track = parseInt(data.saved.audio.track);
-                    self.audio_data.position = parseFloat(data.saved.audio.position);
-                }
-
-                if (self.audio_data.playlist == null || self.audio_data.playlist == NaN) self.audio_data.playlist = 0;
-                if (self.audio_data.page == null || self.audio_data.page == NaN) self.audio_data.page = 0;
-                if (self.audio_data.total_pages == null || self.audio_data.total_pages == NaN) self.audio_data.total_pages = 0;
-                if (self.audio_data.track == null || self.audio_data.track == NaN) self.audio_data.track = 0;
-                if (self.audio_data.position == null || self.audio_data.position == NaN) self.audio_data.position = 0;
-
-                self.waveform_colors = {
-                    wave_color: data.saved.waveform_colors.wave_color,
-                    progress_color: data.saved.waveform_colors.progress_color,
-                    cursor_color: data.saved.waveform_colors.cursor_color,
-                    bar_width: data.saved.waveform_colors.bar_width,
-                }
-
-                self.state = 'inited';
-                console.log(self.state);
-            }).fail(function(){
-                self.audio_data.playlist = -1;
-                self.audio_data.page = 0;
-                self.audio_data.track = 0;
-                self.audio_data.position = 0;
-
-                self.waveform_colors = {
-                    wave_color: 'grey',
-                    progress_color: 'white',
-                    cursor_color: '#dafcff',
-                    bar_width: 2,
-                }
-
-                self.state = 'fail inited';
-                console.error(self.state);
-            });
-        else {
-            self.audio_data.playlist = -1;
-            self.audio_data.page = 0;
-            self.audio_data.track = 0;
-            self.audio_data.position = 0;
-
-            self.waveform_colors = {
-                wave_color: 'grey',
-                progress_color: 'white',
-                cursor_color: '#dafcff',
-                bar_width: 2,
-            }
-
-            self.state = 'init url not found';
-            console.info(self.state);
+        _this.waveform_colors = {
+            wave_color: 'grey',
+            progress_color: 'white',
+            cursor_color: '#dafcff',
+            bar_width: 2,
         }
+    },
 
 
+    // Player Events
+    //
+    assign_events_to_controls: function() {
+        var _this = this;
 
-        //
-        // Visual update
-        //
-        this.visual = {
-            play: $('#datashift-audio-player .play'),
-            pause: $('#datashift-audio-player .pause'),
-
-            prev: $('#datashift-audio-player .datashift-audio-track-controls .previous'),
-            next: $('#datashift-audio-player .datashift-audio-track-controls .next'),
-
-            volume: $('#datashift-audio-player .datashift-audio-track-volume input[type=range].datashift-audio-input-range'),
-
-            author_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-author-name'),
-            track_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-track-name'),
-
-            cover_image: $('#datashift-audio-player .datashift-audio-track-cover'),
-            cover_image_img: $('#datashift-audio-track-cover-img'),
-
-            playlist: $('#datashift-audio-playlist'),
-            waveform: $('#datashift-audio-player #waveform'),
-
-            current_position: $('#datashift-audio-player .datashift-audio-current-position'),
-            total_duration: $('#datashift-audio-player .datashift-audio-total-duration'),
-
-            pages: $('#datashift-audio-player .datashift-audio-pages'),
-
-            btn_toggle_playlist: $('#datashift-audio-toggle-playlist'),
-        }
-
-        //
-        // Events
-        //
-
-        this.visual.play.on('click', function(){
-            self.play();
+        _this.visual.play.on('click', function(){
+            _this.play();
         });
 
-        this.visual.pause.on('click', function(){
-            self.pause();
+        _this.visual.pause.on('click', function(){
+            _this.pause();
         });
 
-        this.visual.prev.on('click', function(){
-            self.previous();
-        });
+        _this.visual.btn_toggle_playlist.on('click', function(){
 
-        this.visual.next.on('click', function(){
-            self.next();
-        });
-
-        this.visual.btn_toggle_playlist.on('click', function(){
-            if(self.visual.btn_toggle_playlist.hasClass('datashift-audio-active')){
-                self.visual.btn_toggle_playlist.removeClass('datashift-audio-active');
-                self.visual.playlist.addClass('datashift-audio-hide');
+            if(_this.visual.btn_toggle_playlist.hasClass('datashift-audio-active')){
+                _this.visual.btn_toggle_playlist.removeClass('datashift-audio-active');
+                _this.visual.playlist.addClass('datashift-audio-hide');
             } else {
-                self.visual.btn_toggle_playlist.addClass('datashift-audio-active');
-                self.visual.playlist.removeClass('datashift-audio-hide');
+                _this.visual.btn_toggle_playlist.addClass('datashift-audio-active');
+                _this.visual.playlist.removeClass('datashift-audio-hide');
             }
         });
 
@@ -276,30 +140,156 @@ var datashift_audio_engine = {
             }
         });
 
-        this.visual.volume.on('input change', function(update = true) {
-            if(this.value >= 75) {
+        _this.visual.volume.on('input change', function(update = true) {
+            if(_this.value >= 75) {
                 $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
                 $('.datashift-audio-track-volume i.volume_up').removeClass('datashift-audio-hide')
             }
 
-            if(this.value >= 50 && this.value < 75) {
+            if(_this.value >= 50 && _this.value < 75) {
                 $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
                 $('.datashift-audio-track-volume i.volume_down').removeClass('datashift-audio-hide')
             }
 
-            if(this.value >= 25 && this.value < 50) {
+            if(_this.value >= 25 && _this.value < 50) {
                 $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
                 $('.datashift-audio-track-volume i.volume_mute').removeClass('datashift-audio-hide')
             }
 
-            if(this.value == 0) {
+            if(_this.value == 0) {
                 $('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
                 $('.datashift-audio-track-volume i.volume_off').removeClass('datashift-audio-hide')
             }
 
             if (update)
-                datashift_audio_engine.volume(this.value / 100.0);
+                datashift_audio_engine.volume(_this.value / 100.0);
         });
+    },
+
+    init: function(init_url = null){
+        if (init_url == null) init_url = this.routes.init_url;
+        //
+        // Load data from local storage first time
+        //
+        var self = this;
+
+        // service
+        var user_token = window.localStorage.getItem('user_token');
+        var client_token = window.localStorage.getItem('client_token');
+
+        // player
+        var autoplay = window.localStorage.getItem('autoplay');
+        var random = window.localStorage.getItem('random');
+        var repeat = window.localStorage.getItem('repeat');
+        var volume = parseFloat(window.localStorage.getItem('volume'));
+
+        if (isNaN(volume)) volume = 1;
+
+        // normalize player settings
+        this.settings.autoplay = (autoplay == 'true');
+        this.settings.random = (random == 'true');
+        this.settings.repeat = repeat;
+        this.settings.volume = volume;
+
+        //
+        // Update settings
+        //
+        if (init_url != null)
+            $.ajax(
+                {
+                    method: "POST",
+                    url: init_url,
+                    type: "script",
+                    data: {
+                        user_token: this.user_token,
+                        client_token: this.client_token
+                    }
+                }).done(function( json_data ) {
+
+                var data = json_data;
+
+                console.log("Call to " + init_url + " SUCCESS - JSON:");
+                console.log(data);
+
+                if(data.saved.service) {
+                    self.user_token = data.saved.service.user_token;
+                    self.client_token = data.saved.service.client_token;
+
+                    window.localStorage.setItem('user_token', self.user_token);
+                    window.localStorage.setItem('client_token', self.client_token);
+                }
+
+                // routes
+                if(data.routes) {
+                    if (data.routes.save_url) datashift_audio_engine.routes.save_url = data.routes.save_url;
+                    if (data.routes.save_interval) datashift_audio_engine.save_interval = data.routes.save_interval;
+                    console.log('CALLBACK - save_current_state - URL:' + datashift_audio_engine.routes.save_url);
+                }
+
+                // track
+                if (data.saved.audio) {
+                    self.audio_data.playlist = parseInt(data.saved.audio.playlist);
+                    self.audio_data.page = parseInt(data.saved.audio.page);
+                    self.audio_data.total_pages = parseInt(data.saved.audio.total_pages);
+                    self.audio_data.track = parseInt(data.saved.audio.track);
+                    self.audio_data.position = parseFloat(data.saved.audio.position);
+                }
+
+                if (self.audio_data.playlist == null || self.audio_data.playlist == NaN) self.audio_data.playlist = 0;
+                if (self.audio_data.page == null || self.audio_data.page == NaN) self.audio_data.page = 0;
+                if (self.audio_data.total_pages == null || self.audio_data.total_pages == NaN) self.audio_data.total_pages = 0;
+                if (self.audio_data.track == null || self.audio_data.track == NaN) self.audio_data.track = 0;
+                if (self.audio_data.position == null || self.audio_data.position == NaN) self.audio_data.position = 0;
+
+                self.waveform_colors = {
+                    wave_color: data.saved.waveform_colors.wave_color,
+                    progress_color: data.saved.waveform_colors.progress_color,
+                    cursor_color: data.saved.waveform_colors.cursor_color,
+                    bar_width: data.saved.waveform_colors.bar_width,
+                }
+
+            }).fail(function(){
+                self.default_init_state();
+
+                self.state = 'fail inited';
+                console.error(self.state);
+            });
+        else {
+            self.default_init_state();
+
+            self.state = 'init url not found';
+            console.info(self.state);
+        }
+
+        // Assign element IDs for controls to Visual
+        //
+        this.visual = {
+            play: $('#datashift-audio-player .play'),
+            pause: $('#datashift-audio-player .pause'),
+
+            prev: $('#datashift-audio-player .datashift-audio-track-controls .previous'),
+            next: $('#datashift-audio-player .datashift-audio-track-controls .next'),
+
+            volume: $('#datashift-audio-player .datashift-audio-track-volume input[type=range].datashift-audio-input-range'),
+
+            author_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-author-name'),
+            track_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-track-name'),
+
+            cover_image: $('#datashift-audio-player .datashift-audio-track-cover'),
+            cover_image_img: $('#datashift-audio-track-cover-img'),
+
+            playlist: $('#datashift-audio-playlist'),
+            waveform: $('#datashift-audio-player #waveform'),
+
+            current_position: $('#datashift-audio-player .datashift-audio-current-position'),
+            total_duration: $('#datashift-audio-player .datashift-audio-total-duration'),
+
+            pages: $('#datashift-audio-player .datashift-audio-pages'),
+
+            btn_toggle_playlist: $('#datashift-audio-toggle-playlist'),
+        }
+
+        self.assign_events_to_controls();
     },
 
     // LOAD DATA
@@ -330,7 +320,7 @@ var datashift_audio_engine = {
 
                 if(!data.hasOwnProperty('disable_playlist')) {
                     if (data.hasOwnProperty('playlist_partial')) {
-                        // TOOD: Probably a cecurity hole ? How can se safely render this on the Rails side but return to this Ajax call  ??
+                        // TOOD: Probably a Security hole ? How can se safely render this on the Rails side but return to this Ajax call  ??
                         self.visual.playlist.html(data.playlist_partial)
                         console.log('rendered supplied playlist partial');
                     } else {
@@ -348,6 +338,7 @@ var datashift_audio_engine = {
 
                 }
 
+                // Add On click event handler to each item in Playlist
                 datashift_audio_engine.visual.playlist.children('li').on('click', function(){
                     datashift_audio_engine.audio_data.track = parseInt(this.id.split('-')[1]);
                     datashift_audio_engine.settings.autoplay = true;
@@ -361,6 +352,7 @@ var datashift_audio_engine = {
                     $('.page-selectors .pages').append('<li id="page-'+ counter +'" >' + counter + '</li>')
                 }
 
+                // TODO - this url probably should not be hard coded but got from routes ??
                 datashift_audio_engine.visual.pages.children('li').on('click', function(){
                     datashift_audio_engine.audio_data.page = parseInt(this.id.split('-')[1]);
                     var next_page = parseInt(this.id.split('-')[1]);
@@ -386,10 +378,8 @@ var datashift_audio_engine = {
                 if (self.audio_data.track == null || self.audio_data.track == NaN) self.audio_data.track = 0;
                 if (self.audio_data.position == null || self.audio_data.position == NaN) self.audio_data.position = 0;
 
-                self.state = 'rendering_wave_from_audio_file';
-                console.log(self.state);
-
                 self.render_wave_from_audio_file()
+
             }).fail(function(){
                 self.playlist = [];
                 self.state = 'fail playlist loaded';
@@ -408,11 +398,12 @@ var datashift_audio_engine = {
 
     // Render audio wave from audio file or pure data
     render_wave_from_audio_file: function(){
-        // clear
+
         this.visual.waveform.html('');
 
         if( this.engine != null )
             this.engine.destroy();
+
         clearInterval(this.timer);
 
         this.is_radio = false;
@@ -431,7 +422,7 @@ var datashift_audio_engine = {
 
         var track = this.playlist[this.audio_data.track];
 
-        console.info("Rendering wav for Track");
+        this.engine.load(track.audio_url);
 
         this.visual.playlist.children('.datashift-audio-playlist li').removeClass('datashift-audio-active');
         var visual_track = $('#track-' + this.audio_data.track);
@@ -441,13 +432,8 @@ var datashift_audio_engine = {
         var visual_page = $('#page-' + this.audio_data.page);
         visual_page.addClass('datashift-audio-active')
 
-        this.engine.load(track.audio_url);
-
-        this.visual.cover_image_img.html('<img class="img-fluid rounded" src="'+ track.cover_image +'">');
-        this.visual.track_name.html(track.name);
-        this.visual.author_name.html(track.author);
-
         var self = this;
+
         this.engine.on('ready', function(){
             self.audio_data.position = 0;
             self.seek(self.audio_data.position);
@@ -473,9 +459,15 @@ var datashift_audio_engine = {
                 console.log('track finished');
             })
 
-            self.state = 'loaded';
             console.log(self.state);
         });
+
+        this.visual.cover_image_img.html('<img class="img-fluid rounded" src="'+ track.cover_image +'">');
+        this.visual.track_name.html(track.name);
+        this.visual.author_name.html(track.author);
+
+        self.state = 'render_wave_from_audio_file complete';
+        console.log(self.state);
     },
 
     render_wave_from_pure_data: function(url = null){
@@ -484,6 +476,7 @@ var datashift_audio_engine = {
         // adapt data for render and play
         this.visual.waveform.html('');
         this.is_radio = true;
+
         this.visual.prev.addClass('datashift-audio-hide');
         this.visual.next.addClass('datashift-audio-hide');
         this.routes.radio_url = url;
@@ -495,10 +488,18 @@ var datashift_audio_engine = {
 
     // MAIN AUDIO CONTROLS
     play: function() {
+
+        console.info("START PLAY");
         this.visual.play.addClass('datashift-audio-hide');
+
         this.visual.pause.removeClass('datashift-audio-hide');
+        this.visual.prev.removeClass('datashift-audio-hide');
+        this.visual.next.removeClass('datashift-audio-hide');
+
+        console.info("CHECK RADIO");
 
         if (this.is_radio == false) {
+            console.log('PLAY - Save Callback every - ' + this.save_interval + ' ms');
             this.audio_data.autoplay = true;
             this.timer = setInterval(this.save_current_state, this.save_interval);
         } else {
@@ -524,7 +525,7 @@ var datashift_audio_engine = {
                 });
             }, 1000);
         }
-
+        console.log('Calling Engine Play');
         this.engine.play();
     },
 
@@ -554,7 +555,7 @@ var datashift_audio_engine = {
             this.save_current_state();
         } else {
             if (this.audio_data.page > 1)
-                this.new_page('playlist/:id.new_page', false);
+                this.new_page('playlist/:id.new_page', false); // TODO surely this should come from routes not hard coded ?
         }
     },
 

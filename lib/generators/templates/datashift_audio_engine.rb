@@ -1,6 +1,6 @@
 # Use this hook to configure datashift_audio_engine audio engine processing
 
-DatashiftAudioEngine::Configuration.call do |config|
+DatashiftAudioEngine::Configuration.configure do |config|
 
   # routes
   #
