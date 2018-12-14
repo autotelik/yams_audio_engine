@@ -10,15 +10,16 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- * require_tree .
- *
- *= require datashift_audio_engine/cover
- *= require datashift_audio_engine/icons
- *= require datashift_audio_engine/playlist
- *= require datashift_audio_engine/volume
- *= require datashift_audio_engine/player
- *= require_self
  */
+@import "bootstrap";
 
- /* fallback */
+$cover-size: 120px;
+$cover-font-size: 60px;
+$cover-size-median: 90px; /* center the icon (given by font size) in the image : (size - font/2) */
+
+@import "cover";
+@import "icons";
+@import "player";
+@import "playlist";
+@import "volume";
 

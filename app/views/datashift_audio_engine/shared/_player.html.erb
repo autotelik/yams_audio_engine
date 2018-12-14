@@ -1,60 +1,15 @@
-<div id="datashift-audio-player" class="col-12 datashift-audio-player datashift-audio-bar pt-2 pb-2 <%= pin_to == :top ? 'datashift-audio-top' : 'datashift-audio-bottom' %>">
+<div class="row">
+  <div id="datashift-audio-player" class="datashift-audio-player datashift-audio-bar ml-4 mr-4 pt-2 pb-2 col-12">
 
-  <div class="row">
+    <div id="datashift-audio-player-wrapper-row" class="row">
+      <%= render partial: 'datashift_audio_engine/shared/track_cover' %>
 
-    <div class="col-1">
-      <div class="datashift-audio-track-cover">
-        <i class="material-icons datashift-audio-cover-play play" >play_circle_outline</i>
-        <i class="material-icons datashift-audio-cover-play pause datashift-audio-hide">pause_circle_outline</i>
-      </div>
-    </div>
+      <%= render partial: 'datashift_audio_engine/shared/track_basic_info' %>
 
-    <div class="col-1">
-      <div class="datashift-audio-track-basic-info text-small">
-        <div class="datashift-audio-track-name">Current Track Name</div>
-        <div class="datashift-audio-author-name">Author Name</div>
-      </div>
-    </div>
+      <%= render partial: 'datashift_audio_engine/shared/wave_block' %>
 
-    <div class="col-9">
-      <div class="row">
-        <div class="datashift-audio-wave-block col-12" id="waveform"></div>
-      </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="row">
-            <div class="datashift-audio-current-position col-11 text-sm-left">00:00</div>
-            <div class="datashift-audio-total-duration col-1 text-sm-right pull-right">00:00</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-1 datashift-audio-track-volume p-0 pull-right">
-      <input type="range" orient="vertical" min="0" max="100" value="100" step="1" class="datashift-audio-input-range" />
-      <i class="material-icons volume_up">volume_up</i>
-      <i class="material-icons volume_down datashift-audio-hide">volume_down</i>
-      <i class="material-icons volume_mute datashift-audio-hide">volume_mute</i>
-      <i class="material-icons volume_off  datashift-audio-hide">volume_off</i>
+      <%= render partial: 'datashift_audio_engine/shared/track_volume' %>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-1 datashift-audio-track-playlist">
-          <i class="material-icons view_list datashift-audio-active">view_list</i>
-        </div>
-        <div class="col-8">
-          <div class="datashift-audio-playlist-content p-1">
-            <ol class="datashift-audio-playlist p-1"></ol>
-            <div class="datashift-audio-page-selectors">
-              <ol class='datashift-audio-pages'></ol>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
+

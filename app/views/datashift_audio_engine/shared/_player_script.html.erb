@@ -1,0 +1,16 @@
+<script type="text/javascript" charset="utf-8">
+    $(document).ready(function(){
+
+      <% if local_assigns.has_key?(:init_url) %>
+        datashift_audio_engine.init('<%= init_url %>');
+      <% else %>
+        datashift_audio_engine.init();
+      <% end unless local_assigns.has_key?(:skip_init) && skip_init.present? %>
+
+      <% if local_assigns.has_key?(:load_url) %>
+        datashift_audio_engine.load('<%= load_url %>');
+      <% else %>
+        datashift_audio_engine.load();
+      <% end %>
+    });
+</script>
