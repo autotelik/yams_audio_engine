@@ -1,0 +1,29 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/home/user/projects/datashift_audio_engine/lib/datashift_audio_engine.rb": [
+        1,
+        null,
+        0,
+        null,
+        null
+      ],
+      "/home/user/projects/datashift_audio_engine/lib/datashift_audio_engine/engine.rb": [
+        1,
+        1,
+        0,
+        null,
+        null,
+        0,
+        null,
+        0,
+        0,
+        null,
+        0,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1542973922
+  }
+}

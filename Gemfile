@@ -13,3 +13,19 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
+group :development, :test do
+  gem 'byebug'
+
+  gem 'ffaker'
+  gem 'rspec-rails', '~> 3.4'
+  gem 'coffee-rails'
+  
+  gem 'teaspoon-jasmine'
+  gem 'teaspoon-mocha'
+  gem 'teaspoon-qunit'
+
+  gem 'jquery-rails'
+  
+  gem 'codeclimate-test-reporter', '~> 1.0.0'
+  gem 'simplecov'
+end
