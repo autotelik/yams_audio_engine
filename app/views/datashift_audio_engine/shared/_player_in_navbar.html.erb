@@ -1,8 +1,5 @@
-<%= content_for 'audio_player_in_navbar' do %>
-  <ul id="navbar-audio-player" class="navbar-nav nav-fill w-100">
-    <li class="nav-item">
-      <%= datashift_audio_player_tag %>
-      <%= datashift_audio_player_script(init_url: init_url, load_url: load_url)  %>
-    </li>
-  </ul>
-<% end %>
+<ul id="navbar-audio-player" class="navbar-nav nav-fill w-100">
+  <li class="nav-item">
+    <%= render partial: 'datashift_audio_engine/shared/player' %>
+  </li>
+</ul>
