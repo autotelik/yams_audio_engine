@@ -52,6 +52,61 @@ var datashift_audio_engine = {
 
     timer: null,
 
+    init_player: function(json_data)
+    {
+        var self = this;
+
+        datashift_audio_engine.default_init_state();
+
+        datashift_audio_engine.assign_events_to_controls();
+
+        var data = JSON.parse(json_data);
+
+        // Service
+        if (data.datashift_audio.service) {
+            self.user_token = data.datashift_audio.service.user_token;
+            self.client_token = data.datashift_audio.service.client_token;
+        }
+
+        // Routes
+        if (data.routes) {
+            if (data.routes.save_url) datashift_audio_engine.routes.save_url = data.routes.save_url;
+            if (data.routes.save_interval) datashift_audio_engine.save_interval = data.routes.save_interval;
+            console.log('CALLBACK - save_current_state - URL:' + datashift_audio_engine.routes.save_url);
+        }
+
+        // Track
+        if (data.datashift_audio.audio) {
+            self.audio_data.playlist = parseInt(data.datashift_audio.audio.playlist);
+            self.audio_data.page = parseInt(data.datashift_audio.audio.page);
+            self.audio_data.total_pages = parseInt(data.datashift_audio.audio.total_pages);
+            self.audio_data.track = parseInt(data.datashift_audio.audio.track);
+            self.audio_data.position = parseFloat(data.datashift_audio.audio.position);
+
+            datashift_audio_engine.validate_audio_data();
+        }
+
+        // Settings
+        let settings = data.datashift_audio.settings;
+
+        if(settings) {
+            datashift_audio_engine.settings.autoplay = settings.autoplay;
+        }
+
+        // Waveform
+        let waveform = data.datashift_audio.waveform;
+
+        if(waveform) {
+            self.waveform_colors = {
+                wave_color: waveform.wave_color,
+                progress_color: waveform.progress_color,
+                cursor_color: waveform.cursor_color,
+                bar_width: waveform.bar_width,
+            }
+        }
+
+    },
+
     init: function(init_url = null)
     {
         if (init_url == null) init_url = this.routes.init_url;
@@ -133,14 +188,17 @@ var datashift_audio_engine = {
 
     // LOAD DATA
     //
-    // ajax request to back-end to get data about track/playlist/radio 
+    // Ajax request to back-end to get data about track/playlist/radio
     // and save it to local variables
     //
     load: function(load_url = null, is_new = false) {
+
         if (load_url == null) load_url = this.routes.load_url;
+
         var self = this;
 
         if (load_url !=  null) {
+            console.log("CALL LOAD URL FOR AUDIO", Date.now);
             $.ajax(
                 {
                     method: "GET",
@@ -151,13 +209,14 @@ var datashift_audio_engine = {
                         client_token: this.client_token,
                         random: this.settings.random
                     }
-                }).done(function( pure_data ) {
-
-                var data = pure_data;
+                }).done(function( data ) {
 
                 self.playlist = data.tracks;
 
-                if(!data.hasOwnProperty('disable_playlist')) {
+               /* To improve user experience with load times , Rendering the Playlist - should not be part of
+                Audio LOAD - probably best after first waveform been rendered
+
+               if(!data.hasOwnProperty('disable_playlist')) {
                     if (data.hasOwnProperty('playlist_partial')) {
                         // TOOD: Probably a Security hole ? How can se safely render this on the Rails side but return to this Ajax call  ??
                         self.visual.playlist.html(data.playlist_partial)
@@ -216,9 +275,14 @@ var datashift_audio_engine = {
                 if (self.audio_data.total_pages == null || self.audio_data.total_pages == NaN) self.audio_data.total_pages = 0;
                 if (self.audio_data.track == null || self.audio_data.track == NaN) self.audio_data.track = 0;
                 if (self.audio_data.position == null || self.audio_data.position == NaN) self.audio_data.position = 0;
+*/
+                // render the first track in the playlist audio engine
+                self.render_wave_from_audio_file(self.playlist[0])
 
-                // Finially render the audio engine
-                self.render_wave_from_audio_file()
+                if (data.hasOwnProperty('playlist_partial')) {
+                    // Replace the visual HTML playlist with supplied HTML from Rails side
+                    self.visual.playlist.html(data.playlist_partial)
+                }
 
             }).fail(function(){
                 self.playlist = [];
@@ -237,7 +301,7 @@ var datashift_audio_engine = {
     },
 
     // Render audio wave from audio file or pure data
-    render_wave_from_audio_file: function(){
+    render_wave_from_audio_file: function(track){
 
         this.visual.waveform.html('');
 
@@ -257,13 +321,14 @@ var datashift_audio_engine = {
             progressColor: this.waveform_colors.progress_color,
             cursorColor: this.waveform_colors.cursor_color,
             barWidth: 3,
-            hideScrollbar: true
+            hideScrollbar: true,
+            backend: 'MediaElement'
         });
-
-        var track = this.playlist[this.audio_data.track];
 
         console.log("Loading Audio Engine with " + track.audio_url)
         this.engine.load(track.audio_url);
+
+        /* TODO seperate wave/audio rendering from playlist
 
         this.visual.playlist.children('.datashift-audio-playlist li').removeClass('datashift-audio-active');
         var visual_track = $('#track-' + this.audio_data.track);
@@ -272,7 +337,7 @@ var datashift_audio_engine = {
         this.visual.pages.children('li').removeClass('datashift-audio-active');
         var visual_page = $('#page-' + this.audio_data.page);
         visual_page.addClass('datashift-audio-active')
-
+*/
         var self = this;
 
         this.engine.on('ready', function(){
@@ -289,7 +354,7 @@ var datashift_audio_engine = {
             self.controls.volume.get(0).value = self.settings.volume * 100;
             self.controls.volume.attr('value',  self.settings.volume * 100);
 
-            var volume = parseInt(self.controls.volume.attr('value'));
+            //var volume = parseInt(self.controls.volume.attr('value'));
             self.controls.volume.change();
 
             if (self.settings.autoplay) {
@@ -301,7 +366,7 @@ var datashift_audio_engine = {
                 self.save_current_state();
                 clearInterval(self.timer);
                 self.next();
-                console.log('track finished');
+                console.log('Track finished');
             })
         });
 

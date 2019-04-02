@@ -1,7 +1,6 @@
-$('<%= @target_element %>').html("<%= j render(partial: 'datashift_audio_engine/shared/player_in_navbar') %>");
+$('<%= target_element %>').html("<%= j render(partial: 'datashift_audio_engine/shared/player_in_navbar') %>");
 
 $(document).ready(function(){
-    datashift_audio_engine.init('<%= init_url %>');
-
+    datashift_audio_engine.init_player('<%= raw @player_settings.to_json %>');
     datashift_audio_engine.load('<%= load_url %>');
 });
