@@ -5,8 +5,9 @@
       <ol id="datashift-audio-playlist" class="datashift-audio-playlist p-1">
       </ol>
       <div class="datashift-audio-page-selectors">
-        <ol class='datashift-audio-pages'>
-        </ol>
+        <ul class='datashift-audio-pages'>
+          <%= yield :datashift_audio_track_listing %>
+        </ul>
       </div>
     </div>
 
