@@ -13,8 +13,8 @@ module DatashiftAudioEngine
       end
     end
 
-    def datashift_audio_player_in_navbar(init_url: nil, load_url: nil)
-      render partial: 'datashift_audio_engine/shared/player_in_navbar', locals: { init_url: init_url, load_url: load_url }
+    def datashift_audio_player_in_navbar(load_url: nil)
+      render partial: 'datashift_audio_engine/shared/player_in_navbar', locals: { load_url: load_url }
     end
 
   end
