@@ -37,3 +37,14 @@ function formatTime(time_in_seconds){
 
     return minutes + ":" + seconds;
 }
+
+
+function datashift_audio_playlist_onclick_handler(item)
+{
+    console.log('CALLED Playlist event handler ON ' + item)
+    console.log('CALLED Playlist event handler ON ' + item.id)
+    // TODO: audio_data.track should be renamed track_idx
+    datashift_audio_engine.audio_data.track = parseInt(item.id.split('-')[1]);
+    datashift_audio_engine.settings.autoplay = true;
+    datashift_audio_engine.render_wave_from_audio_file(datashift_audio_engine.playlist[datashift_audio_engine.audio_data.track])
+}

@@ -60,6 +60,7 @@ var datashift_audio_engine = {
 
         datashift_audio_engine.assign_events_to_controls();
 
+        console.log('Init JSON:' + json_data)
         var data = JSON.parse(json_data);
 
         // Service
