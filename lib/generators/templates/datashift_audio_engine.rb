@@ -1,6 +1,6 @@
 # Use this hook to configure datashift_audio_engine audio engine processing
 
-DatashiftAudioEngine::Configuration.configure do |config|
+DatashiftAudioEngine::Config.configure do |config|
 
   # routes
   #
@@ -37,7 +37,10 @@ DatashiftAudioEngine::Configuration.configure do |config|
   # regular css color for normal wave
   # config.wave_color;
   #
+  # regular css color for already played part of the wave
   # config.progress_color;
+  #
+  # regular css color for trackign currnet location within the wave
   # config.cursor_color;
   #
   # width in pixels

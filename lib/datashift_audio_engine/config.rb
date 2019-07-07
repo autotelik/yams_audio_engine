@@ -6,7 +6,7 @@
 #
 module DatashiftAudioEngine
 
-  class Configuration
+  class Config
 
     # @param [Boolean] Player can start playing audio on page load, rather than waiting for visitor to click play.
     #
@@ -39,25 +39,33 @@ module DatashiftAudioEngine
     attr_accessor :volume
 
 
+    # @param [String] Regular css colours for sound wave
+    #
+    # @return [String]
+    attr_accessor :wave_color, :progress_color, :cursor_color
+
     def initialize
       @autoplay = false
       @random = false
       @repeat = false
       @save_interval = 1000
       @volume = 0.5
+      @wave_color = 'black'
+      @progress_color = 'purple'
+      @cursor_color = 'green'
     end
 
-    # @return [DatashiftAudioEngine::Configuration] DataShift's current configuration
+    # @return [DatashiftAudioEngine::Config] DataShift's current configuration
     def self.call
-      @configuration ||= Configuration.new
+      @configuration ||= Config.new
     end
 
     def self.reset
-      @configuration = Configuration.new
+      @configuration = Config.new
     end
 
     # Set DataShift's configuration
-    # @param config [DatashiftAudioEngine::Configuration]
+    # @param config [DatashiftAudioEngine::Config]
     class << self
       attr_writer :configuration
     end
@@ -65,7 +73,7 @@ module DatashiftAudioEngine
     # Modify DataShift's current configuration through a block
     #
     # ```
-    # DatashiftAudioEngine::Configuration.call do |config|
+    # DatashiftAudioEngine::Config.call do |config|
     #   config.verbose = false
     # end
     # ```

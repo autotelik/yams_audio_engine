@@ -1,22 +1,19 @@
-<% style = local_assigns.has_key?(:css) ? css : 'col-8' %>
-
-<div class="<%= style %>">
-  <div class="row w-100">
-    <div class="datashift-audio-wave-block w-100" id="waveform"></div> <!-- id provides wave insertion point -->
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <div class="row">
-        <div class="col-1 pull-left">
-          <div class="datashift-audio-current-position col-1 text-sm-left">00:00</div>
-        </div>
-        <div class="col-7 pull-left">
-          <i class="material-icons datashift-audio-track-controls previous pr-1" onclick="datashift_audio_engine.previous();" >skip_previous</i>
-          <i class="material-icons datashift-audio-track-controls next" onclick="datashift_audio_engine.next();">skip_next</i>
-        </div>
-        <div class="datashift-audio-total-duration col-1 text-sm-right pull-right">00:00</div>
+<div class="row w-100">
+  <div class="datashift-audio-wave-block w-100" id="waveform"></div> <!-- id provides wave insertion point -->
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-1 pull-left">
+        <div class="datashift-audio-current-position col-1 text-sm-left">00:00</div>
       </div>
+      <div class="col-7 pull-left">
+        <i class="material-icons datashift-audio-track-controls previous pr-1" onclick="datashift_audio_engine.previous();" >skip_previous</i>
+        <i class="material-icons datashift-audio-track-controls next" onclick="datashift_audio_engine.next();">skip_next</i>
+      </div>
+      <div class="col-4 datashift-audio-total-duration text-sm-right pull-right">00:00</div>
     </div>
   </div>
 </div>
+
 
