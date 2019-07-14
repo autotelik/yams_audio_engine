@@ -62,23 +62,19 @@
 }
 
 .datashift-audio-playlist li:hover{
-  background-color: grey;
   color: white;
   cursor: pointer;
 }
 
 .datashift-audio-playlist li.datashift-audio-active{
-  background-color: black;
   color: white;
 }
 
 .datashift-audio-playlist li.datashift-audio-active:hover{
-  background-color: red;
   color: white;
 }
 
 .datashift-audio-playlist .datashift-audio-current-track{
-  background-color: black;
   color: white;
 }
 

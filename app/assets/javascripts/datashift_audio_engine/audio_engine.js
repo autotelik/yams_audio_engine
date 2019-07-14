@@ -47,6 +47,8 @@ var datashift_audio_engine = {
     // Member Data
     playlist: {},
     audio_data: {},
+
+    // Holds details of the control elements such as play/prev/volume buttons
     controls: {},
     visual: {},
 
@@ -345,10 +347,10 @@ var datashift_audio_engine = {
             self.visual.total_duration.html(formatTime(self.engine.getDuration()));
 
             self.volume(self.settings.volume);
-            self.controls.volume.get(0).value = self.settings.volume * 100;
+           // self.controls.volume.get(0).value = self.settings.volume * 100;
             self.controls.volume.attr('value',  self.settings.volume * 100);
 
-            //var volume = parseInt(self.controls.volume.attr('value'));
+            var volume = parseInt(self.controls.volume.attr('value'));
             self.controls.volume.change();
 
             if (self.settings.autoplay) {
