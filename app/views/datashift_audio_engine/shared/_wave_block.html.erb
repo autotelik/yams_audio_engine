@@ -4,11 +4,15 @@
 <div class="row">
   <div class="col-12">
     <div class="row">
-      <div class="col-1 pull-left">
+      <div class="col-4 pull-left">
         <div class="datashift-audio-current-position col-1 text-sm-left">00:00</div>
       </div>
-      <div class="col-7 pull-left">
+      <div id="datashift-audio-wave-controls" class="col-4">
         <i class="material-icons datashift-audio-track-controls previous pr-1" onclick="datashift_audio_engine.previous();" >skip_previous</i>
+
+        <i class="material-icons datashift-audio-cover-play play" >play_circle_outline</i>
+        <i class="material-icons datashift-audio-cover-play pause datashift-audio-hide">pause_circle_outline</i>
+
         <i class="material-icons datashift-audio-track-controls next" onclick="datashift_audio_engine.next();">skip_next</i>
       </div>
       <div class="col-4 datashift-audio-total-duration text-sm-right pull-right">00:00</div>
