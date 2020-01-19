@@ -4,9 +4,9 @@ Audio player for Rails apps.
 
 Add an audio player partial to any page. 
 
-Configure playlist via JSON.
+Configure player and playlist via JSON.
 
-Receive player data vis callbacks.
+Receive player data back via callbacks.
 
 ## Installation
 
@@ -24,7 +24,7 @@ $ bundle install
 Add the JS to your application javascript file
 
 ```javascript
-//= require datashift_audio_engine/application
+//= require datashift_audio_engine
 ```
 
 Some basic styles are provided in SASS, import the application style file
@@ -55,7 +55,8 @@ Summary - To add an audio player
 
 - Add player and script partials to Views
 
-- Create helper to convert your DB representation, or track listings into JSON format expected by the player.
+- Create helper to convert your DB representation of Audio, e.g a Track, into track listings in the JSON format
+ expected by the player.
 
 
 #### Configuration 
@@ -81,15 +82,15 @@ settings.
     volume      - 0 .. 1
     
 waveform_colors.
-    wave_color          - regular css colors
+    wave_color          - regular css colors e.g   '#a7431c'
     progress_color      - regular css colors
     cursor_color        - regular css colors
     bar_width           - width in pixels
     
-playlist_id     - id of selected playlist
-playlist:   {}  - content of playlist
 
-audio_data: {}  - main storage of current state of player
+audio_data: {}          - main storage of current state of player
+audio_data.playlist: {} - audio/track content of playlist
+
     visual: {}  - interface for interation with all visual elements connected with
                   this player
         
@@ -131,131 +132,94 @@ At some point in the flow, the Ruby value has to be assigned to the javascript a
 
 To add the player to any view :
 
-- Render the `datashift_audio_player_tag` helper, to generate the player HTML markup.
+- Render the `datashift_audio_engine/shared/player` partial, to generate the basic HTML markup.
 
-- Render the `datashift_audio_player_script` helper, to init the javascript and load JSON defining the audio to play.
-  
-Partial
+- Render the `datashift_audio_engine.init_player` helper, passing in JSON to configure the player.
+
+- Render the `datashift_audio_engine.load_playlist` helper, passing in JSON track listing to populate the player
+
+TODO: Document the JSON schema for  data.tracks (assigned to datashift_audio.playlist = data.tracks;)
+
+
+##### Example ERB snippet
   
 ```erb
-<%= datashift_audio_player_tag %>
 
-<%= datashift_audio_player_script( load_url: "#{radio_index_url}.json" )  %>
-```
+<%= render partial: 'datashift_audio_engine/shared/player' %>
 
-The helper takes optional urls, which will over ride the init, load and save status urls specified in config. 
-
-> N.B init and load urls format should be JSON
-
-For example, you can specify Rails named routes, with json format :
-
-```erb
-    <%= datashift_audio_player_script(init_url: "#{player_init_url}.json", load_url: "#{track_url(@track)}.json", save_url: player_status_callback_url) %>
-```
-
-To access these engine helpers, you'll probably need to pull the engine's helper module into a relevant controller or ApplicationController
-
-Add following to your Controller
-
-```ruby
-  helper DatashiftAudioEngine::ApplicationHelper
-```
-
-For reference, the `datashift_audio_player_script` generates these 2 low level Javascript calls, to init and load the player. 
-
-Both take an optional url.
-
-```javascript
 <script type="text/javascript" charset="utf-8">
-    $(document).ready(function(){
-        datashift_audio_engine.init();
-        datashift_audio_engine.load();
-    });
-</script">
+    datashift_audio_engine.init_player('<%= raw datashift_audio_setup_json %>');
+
+    datashift_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
+</script>
 ```
 
-The helper also takes these optional urls, which will over ride the init and load urls specified in config. 
+##### Example JSON Builder
 
-For example, you can specify Rails named routes
+This is an example Ruby JSON builder to generate the correct format JSON
 
-> N.B init and load urls format should be JSON
-
-```erb
-    <%= datashift_audio_player_script(init_url: "#{player_init_url}.json", load_url: "#{track_url(@track)}.json", save_url: player_status_callback_url) %>
 ```
+ Jbuilder.encode do |json|
+        json.datashift_audio do
 
+          json.service do
+            if current_user     #  Soem streamms such as Radio stream can be accessed by non signed in visitors
+              json.user_token   current_user.id
+              json.client_token '0987654321' # TODO: - add tokens to devise
+            end
+          end
+
+          json.settings do
+            json.autoplay true
+          end
+
+          json.waveform do
+            json.wave_color     DatashiftAudioEngine::Config.call.wave_color
+            json.progress_color DatashiftAudioEngine::Config.call.progress_color
+            json.cursor_color   DatashiftAudioEngine::Config.call.cursor_color
+            json.bar_width      'w-100'
+          end
+
+          json.playlist do
+            json.tracks    YamsCore::AudioEnginePlayListBuilder.call(tracks, current_user)
+            json.track_idx '0'
+            json.position  '0'
+          end
+
+          # TODO: how is pagination gonna work ?
+          json.pagination do
+            json.page '0'
+            json.total_pages 1
+          end
+
+        end
+ ```
+        
+#### Call Backs
+
+TODO: document the save state callback
+
+##### Save - How to get current state - save callback ?
 
 #### Javascript methods and call-backs
 
 Each callback should be related to a route in the main Rails app side, connected to a suitable
 controller method that can parse or store the supplied  data.
 
-##### How to init?
 
-init -  it sends request during datashift_audio_engine.init() function call once 
-        when we need to sync basic player settings possible 
-        url structure 'user/get_state'
-        it sends local variables of {user_token} and {client_token}
-        and should obtain JSON with sync data of player
-        The structure of answer is:
+##### How to load audio data
 
-Example route for the init callback - use the create action on an InitPlayerController
+The load_playlist function can be used to supply track listing and audio url information.
 
-```ruby
-  post 'init_player', to: 'init_player#create'
+``` 
+  datashift_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
 ```
 
-```
-    {
-       saved: {
-        service: {
-            user_token: '1234567890',
-            client_token: '0987654321',
-        },
-
-        audio_player: {
-            autoplay: false,
-            random: false,
-            repeat: null,
-            volume: 1,
-        },
-
-        audio: {
-            playlist: 'id',
-            
-            page: '1',
-            total_pages: '3',
-            
-            track: 0,
-            position: 0,
-        }
-       }    
-    }
-```
-
-##### How to load?
-
-The load callback sends back track listing and audio uurl information.
-       call once when we need to load playlist and set it into basic state on first open
-       possible url structure 'playlist/:id.page' or 'audio/:id'
-       request: { user_token, client_token, random }
-       expected strucuture of answer:
+TODO: create and supply a JSON Schema for playlist initialisation :
 
     
 ```json
-    {
-        user_token: '1234567890',
-        client_token: '0987654321',
-
-        playlist: '0',
-
-        page: '1',
-        total_pages: '3',
-
-        track: '0',
-        position: '0',
-
-        tracks: [
+    json.playlist.tracks : [
         {
             id: '1',
             author: 'Full Name 1',
@@ -273,8 +237,8 @@ The load callback sends back track listing and audio uurl information.
             audio_url: 'http://localhost:3000/audio/2.mp3',
             duration: 100,
         }, etc
-        ],
-    }
+       ],
+   
 ```
 
 You can also provide your own your own track listing HTML in property - `playlist_partial` - which will over ride the auto generated listing
@@ -288,40 +252,8 @@ json.playlist_partial json.partial! 'my_audio_app/playlist.html.erb', locals: { 
 ``````
 
 
-##### How to get current state - save callback ?
 
-Structure of user state
 
-```
-    request: {
-            user_token
-            client_token
-            random
-            audio_data: {
-                service: {
-                    user_token: '1234567890',
-                    client_token: '0987654321',
-                },
-        
-                audio_player: {
-                    autoplay: false,
-                    random: false,
-                    repeat: null,
-                    volume: 1,
-                },
-        
-                audio: {
-                    playlist: 'id',
-                    
-                    page: '1',
-                    total_pages: '3',
-                    
-                    track: 0,
-                    position: 0,
-                }
-            }
-    }
-```
 
 ## How to do pagination?
 
@@ -429,31 +361,6 @@ Track Controls :
     
 Cover image : `datashift-audio-track-cover` 
     
-#### ORIGINAL README
-
-
-#Q/A
-
-
-#### @Sloboda  What is the HTML for adding the single thin banner player to any particular view - can you  document what CSS can be used to change look and feel of the player ?
-#### Answer - For including player to any page just use helper
-              For updating of styles -> check wich file of styles u need to include and type it in application.css and
-              modify all data u need in separate file imported after datashift_audio_engine/application.css
-
-#### @Sloboda  - Is the main target for the player a div ALWAYS with id="datashift-audio-player"  regardless of Player Type
-#### Answer - Yes
-
-#### @Sloboda  - Is this the way to load track data regardless of whether player is full width, hover button, thin main  player ?
-#### Answer - Yes
-
-#### @Sloboda - What is this url and is this really the save callback json ? ('user/set_state')
-#### Answer - Yes, its save call back with ability to get/set state
-
-#### @Sloboda - How to pass such configuration from the Ruby world to the Javascript world ?
-#### Answer - erb, json, ajax
-
-#### @Sloboda How to style the player - What are the key CSS classes to change look and feel of the player ?
-#### Answer - 
 
 ```
 .datashift-audio-player

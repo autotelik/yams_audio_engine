@@ -2,9 +2,12 @@
   <div id="datashift-audio-player" class="datashift-audio-player datashift-audio-bar pt-2 col">
 
     <div id="datashift-audio-player-wrapper-row" class="row">
-      <div id="datashift-audio-player-track_cover" class="col-1"><%= render partial: 'datashift_audio_engine/shared/track_cover' %></div>
-
-      <div id="datashift-audio-player-track_basic_info" class="col-2"><%= render partial: 'datashift_audio_engine/shared/track_basic_info' %></div>
+      <div class="col-3">
+        <div class="row">
+          <div id="datashift-audio-player-track_cover" class="col-5"><%= render partial: 'datashift_audio_engine/shared/track_cover' %></div>
+          <div id="datashift-audio-player-track_basic_info" class="col-7"><%= render partial: 'datashift_audio_engine/shared/track_basic_info' %></div>
+        </div>
+      </div>
 
       <div id="datashift-audio-player-wave_block" class="col-6"><%= render partial: 'datashift_audio_engine/shared/wave_block' %></div>
 

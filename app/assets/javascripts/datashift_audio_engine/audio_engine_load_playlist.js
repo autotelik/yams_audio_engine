@@ -1,20 +1,13 @@
-datashift_audio_engine.load_playlist = function(json_data) {
-
+datashift_audio_engine.load_playlist = function(json_data)
+{
   // Load Engine with JSON Playlist
-  //
-  var self = this;
-
   var data = JSON.parse(json_data)['datashift_audio'];
 
-  this.playlist = data.tracks;
+  this.audio_data.playlist  = data.playlist.tracks;
+	this.audio_data.track_idx = parseInt(data.playlist.track_idx);
 
-  console.log("TRACKS SIZE : ", data.tracks.length);
+  console.log("PLAYLIST CONTAINS : ", this.audio_data.playlist.length + ' Tracks - Starting at ' + this.audio_data.track_idx);
 
-  // Render audio and wave for the first track in the playlist
-
-  // TODO: json can contain the track number to play
-  if(data.tracks.length > 0) {
-    self.render_wave_from_audio_file(data.tracks[0]);
-  }
-
+  // Render audio and wave for the selected track in the playlist
+	if(this.audio_data.playlist.length > 0) { datashift_audio_engine.select_from_playlist(this.audio_data.track_idx) }
 };

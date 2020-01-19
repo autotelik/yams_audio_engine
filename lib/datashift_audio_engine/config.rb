@@ -38,7 +38,6 @@ module DatashiftAudioEngine
     # @return [Number]
     attr_accessor :volume
 
-
     # @param [String] Regular css colours for sound wave
     #
     # @return [String]
@@ -46,22 +45,23 @@ module DatashiftAudioEngine
 
     def initialize
       @autoplay = false
-      @random = false
-      @repeat = false
-      @save_interval = 1000
-      @volume = 0.5
-      @wave_color = 'black'
+      @random   = false
+      @repeat   = false
+
+      @save_interval  = 1000
+      @volume         = 0.5
+      @wave_color     = 'green'
       @progress_color = 'purple'
-      @cursor_color = 'green'
+      @cursor_color   = 'black'
     end
 
     # @return [DatashiftAudioEngine::Config] DataShift's current configuration
     def self.call
-      @configuration ||= Config.new
+      @configuration ||= DatashiftAudioEngine::Config.new
     end
 
     def self.reset
-      @configuration = Config.new
+      @configuration = DatashiftAudioEngine::Config.new
     end
 
     # Set DataShift's configuration
