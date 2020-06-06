@@ -1,6 +1,6 @@
 require 'rails/generators/base'
 
-module DatashiftAudioEngine
+module YamsAudioEngine
   module Generators
     class InstallGenerator < Rails::Generators::Base
       source_root File.expand_path("../../templates", __FILE__)
@@ -9,7 +9,7 @@ module DatashiftAudioEngine
       class_option :orm
 
       def copy_initializer
-        template "datashift_audio_engine.rb", "config/initializers/datashift_audio_engine.rb"
+        template "yams_audio_engine.rb", "config/initializers/yams_audio_engine.rb"
       end
 
     end

@@ -1,9 +1,9 @@
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){
       <% if local_assigns.has_key?(:load_url) %>
-        datashift_audio_engine.load('<%= load_url %>');
+        yams_audio_engine.load('<%= load_url %>');
       <% else %>
-        datashift_audio_engine.load();
+        yams_audio_engine.load();
       <% end %>
     });
 </script>

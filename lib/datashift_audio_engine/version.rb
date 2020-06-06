@@ -1,3 +1,3 @@
-module DatashiftAudioEngine
+module YamsAudioEngine
   VERSION = '0.1.0'
 end

@@ -1,11 +1,12 @@
-module DatashiftAudioEngine
+module YamsAudioEngine
   class Engine < ::Rails::Engine
-    isolate_namespace DatashiftAudioEngine
+    isolate_namespace YamsAudioEngine
 
     # Add a load path for this specific Engine
-    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    pp "#{config.root}/lib/yams_audio_engine"
+    config.autoload_paths += ["#{config.root}/lib/yams_audio_engine"]
 
-    config.assets.paths << root.join("app", "assets", "javascripts", "datashift_audio_engine")
+    config.assets.paths << root.join("app", "assets", "javascripts", "yams_audio_engine")
     config.assets.paths << root.join("vendor", "assets", "javascripts")
 
     config.assets.precompile += %w[*.png]

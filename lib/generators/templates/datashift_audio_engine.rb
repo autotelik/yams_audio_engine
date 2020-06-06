@@ -1,6 +1,6 @@
-# Use this hook to configure datashift_audio_engine audio engine processing
+# Use this hook to configure yams_audio_engine audio engine processing
 
-DatashiftAudioEngine::Config.configure do |config|
+YamsAudioEngine::Config.configure do |config|
 
   # routes
   #

@@ -1,12 +1,11 @@
-# Copyright:: (c) Autotelik Media Ltd 2018
+# Copyright:: (c) Autotelik B.V 2020
 # Author ::   Tom Statter
 # License::   MIT
 #
 # Details::   Configure Datashift Audio Engine operations
 #
-module DatashiftAudioEngine
 
-  class Config
+  class YamsAudioEngine::Config
 
     # @param [Boolean] Player can start playing audio on page load, rather than waiting for visitor to click play.
     #
@@ -55,17 +54,17 @@ module DatashiftAudioEngine
       @cursor_color   = 'black'
     end
 
-    # @return [DatashiftAudioEngine::Config] DataShift's current configuration
+    # @return [YamsAudioEngine::Config] DataShift's current configuration
     def self.call
-      @configuration ||= DatashiftAudioEngine::Config.new
+      @configuration ||= YamsAudioEngine::Config.new
     end
 
     def self.reset
-      @configuration = DatashiftAudioEngine::Config.new
+      @configuration = YamsAudioEngine::Config.new
     end
 
     # Set DataShift's configuration
-    # @param config [DatashiftAudioEngine::Config]
+    # @param config [YamsAudioEngine::Config]
     class << self
       attr_writer :configuration
     end
@@ -73,7 +72,7 @@ module DatashiftAudioEngine
     # Modify DataShift's current configuration through a block
     #
     # ```
-    # DatashiftAudioEngine::Config.call do |config|
+    # YamsAudioEngine::Config.call do |config|
     #   config.verbose = false
     # end
     # ```
@@ -83,4 +82,3 @@ module DatashiftAudioEngine
 
   end
 
-end

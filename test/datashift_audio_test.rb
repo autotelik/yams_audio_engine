@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class DatashiftAudioEngine::Test < ActiveSupport::TestCase
+class YamsAudioEngine::Test < ActiveSupport::TestCase
   test "truth" do
-    assert_kind_of Module, DatashiftAudioEngine
+    assert_kind_of Module, YamsAudioEngine
   end
 end

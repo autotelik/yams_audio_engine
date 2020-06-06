@@ -1,5 +1,6 @@
-require "datashift_audio_engine/engine"
+require "yams_audio_engine/engine"
+require "yams_audio_engine/config"
 
-module DatashiftAudioEngine
+module YamsAudioEngine
   # Your code goes here...
 end

@@ -19,7 +19,7 @@
 // The track currently selected from a PLAYLIST is identified by :
 //  self.audio_data.track_idx
 
-var datashift_audio_engine = {
+var yams_audio_engine = {
 
 	state: null,
 	engine: null,
@@ -69,9 +69,9 @@ var datashift_audio_engine = {
 	{
 		var self = this;
 
-		datashift_audio_engine.default_init_state();
+		yams_audio_engine.default_init_state();
 
-		datashift_audio_engine.assign_events_to_controls();
+		yams_audio_engine.assign_events_to_controls();
 
 		console.log('Init Player JSON:' + json_data)
 
@@ -79,9 +79,9 @@ var datashift_audio_engine = {
 
 		// Routes
 		if (data.routes) {
-			if (data.routes.save_url)      datashift_audio_engine.routes.save_url = data.routes.save_url;
-			if (data.routes.save_interval) datashift_audio_engine.save_interval   = data.routes.save_interval;
-			console.log('CALLBACK - init_player - routes -save_current_state - URL:' + datashift_audio_engine.routes.save_url);
+			if (data.routes.save_url)      yams_audio_engine.routes.save_url = data.routes.save_url;
+			if (data.routes.save_interval) yams_audio_engine.save_interval   = data.routes.save_interval;
+			console.log('CALLBACK - init_player - routes -save_current_state - URL:' + yams_audio_engine.routes.save_url);
 		}
 
 		// Service
@@ -95,14 +95,14 @@ var datashift_audio_engine = {
 			self.audio_data.page        = parseInt(data.pagination.page);
 			self.audio_data.total_pages = parseInt(data.pagination.total_pages);
 
-			datashift_audio_engine.validate_audio_data();
+			yams_audio_engine.validate_audio_data();
 		}
 
 		// Settings
 		let settings = data.settings;
 
 		if(settings) {
-			datashift_audio_engine.settings.autoplay = settings.autoplay;
+			yams_audio_engine.settings.autoplay = settings.autoplay;
 		}
 
 		// Waveform
@@ -127,9 +127,9 @@ var datashift_audio_engine = {
 	//
 	// 	console.log("Call to INIT : " + init_url);
 	//
-	// 	datashift_audio_engine.default_init_state();
+	// 	yams_audio_engine.default_init_state();
 	//
-	// 	datashift_audio_engine.assign_events_to_controls();
+	// 	yams_audio_engine.assign_events_to_controls();
 	//
 	// 	// Update settings
 	// 	//
@@ -157,9 +157,9 @@ var datashift_audio_engine = {
 	//
 	// 			// routes
 	// 			if (data.routes) {
-	// 				if (data.routes.save_url) datashift_audio_engine.routes.save_url = data.routes.save_url;
-	// 				if (data.routes.save_interval) datashift_audio_engine.save_interval = data.routes.save_interval;
-	// 				console.log('CALLBACK - save_current_state - URL:' + datashift_audio_engine.routes.save_url);
+	// 				if (data.routes.save_url) yams_audio_engine.routes.save_url = data.routes.save_url;
+	// 				if (data.routes.save_interval) yams_audio_engine.save_interval = data.routes.save_interval;
+	// 				console.log('CALLBACK - save_current_state - URL:' + yams_audio_engine.routes.save_url);
 	// 			}
 	//
 	// 			// track
@@ -170,7 +170,7 @@ var datashift_audio_engine = {
 	// 				self.audio_data.track_idx   = parseInt(data.datashift_audio.audio.track);
 	// 				self.audio_data.position    = parseFloat(data.datashift_audio.audio.position);
 	//
-	// 				datashift_audio_engine.validate_audio_data();
+	// 				yams_audio_engine.validate_audio_data();
 	// 			}
 	//
 	// 			let settings = data.datashift_audio.settings;
@@ -347,15 +347,15 @@ var datashift_audio_engine = {
 
 					var data = pure_data;
 
-					datashift_audio_engine.visual.cover_image_img.html('<img class="img-fluid rounded" src="'+ data.radio.cover_image +'">');
-					datashift_audio_engine.visual.author_name.html(data.radio.author);
-					datashift_audio_engine.visual.track_name.html(data.radio.track);
+					yams_audio_engine.visual.cover_image_img.html('<img class="img-fluid rounded" src="'+ data.radio.cover_image +'">');
+					yams_audio_engine.visual.author_name.html(data.radio.author);
+					yams_audio_engine.visual.track_name.html(data.radio.track);
 
 					console.log('update radio metadata');
 				}).fail(function(){
-					// datashift_audio_engine.visual.cover_image.css('background-image', 'url("'+ test_audio_data_json.radio.cover_image +'")');
-					datashift_audio_engine.visual.author_name.html('Not Found');
-					datashift_audio_engine.visual.track_name.html('Not Found');
+					// yams_audio_engine.visual.cover_image.css('background-image', 'url("'+ test_audio_data_json.radio.cover_image +'")');
+					yams_audio_engine.visual.author_name.html('Not Found');
+					yams_audio_engine.visual.track_name.html('Not Found');
 
 					console.log('fail update radio metadata');
 				});
@@ -385,39 +385,39 @@ var datashift_audio_engine = {
 
 			var data = pure_data;
 
-			datashift_audio_engine.playlist = data.tracks;
-			datashift_audio_engine.page = parseInt(data.page);
+			yams_audio_engine.playlist = data.tracks;
+			yams_audio_engine.page = parseInt(data.page);
 
-			datashift_audio_engine.visual.playlist.html('');
+			yams_audio_engine.visual.playlist.html('');
 
-			datashift_audio_engine.visual.pages.children('li').removeClass('datashift-audio-active');
+			yams_audio_engine.visual.pages.children('li').removeClass('datashift-audio-active');
 			var visual_page = $('#page-' + data.page);
 			visual_page.addClass('datashift-audio-active');
 
-			datashift_audio_engine.playlist.forEach((track, index) => {
+			yams_audio_engine.playlist.forEach((track, index) => {
 				var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
 				var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
 
 				var track_set = duration + full_name;
-				datashift_audio_engine.visual.playlist.append('<li id="track-' + index + '" onClick="" >' + track_set + '</li>')
+				yams_audio_engine.visual.playlist.append('<li id="track-' + index + '" onClick="" >' + track_set + '</li>')
 			});
 
-			datashift_audio_engine.visual.playlist.children('li').on('click', function(){
-				datashift_audio_engine.audio_data.track_idx = parseInt(this.id.split('-')[1]);
-				datashift_audio_engine.settings.autoplay = true;
-				datashift_audio_engine.render_wave_from_audio_file()
+			yams_audio_engine.visual.playlist.children('li').on('click', function(){
+				yams_audio_engine.audio_data.track_idx = parseInt(this.id.split('-')[1]);
+				yams_audio_engine.settings.autoplay = true;
+				yams_audio_engine.render_wave_from_audio_file()
 			});
 
 			if (fromBeginning == true){
-				datashift_audio_engine.audio_data.track_idx = -1;
-				datashift_audio_engine.next();
+				yams_audio_engine.audio_data.track_idx = -1;
+				yams_audio_engine.next();
 			} else {
-				datashift_audio_engine.audio_data.track_idx = datashift_audio_engine.playlist.length;
-				datashift_audio_engine.previous();
+				yams_audio_engine.audio_data.track_idx = yams_audio_engine.playlist.length;
+				yams_audio_engine.previous();
 			}
 		}).fail(function(){
 			console.error('page not found');
-			console.log('page: ' + datashift_audio_engine.audio_data.page)
+			console.log('page: ' + yams_audio_engine.audio_data.page)
 		});
 	},
 
@@ -443,27 +443,27 @@ var datashift_audio_engine = {
 	// Save current state of a player and send it to the back-end to sync it
 	save_current_state: function(save_url = null){
 
-		//console.log('CALL - save_current_state - URL:' + datashift_audio_engine.routes.save_url);
+		//console.log('CALL - save_current_state - URL:' + yams_audio_engine.routes.save_url);
 
-		if ( save_url == null && (datashift_audio_engine.routes.save_url == null || datashift_audio_engine.routes.save_url == undefined) )
+		if ( save_url == null && (yams_audio_engine.routes.save_url == null || yams_audio_engine.routes.save_url == undefined) )
 		{
-			console.log('WARNING - CALL BACK FOR datashift_audio_engine.routes.save_url - NOT DEFINED');
+			console.log('WARNING - CALL BACK FOR yams_audio_engine.routes.save_url - NOT DEFINED');
 			return;
 		}
 
-		if ( datashift_audio_engine.state == undefined ) return;
+		if ( yams_audio_engine.state == undefined ) return;
 
-		if ( save_url == null) save_url = datashift_audio_engine.routes.save_url;
+		if ( save_url == null) save_url = yams_audio_engine.routes.save_url;
 
-		datashift_audio_engine.update_info();
+		yams_audio_engine.update_info();
 
-		datashift_audio_engine.visual.current_position.html(formatTime(datashift_audio_engine.audio_data.position));
+		yams_audio_engine.visual.current_position.html(formatTime(yams_audio_engine.audio_data.position));
 
 		var data = {
-			user_token: datashift_audio_engine.user_token,
-			client_token: datashift_audio_engine.client_token,
-			random: datashift_audio_engine.settings.random,
-			audio_data: datashift_audio_engine.audio_data,
+			user_token: yams_audio_engine.user_token,
+			client_token: yams_audio_engine.client_token,
+			random: yams_audio_engine.settings.random,
+			audio_data: yams_audio_engine.audio_data,
 		}
 
 		$.post(save_url, data )

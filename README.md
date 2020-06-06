@@ -13,7 +13,7 @@ Receive player data back via callbacks.
 Add to Gemfile:
 
 ```ruby
-gem 'datashift_audio_engine'
+gem 'yams_audio_engine'
 ```
 
 And then execute:
@@ -24,14 +24,14 @@ $ bundle install
 Add the JS to your application javascript file
 
 ```javascript
-//= require datashift_audio_engine
+//= require yams_audio_engine
 ```
 
 Some basic styles are provided in SASS, import the application style file
 
 ```scss
 /*
-@import "datashift_audio_engine/datashift_audio_engine";
+@import "yams_audio_engine/yams_audio_engine";
  */
 ```
 
@@ -102,8 +102,8 @@ These can be set directly in Rails views, for example
 ```erb
 <script type="text/javascript" charset="utf-8">
     $(document).ready(function(){
-        datashift_audio_engine.settings.autoplay = true;
-        datashift_audio_engine.save_interval = 5000;
+        yams_audio_engine.settings.autoplay = true;
+        yams_audio_engine.save_interval = 5000;
     });
 </script>
 ```
@@ -111,7 +111,7 @@ These can be set directly in Rails views, for example
 To generate a Ruby configuration block, within the host Rails app's initializers, you can run the following rails generator
 
 ```bash
-bundle exec rails generate datashift_audio_engine:install
+bundle exec rails generate yams_audio_engine:install
 ```
 
 Each of the settable javascript settings, has an analogous setting in the Rails configuration block,
@@ -122,8 +122,8 @@ At some point in the flow, the Ruby value has to be assigned to the javascript a
 ```erb
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
-        datashift_audio_engine.settings.autoplay = DatashiftAudioEngine::Configuration.call.autoplay;
-        datashift_audio_engine.save_interval = DatashiftAudioEngine::Configuration.call.save_interval;
+        yams_audio_engine.settings.autoplay = YamsAudioEngine::Configuration.call.autoplay;
+        yams_audio_engine.save_interval = YamsAudioEngine::Configuration.call.save_interval;
   });
 </script>
 ```
@@ -132,11 +132,11 @@ At some point in the flow, the Ruby value has to be assigned to the javascript a
 
 To add the player to any view :
 
-- Render the `datashift_audio_engine/shared/player` partial, to generate the basic HTML markup.
+- Render the `yams_audio_engine/shared/player` partial, to generate the basic HTML markup.
 
-- Render the `datashift_audio_engine.init_player` helper, passing in JSON to configure the player.
+- Render the `yams_audio_engine.init_player` helper, passing in JSON to configure the player.
 
-- Render the `datashift_audio_engine.load_playlist` helper, passing in JSON track listing to populate the player
+- Render the `yams_audio_engine.load_playlist` helper, passing in JSON track listing to populate the player
 
 TODO: Document the JSON schema for  data.tracks (assigned to datashift_audio.playlist = data.tracks;)
 
@@ -145,12 +145,12 @@ TODO: Document the JSON schema for  data.tracks (assigned to datashift_audio.pla
   
 ```erb
 
-<%= render partial: 'datashift_audio_engine/shared/player' %>
+<%= render partial: 'yams_audio_engine/shared/player' %>
 
 <script type="text/javascript" charset="utf-8">
-    datashift_audio_engine.init_player('<%= raw datashift_audio_setup_json %>');
+    yams_audio_engine.init_player('<%= raw datashift_audio_setup_json %>');
 
-    datashift_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
+    yams_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
 </script>
 ```
 
@@ -174,9 +174,9 @@ This is an example Ruby JSON builder to generate the correct format JSON
           end
 
           json.waveform do
-            json.wave_color     DatashiftAudioEngine::Config.call.wave_color
-            json.progress_color DatashiftAudioEngine::Config.call.progress_color
-            json.cursor_color   DatashiftAudioEngine::Config.call.cursor_color
+            json.wave_color     YamsAudioEngine::Config.call.wave_color
+            json.progress_color YamsAudioEngine::Config.call.progress_color
+            json.cursor_color   YamsAudioEngine::Config.call.cursor_color
             json.bar_width      'w-100'
           end
 
@@ -212,7 +212,7 @@ controller method that can parse or store the supplied  data.
 The load_playlist function can be used to supply track listing and audio url information.
 
 ``` 
-  datashift_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
+  yams_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
 ```
 
 TODO: create and supply a JSON Schema for playlist initialisation :

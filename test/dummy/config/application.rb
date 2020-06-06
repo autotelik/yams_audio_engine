@@ -3,7 +3,7 @@ require_relative 'boot'
 require 'rails/all'
 
 Bundler.require(*Rails.groups)
-require "datashift_audio_engine"
+require "yams_audio_engine"
 
 module Dummy
   class Application < Rails::Application

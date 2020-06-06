@@ -1,2 +1,2 @@
-DatashiftAudioEngine::Engine.routes.draw do
+YamsAudioEngine::Engine.routes.draw do
 end

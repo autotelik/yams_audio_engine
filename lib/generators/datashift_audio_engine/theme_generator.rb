@@ -1,15 +1,15 @@
 require 'rails/generators/base'
 
 # A generator to make it easier for Main Apps to over ride the styling - copy over all CSS assets
-module DatashiftAudioEngine
+module YamsAudioEngine
   module Generators
     class ThemeGenerator < Rails::Generators::Base
-      source_root DatashiftAudioEngine::Engine.root
+      source_root YamsAudioEngine::Engine.root
 
       desc "Copy DataShift Audio Engine stylesheets to the parent Rails app to simplify over riding styles."
 
       def copy_theme
-        css_path = "app/assets/stylesheets/datashift_audio_engine"
+        css_path = "app/assets/stylesheets/yams_audio_engine"
 
         copy_file File.join(css_path, "cover.scss"),    File.join(css_path, "cover.scss")
         copy_file File.join(css_path, "icons.scss"),    File.join(css_path, "icons.scss")
@@ -20,7 +20,7 @@ module DatashiftAudioEngine
         # TODO: Append to application.js
         # @import "datashift_audio_player/cover";
         # @import "datashift_audio_player/icons";
-        # @import "datashift_audio_engine/player";
+        # @import "yams_audio_engine/player";
         # @import "datashift_audio_player/playlist";
         # @import "datashift_audio_player/volume";
       end

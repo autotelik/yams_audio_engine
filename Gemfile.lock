@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    datashift_audio_engine (0.1.0)
+    yams_audio_engine (0.1.0)
       rails (~> 5.2)
 
 GEM
@@ -123,7 +123,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  datashift_audio_engine!
+  yams_audio_engine!
   sqlite3
 
 BUNDLED WITH

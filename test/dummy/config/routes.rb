@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount DatashiftAudioEngine::Engine => "/datashift_audio_engine"
+  mount YamsAudioEngine::Engine => "/yams_audio_engine"
 end
