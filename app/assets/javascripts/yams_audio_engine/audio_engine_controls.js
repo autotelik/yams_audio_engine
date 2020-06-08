@@ -2,32 +2,32 @@ yams_audio_engine.assign_events_to_controls = function() {
 	// Find and assign element IDs for controls to Visual
 	//
 	this.controls = {
-		play: $('#datashift-audio-player .play'),
-		pause: $('#datashift-audio-player .pause'),
+		play: $('#yams-audio-player .play'),
+		pause: $('#yams-audio-player .pause'),
 
-		prev: $('#datashift-audio-player .datashift-audio-track-controls .previous'),
-		next: $('#datashift-audio-player .datashift-audio-track-controls .next'),
+		prev: $('#yams-audio-player .yams-audio-track-controls .previous'),
+		next: $('#yams-audio-player .yams-audio-track-controls .next'),
 
-		volume: $('#datashift-audio-player .datashift-audio-track-volume input[type=range].datashift-audio-input-range')
+		volume: $('#yams-audio-player .yams-audio-track-volume input[type=range].yams-audio-input-range')
 	}
 
 	this.visual = {
 
-		author_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-author-name'),
-		track_name: $('#datashift-audio-player .datashift-audio-track-basic-info .datashift-audio-track-name'),
+		author_name: $('#yams-audio-player .yams-audio-track-basic-info .yams-audio-author-name'),
+		track_name: $('#yams-audio-player .yams-audio-track-basic-info .yams-audio-track-name'),
 
-		cover_image: $('#datashift-audio-player .datashift-audio-track-cover'),
-		cover_image_img: $('#datashift-audio-track-cover-img'),
+		cover_image: $('#yams-audio-player .yams-audio-track-cover'),
+		cover_image_img: $('#yams-audio-track-cover-img'),
 
-		playlist: $('#datashift-audio-playlist'),
-		waveform: $('#datashift-audio-player #waveform'),
+		playlist: $('#yams-audio-playlist'),
+		waveform: $('#yams-audio-player #waveform'),
 
-		current_position: $('#datashift-audio-player .datashift-audio-current-position'),
-		total_duration: $('#datashift-audio-player .datashift-audio-total-duration'),
+		current_position: $('#yams-audio-player .yams-audio-current-position'),
+		total_duration: $('#yams-audio-player .yams-audio-total-duration'),
 
-		pages: $('#datashift-audio-player .datashift-audio-pages'),
+		pages: $('#yams-audio-player .yams-audio-pages'),
 
-		btn_toggle_playlist: $('#datashift-audio-toggle-playlist'),
+		btn_toggle_playlist: $('#yams-audio-toggle-playlist'),
 	}
 
 	this.controls.play.on('click', function(){
@@ -40,16 +40,16 @@ yams_audio_engine.assign_events_to_controls = function() {
 
 	this.visual.btn_toggle_playlist.on('click', function(){
 
-		if(this.visual.btn_toggle_playlist.hasClass('datashift-audio-active')){
-			this.visual.btn_toggle_playlist.removeClass('datashift-audio-active');
-			this.visual.playlist.addClass('datashift-audio-hide');
+		if(this.visual.btn_toggle_playlist.hasClass('yams-audio-active')){
+			this.visual.btn_toggle_playlist.removeClass('yams-audio-active');
+			this.visual.playlist.addClass('d-none');
 		} else {
-			this.visual.btn_toggle_playlist.addClass('datashift-audio-active');
-			this.visual.playlist.removeClass('datashift-audio-hide');
+			this.visual.btn_toggle_playlist.addClass('yams-audio-active');
+			this.visual.playlist.removeClass('d-none');
 		}
 	});
 
-	$('#datashift-audio-player .datashift-audio-track-volume i').on('click', function(){
+	$('#yams-audio-player .yams-audio-track-volume i').on('click', function(){
 		var current_value = parseInt(yams_audio_engine.controls.volume.attr('value'));
 		var audio_dom_el = yams_audio_engine.controls.volume.get(0);
 		console.log( 'volume: ' + current_value );
@@ -63,8 +63,8 @@ yams_audio_engine.assign_events_to_controls = function() {
 			yams_audio_engine.engine.setVolume(0);
 
 			if(audio_dom_el.value == 0) {
-				$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-				$('.datashift-audio-track-volume i.volume_off').removeClass('datashift-audio-hide')
+				$('.yams-audio-track-volume i').addClass('d-none');
+				$('.yams-audio-track-volume i.volume_off').removeClass('d-none')
 			}
 		} else {
 			console.log('current_value == 0');
@@ -79,18 +79,18 @@ yams_audio_engine.assign_events_to_controls = function() {
 			yams_audio_engine.volume(yams_audio_engine.settings.volume);
 
 			if(audio_dom_el.value >= 75) {
-				$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-				$('.datashift-audio-track-volume i.volume_up').removeClass('datashift-audio-hide')
+				$('.yams-audio-track-volume i').addClass('d-none');
+				$('.yams-audio-track-volume i.volume_up').removeClass('d-none')
 			}
 
 			if(audio_dom_el.value >= 50 && audio_dom_el.value < 75) {
-				$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-				$('.datashift-audio-track-volume i.volume_down').removeClass('datashift-audio-hide')
+				$('.yams-audio-track-volume i').addClass('d-none');
+				$('.yams-audio-track-volume i.volume_down').removeClass('d-none')
 			}
 
 			if(audio_dom_el.value >= 25 && audio_dom_el.value < 50) {
-				$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-				$('.datashift-audio-track-volume i.volume_mute').removeClass('datashift-audio-hide')
+				$('.yams-audio-track-volume i').addClass('d-none');
+				$('.yams-audio-track-volume i.volume_mute').removeClass('d-none')
 			}
 
 			console.log(yams_audio_engine.controls.volume.attr('value'));
@@ -99,23 +99,23 @@ yams_audio_engine.assign_events_to_controls = function() {
 
 	this.controls.volume.on('input change', function(update = true) {
 		if(this.value >= 75) {
-			$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-			$('.datashift-audio-track-volume i.volume_up').removeClass('datashift-audio-hide')
+			$('.yams-audio-track-volume i').addClass('d-none');
+			$('.yams-audio-track-volume i.volume_up').removeClass('d-none')
 		}
 
 		if(this.value >= 50 && this.value < 75) {
-			$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-			$('.datashift-audio-track-volume i.volume_down').removeClass('datashift-audio-hide')
+			$('.yams-audio-track-volume i').addClass('d-none');
+			$('.yams-audio-track-volume i.volume_down').removeClass('d-none')
 		}
 
 		if(this.value >= 25 && this.value < 50) {
-			$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-			$('.datashift-audio-track-volume i.volume_mute').removeClass('datashift-audio-hide')
+			$('.yams-audio-track-volume i').addClass('d-none');
+			$('.yams-audio-track-volume i.volume_mute').removeClass('d-none')
 		}
 
 		if(this.value == 0) {
-			$('.datashift-audio-track-volume i').addClass('datashift-audio-hide');
-			$('.datashift-audio-track-volume i.volume_off').removeClass('datashift-audio-hide')
+			$('.yams-audio-track-volume i').addClass('d-none');
+			$('.yams-audio-track-volume i.volume_off').removeClass('d-none')
 		}
 
 		if (update)

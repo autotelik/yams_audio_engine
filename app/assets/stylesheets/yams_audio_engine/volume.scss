@@ -1,4 +1,4 @@
-input[type=range][orient=vertical].datashift-audio-input-range
+input[type=range][orient=vertical].yams-audio-input-range
 {
     writing-mode: bt-lr; /* IE */
     -webkit-appearance: slider-vertical; /* WebKit */
@@ -6,7 +6,7 @@ input[type=range][orient=vertical].datashift-audio-input-range
     height: $cover-size;
 }
 
-.datashift-audio-player .datashift-audio-track-volume {
+.yams-audio-player .yams-audio-track-volume {
     display: inline-block;
     width: 3%;
     height: $cover-size;
@@ -14,12 +14,12 @@ input[type=range][orient=vertical].datashift-audio-input-range
     padding: 0px 10px;
 }
 
-.datashift-audio-track-volume i{
+.yams-audio-track-volume i{
   cursor: pointer;
   transition: 0.25s;
 }
 
-.datashift-audio-track-volume i:hover{
+.yams-audio-track-volume i:hover{
   cursor: pointer;
   transform:rotate(360deg);
   color: floralwhite;

@@ -148,9 +148,9 @@ TODO: Document the JSON schema for  data.tracks (assigned to datashift_audio.pla
 <%= render partial: 'yams_audio_engine/shared/player' %>
 
 <script type="text/javascript" charset="utf-8">
-    yams_audio_engine.init_player('<%= raw datashift_audio_setup_json %>');
+    yams_audio_engine.init_player('<%= raw yams_audio_json %>');
 
-    yams_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
+    yams_audio_engine.load_playlist('<%= raw yams_audio_json %>');
 </script>
 ```
 
@@ -212,7 +212,7 @@ controller method that can parse or store the supplied  data.
 The load_playlist function can be used to supply track listing and audio url information.
 
 ``` 
-  yams_audio_engine.load_playlist('<%= raw datashift_audio_setup_json %>');
+  yams_audio_engine.load_playlist('<%= raw yams_audio_json %>');
 ```
 
 TODO: create and supply a JSON Schema for playlist initialisation :

@@ -1,10 +1,12 @@
 # Note: You must restart bin/webpack-dev-server for changes to take effect
 
+# Based off : https://github.com/rails/webpacker/blob/master/docs/engines.md
+
 default: &default
   source_path: app/javascript
   source_entry_path: packs
-  public_root_path: public
-  public_output_path: packs
+  public_root_path: ../public
+  public_output_path: yams_audio_engine_packs
   cache_path: tmp/cache/webpacker
   webpack_compile_output: true
 

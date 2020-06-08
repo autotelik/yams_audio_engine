@@ -1,0 +1,31 @@
+wave {
+  max-height: 100px;
+}
+
+.yams-audio-track-controls {
+  cursor: pointer;
+}
+
+i > .yams-audio-track-controls  {
+  transition: 0.25s;
+  cursor: pointer;
+}
+
+
+.yams-audio-track-basic-info {
+  padding: 5px;
+}
+
+.yams-audio-track-basic-info .yams-audio-author-name{
+  color: grey;
+}
+
+.yams-audio-current-position{
+  display: inline;
+}
+
+.yams-audio-total-duration{
+  display: inline;
+}
+
+

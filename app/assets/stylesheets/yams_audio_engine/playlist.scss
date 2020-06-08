@@ -1,0 +1,103 @@
+.yams-audio-track-playlist{
+  display: inline-block;
+
+  width: 70px;
+
+  /* text-align: center; */
+  vertical-align: center;
+}
+
+.yams-audio-track-playlist i{
+  font-size: 40px;
+  transition: 0.25s;
+  color: grey;
+}
+
+.yams-audio-track-playlist i:hover{
+  /* color: red; */
+  cursor: pointer;
+}
+
+.yams-audio-track-playlist i.yams-audio-active{
+  box-shadow: 0px 0px 5px black;
+  color: black;
+}
+
+.yams-audio-playlist-content{
+  display: inline-block;
+}
+
+.yams-audio-playlist{
+}
+
+.yams-audio-playlist li{
+  display: block;
+  transition: 0.25s;
+  padding: 10px;
+  color: black;
+}
+
+.yams-audio-playlist li *{
+  display: inline-block;
+  padding-left: 5px;
+  cursor: pointer;
+}
+
+.yams-audio-playlist li .yams-audio-duration{
+  color: white;
+  padding: 0px 10px;
+}
+
+.yams-audio-playlist li i{
+  color: black;
+}
+
+.yams-audio-playlist li:hover i{
+  color: white;
+}
+
+.yams-audio-playlist li .yams-audio-full-name{
+  padding: 0px 10px;
+}
+
+.yams-audio-playlist li:hover{
+  color: white;
+  cursor: pointer;
+}
+
+.yams-audio-playlist li.yams-audio-active{
+  color: white;
+}
+
+.yams-audio-playlist li.yams-audio-active:hover{
+  color: white;
+}
+
+.yams-audio-playlist .yams-audio-current-track{
+  color: white;
+}
+
+/********************************************************/
+
+.yams-audio-player .yams-audio-page-selectors{
+  text-align: center;
+}
+
+.yams-audio-player .yams-audio-pages{
+  display: inline-block;
+}
+
+.yams-audio-player .yams-audio-pages li{
+  display: inline-block;
+  padding: 5px;
+}
+
+.yams-audio-player .yams-audio-pages li:hover{
+  cursor: pointer;
+  color: red;
+}
+
+.yams-audio-player .yams-audio-pages li.yams-audio-active{
+  color: red;
+  font-size: 24px;
+}

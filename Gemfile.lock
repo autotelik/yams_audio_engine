@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     yams_audio_engine (0.1.0)
-      rails (~> 5.2)
+      rails (>= 5.2)
 
 GEM
   remote: https://rubygems.org/
@@ -123,8 +123,8 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  yams_audio_engine!
   sqlite3
+  yams_audio_engine!
 
 BUNDLED WITH
-   1.17.3
+   2.1.4

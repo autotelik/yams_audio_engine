@@ -277,13 +277,13 @@ var yams_audio_engine = {
 
 		/* TODO seperate wave/audio rendering from playlist
 
-		this.visual.playlist.children('.datashift-audio-playlist li').removeClass('datashift-audio-active');
+		this.visual.playlist.children('.yams-audio-playlist li').removeClass('yams-audio-active');
 		var visual_track = $('#track-' + this.audio_data.track);
-		visual_track.addClass('datashift-audio-active');
+		visual_track.addClass('yams-audio-active');
 
-		this.visual.pages.children('li').removeClass('datashift-audio-active');
+		this.visual.pages.children('li').removeClass('yams-audio-active');
 		var visual_page = $('#page-' + this.audio_data.page);
-		visual_page.addClass('datashift-audio-active')
+		visual_page.addClass('yams-audio-active')
 */
 		var self = this;
 
@@ -326,11 +326,10 @@ var yams_audio_engine = {
 	play: function() {
 
 		console.info("START PLAY");
-		this.controls.play.addClass('datashift-audio-hide');
+		this.controls.play.addClass('d-none');
 
-		this.controls.pause.removeClass('datashift-audio-hide');
-		//this.controls.prev.removeClass('datashift-audio-hide');
-		//this.controls.next.removeClass('datashift-audio-hide');
+		this.controls.pause.removeClass('d-none');
+
 
 		console.info("CHECK RADIO");
 
@@ -366,8 +365,8 @@ var yams_audio_engine = {
 	},
 
 	pause: function() {
-		this.controls.pause.addClass('datashift-audio-hide');
-		this.controls.play.removeClass('datashift-audio-hide');
+		this.controls.pause.addClass('d-none');
+		this.controls.play.removeClass('d-none');
 
 		if (this.is_radio == false) {
 			this.audio_data.autoplay = false;
@@ -390,13 +389,13 @@ var yams_audio_engine = {
 
 			yams_audio_engine.visual.playlist.html('');
 
-			yams_audio_engine.visual.pages.children('li').removeClass('datashift-audio-active');
+			yams_audio_engine.visual.pages.children('li').removeClass('yams-audio-active');
 			var visual_page = $('#page-' + data.page);
-			visual_page.addClass('datashift-audio-active');
+			visual_page.addClass('yams-audio-active');
 
 			yams_audio_engine.playlist.forEach((track, index) => {
-				var duration = '<div class="datashift-audio-duration">' + formatTime(track.duration) + '</div>';
-				var full_name = '<div class="datashift-audio-full-name">' + track.author + " - " + track.name + '</div>';
+				var duration = '<div class="yams-audio-duration">' + formatTime(track.duration) + '</div>';
+				var full_name = '<div class="yams-audio-full-name">' + track.author + " - " + track.name + '</div>';
 
 				var track_set = duration + full_name;
 				yams_audio_engine.visual.playlist.append('<li id="track-' + index + '" onClick="" >' + track_set + '</li>')
