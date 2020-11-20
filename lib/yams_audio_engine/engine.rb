@@ -1,22 +1,11 @@
 module YamsAudioEngine
 
-  ROOT_PATH = Pathname.new(File.join(__dir__, ".."))
-
-  class << self
-    def webpacker
-      @webpacker ||= ::Webpacker::Instance.new(
-          root_path: ROOT_PATH,
-          config_path: ROOT_PATH.join("config/webpacker.yml")
-      )
-    end
-  end
 
   class Engine < ::Rails::Engine
     isolate_namespace YamsAudioEngine
 
     # Add a load path for this specific Engine
-    pp "#{config.root}/lib/yams_audio_engine"
-    config.autoload_paths += ["#{config.root}/lib/yams_audio_engine"]
+   # config.autoload_paths += ["#{config.root}/lib/yams_audio_engine"]
 
     config.assets.paths << root.join("app", "assets", "stylesheets", "yams_audio_engine")
     config.assets.paths << root.join("app", "assets", "javascripts", "yams_audio_engine")
