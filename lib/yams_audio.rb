@@ -1,7 +1,7 @@
-require "yams_audio_engine/engine"
-require "yams_audio_engine/config"
+require "yams_audio/engine"
+require "yams_audio/config"
 
-module YamsAudioEngine
+module YamsAudio
 
   ROOT_PATH = Pathname.new(File.join(__dir__, ".."))
 

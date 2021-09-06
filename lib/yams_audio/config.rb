@@ -5,7 +5,7 @@
 # Details::   Configure Datashift Audio Engine operations
 #
 
-  class YamsAudioEngine::Config
+  class YamsAudio::Config
 
     # @param [Boolean] Player can start playing audio on page load, rather than waiting for visitor to click play.
     #
@@ -54,17 +54,17 @@
       @cursor_color   = 'black'
     end
 
-    # @return [YamsAudioEngine::Config] DataShift's current configuration
+    # @return [YamsAudio::Config] DataShift's current configuration
     def self.call
-      @configuration ||= YamsAudioEngine::Config.new
+      @configuration ||= YamsAudio::Config.new
     end
 
     def self.reset
-      @configuration = YamsAudioEngine::Config.new
+      @configuration = YamsAudio::Config.new
     end
 
     # Set DataShift's configuration
-    # @param config [YamsAudioEngine::Config]
+    # @param config [YamsAudio::Config]
     class << self
       attr_writer :configuration
     end
@@ -72,7 +72,7 @@
     # Modify DataShift's current configuration through a block
     #
     # ```
-    # YamsAudioEngine::Config.call do |config|
+    # YamsAudio::Config.call do |config|
     #   config.verbose = false
     # end
     # ```

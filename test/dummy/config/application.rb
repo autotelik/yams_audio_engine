@@ -3,7 +3,7 @@ require_relative 'boot'
 require 'rails/all'
 
 Bundler.require(*Rails.groups)
-require "yams_audio_engine"
+require "yams_audio"
 
 module Dummy
   class Application < Rails::Application

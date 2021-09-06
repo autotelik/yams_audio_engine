@@ -1,11 +1,11 @@
 require "webpacker/helper"
 
-module YamsAudioEngine
+module YamsAudio
   module ApplicationHelper
     include ::Webpacker::Helper
 
     def current_webpacker_instance
-      YamsAudioEngine.webpacker
+      YamsAudio.webpacker
     end
   end
 end

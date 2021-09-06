@@ -1,6 +1,6 @@
 require 'rails/generators/base'
 
-module YamsAudioEngine
+module YamsAudio
   module Generators
     class InstallGenerator < Rails::Generators::Base
       source_root File.expand_path("../../templates", __FILE__)
@@ -9,7 +9,7 @@ module YamsAudioEngine
       class_option :orm
 
       def copy_initializer
-        template "yams_audio_engine.rb", "config/initializers/yams_audio_engine.rb"
+        template "yams_audio.rb", "config/initializers/yams_audio.rb"
       end
 
     end

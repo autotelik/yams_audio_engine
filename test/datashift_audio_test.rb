@@ -1,7 +1,7 @@
 require 'test_helper'
 
-class YamsAudioEngine::Test < ActiveSupport::TestCase
+class YamsAudio::Test < ActiveSupport::TestCase
   test "truth" do
-    assert_kind_of Module, YamsAudioEngine
+    assert_kind_of Module, YamsAudio
   end
 end

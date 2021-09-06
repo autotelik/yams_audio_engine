@@ -15,9 +15,9 @@ $cover-size: 120px;
 $cover-font-size: 60px;
 $cover-size-median: 90px; /* center the icon (given by font size) in the image : (size - font/2) */
 
-@import "yams_audio_engine/cover";
-@import "yams_audio_engine/icons";
-@import "yams_audio_engine/player";
-@import "yams_audio_engine/playlist";
-@import "yams_audio_engine/volume";
+@import "yams_audio/cover";
+@import "yams_audio/icons";
+@import "yams_audio/player";
+@import "yams_audio/playlist";
+@import "yams_audio/volume";
 

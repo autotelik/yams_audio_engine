@@ -1,5 +1,5 @@
 {
-  "name": "yams_audio_engine",
+  "name": "yams_audio",
   "private": true,
   "dependencies": {
     "@rails/webpacker": "5.1.1"

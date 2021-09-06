@@ -1,9 +1,0 @@
-<%= render partial: 'yams_audio_engine/shared/player' %>
-
-<% if local_assigns.has_key?(:yams_audio_json) %>
-  <script type="text/javascript" charset="utf-8">
-    yams_audio_engine.init_player('<%= raw yams_audio_json %>');
-
-    yams_audio_engine.load_playlist('<%= raw yams_audio_json %>');
-  </script>
-<% end %>

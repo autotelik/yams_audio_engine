@@ -1,2 +1,2 @@
-YamsAudioEngine::Engine.routes.draw do
+YamsAudio::Engine.routes.draw do
 end

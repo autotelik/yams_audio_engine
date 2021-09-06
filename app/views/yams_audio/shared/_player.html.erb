@@ -1,0 +1,33 @@
+<div id="yams-audio-player"
+     data-controller="yams-audio-player"
+     data-yams-audio-player-settings-value="<%= raw yams_player_settings if local_assigns.has_key?(:yams_player_settings) %>"
+     data-yams-audio-player-audio-url-value="<%= rails_blob_path(track.audio, only_path: true) if track.audio.present? %>"
+     class="yams-audio-player yams-audio-bar pt-2 col">
+
+  <div id="yams-audio-player-wrapper-row" class="row">
+    <div class="col-3">
+      <div class="row">
+        <div id="yams-audio-player-track_cover" class="col-5 text-center align-middle">
+          <div id="yams-audio-track-cover-img">
+            <%= image_tag(track.cover_image_path, width: '80px', class: "thumbnail") %>
+          </div>
+        </div>
+        <div id="yams-audio-player-track_basic_info" class="col-7 text-center align-middle">
+          <div class="yams-audio-track-basic-info d-inline">
+            <div class="yams-audio-track-name" ><%= track.track_name %></div>
+            <div class="yams-audio-author-name pt-2"><%= track.artist_name %></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="yams-audio-player-wave_block" class="col-6">
+      <%= render partial: 'yams_audio/shared/wave_block.html' %>
+    </div>
+
+    <div id="yams-audio-player-controls" class="col-3">
+      <%= render partial: 'yams_audio/shared/track_volume.html' %>
+    </div>
+  </div>
+</div>

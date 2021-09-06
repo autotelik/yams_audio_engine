@@ -1,0 +1,24 @@
+<div class="row w-100">
+  <div class="yams-audio-wave-block w-100" id="waveform"></div> <!-- id provides wave insertion point -->
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-4 pull-left">
+        <div class="yams-audio-current-position col-1 text-sm-left">00:00</div>
+      </div>
+      <div id="yams-audio-wave-controls" class="col-4">
+        <i class="material-icons yams-audio-track-controls previous pr-1" onclick="yams_audio.previous();" >skip_previous</i>
+
+    
+        <i id="yams-player-controls-play" class="material-icons yams-audio-track-controls play" data-action="click->yams-audio-player#play">play_circle_outline</i>
+        <i id="yams-player-controls-pause" class="material-icons yams-audio-track-controls pause" style="display: none" data-action="click->yams-audio-player#pause">pause_circle_outline</i>
+
+        <i class="material-icons yams-audio-track-controls next" onclick="yams_audio.next();">skip_next</i>
+      </div>
+      <div class="col-4 yams-audio-total-duration text-sm-right pull-right">00:00</div>
+    </div>
+  </div>
+</div>
+
+

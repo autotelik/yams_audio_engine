@@ -1,4 +1,4 @@
-yams_audio_engine.assign_events_to_controls = function() {
+yams_audio.assign_events_to_controls = function() {
 	// Find and assign element IDs for controls to Visual
 	//
 	this.controls = {
@@ -31,11 +31,11 @@ yams_audio_engine.assign_events_to_controls = function() {
 	}
 
 	this.controls.play.on('click', function(){
-		yams_audio_engine.play();
+		yams_audio.play();
 	});
 
 	this.controls.pause.on('click', function(){
-		yams_audio_engine.pause();
+		yams_audio.pause();
 	});
 
 	this.visual.btn_toggle_playlist.on('click', function(){
@@ -50,17 +50,17 @@ yams_audio_engine.assign_events_to_controls = function() {
 	});
 
 	$('#yams-audio-player .yams-audio-track-volume i').on('click', function(){
-		var current_value = parseInt(yams_audio_engine.controls.volume.attr('value'));
-		var audio_dom_el = yams_audio_engine.controls.volume.get(0);
+		var current_value = parseInt(yams_audio.controls.volume.attr('value'));
+		var audio_dom_el = yams_audio.controls.volume.get(0);
 		console.log( 'volume: ' + current_value );
 
 		if (current_value > 0){
 			console.log('current_value > 0');
 
-			yams_audio_engine.controls.volume.get(0).value = 0;
-			yams_audio_engine.controls.volume.attr('value', 0);
+			yams_audio.controls.volume.get(0).value = 0;
+			yams_audio.controls.volume.attr('value', 0);
 
-			yams_audio_engine.engine.setVolume(0);
+			yams_audio.engine.setVolume(0);
 
 			if(audio_dom_el.value == 0) {
 				$('.yams-audio-track-volume i').addClass('d-none');
@@ -69,14 +69,14 @@ yams_audio_engine.assign_events_to_controls = function() {
 		} else {
 			console.log('current_value == 0');
 
-			if (current_value == 0 && yams_audio_engine.settings.volume == 0){
+			if (current_value == 0 && yams_audio.settings.volume == 0){
 				current_value = 1;
-				yams_audio_engine.settings.volume = current_value;
+				yams_audio.settings.volume = current_value;
 			}
 
-			audio_dom_el.value = yams_audio_engine.settings.volume * 100;
-			yams_audio_engine.controls.volume.attr('value',  yams_audio_engine.settings.volume * 100);
-			yams_audio_engine.volume(yams_audio_engine.settings.volume);
+			audio_dom_el.value = yams_audio.settings.volume * 100;
+			yams_audio.controls.volume.attr('value',  yams_audio.settings.volume * 100);
+			yams_audio.volume(yams_audio.settings.volume);
 
 			if(audio_dom_el.value >= 75) {
 				$('.yams-audio-track-volume i').addClass('d-none');
@@ -93,7 +93,7 @@ yams_audio_engine.assign_events_to_controls = function() {
 				$('.yams-audio-track-volume i.volume_mute').removeClass('d-none')
 			}
 
-			console.log(yams_audio_engine.controls.volume.attr('value'));
+			console.log(yams_audio.controls.volume.attr('value'));
 		}
 	});
 
@@ -119,11 +119,11 @@ yams_audio_engine.assign_events_to_controls = function() {
 		}
 
 		if (update)
-			yams_audio_engine.volume(this.value / 100.0);
+			yams_audio.volume(this.value / 100.0);
 	});
 };
 
-yams_audio_engine.select_from_playlist = function(index)
+yams_audio.select_from_playlist = function(index)
 {
 	if(index < 0 || index >this.audio_data.playlist.length)
 	{
@@ -153,19 +153,19 @@ yams_audio_engine.select_from_playlist = function(index)
 // Play a track - Handler that can be applied to playlist row,
 // for example on an <li> so user can click anywhere to start play back.
 //
-yams_audio_engine.playlist_onclick = function(item)
+yams_audio.playlist_onclick = function(item)
 {
 	this.audio_data.track_idx = parseInt(item.id.split('-')[1]);
 
-	yams_audio_engine.select_from_playlist(this.audio_data.track_idx);
+	yams_audio.select_from_playlist(this.audio_data.track_idx);
 }
 
-yams_audio_engine.previous = function()
+yams_audio.previous = function()
 {
-	yams_audio_engine.select_from_playlist(this.audio_data.track_idx - 1);
+	yams_audio.select_from_playlist(this.audio_data.track_idx - 1);
 }
 
-yams_audio_engine.next = function()
+yams_audio.next = function()
 {
-	yams_audio_engine.select_from_playlist(this.audio_data.track_idx + 1);
+	yams_audio.select_from_playlist(this.audio_data.track_idx + 1);
 }

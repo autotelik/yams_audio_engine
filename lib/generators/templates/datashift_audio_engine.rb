@@ -1,6 +1,6 @@
-# Use this hook to configure yams_audio_engine audio engine processing
+# Use this hook to configure yams_audio audio engine processing
 
-YamsAudioEngine::Config.configure do |config|
+YamsAudio::Config.configure do |config|
 
   # routes
   #
