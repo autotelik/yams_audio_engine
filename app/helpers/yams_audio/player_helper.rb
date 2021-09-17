@@ -1,6 +1,12 @@
 module YamsAudio
   module PlayerHelper
 
+
+    # Settings for rendering the Audio Player
+    def yams_player_settings
+      YamsAudio::PlayerSettingsBuilder.call(user: current_user)
+    end
+
     def datashift_audio_player_tag(pin_to: :top)
       render partial: 'yams_audio/shared/player', locals: { pin_to: pin_to }
     end

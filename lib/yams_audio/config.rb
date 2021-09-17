@@ -4,8 +4,7 @@
 #
 # Details::   Configure Datashift Audio Engine operations
 #
-
-  class YamsAudio::Config
+class YamsAudio::Config
 
     # @param [Boolean] Player can start playing audio on page load, rather than waiting for visitor to click play.
     #
@@ -32,10 +31,6 @@
     # @return [Boolean]
     attr_accessor :repeat
 
-    # @param [Number] Volume level, min to max, 0 .. 1
-    #
-    # @return [Number]
-    attr_accessor :volume
 
     # @param [String] Regular css colours for sound wave
     #
@@ -48,9 +43,9 @@
       @repeat   = false
 
       @save_interval  = 1000
-      @volume         = 0.5
-      @wave_color     = 'green'
-      @progress_color = 'purple'
+  
+      @wave_color     = '#4d4d4e'
+      @progress_color = '#f7931a'
       @cursor_color   = 'black'
     end
 

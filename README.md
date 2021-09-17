@@ -140,12 +140,6 @@ To add the player to any view :
 
 - Render the `yams_audio/shared/player` partial, to generate the basic HTML markup.
 
-- Render the `yams_audio.init_player` helper, passing in JSON to configure the player.
-
-- Render the `yams_audio.load_playlist` helper, passing in JSON track listing to populate the player
-
-TODO: Document the JSON schema for  data.tracks (assigned to datashift_audio.playlist = data.tracks;)
-
 
 ##### Example ERB snippet
   

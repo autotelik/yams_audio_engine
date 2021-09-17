@@ -12,12 +12,19 @@ module YamsAudio
       @user = user
       
       @options = options
+
+      pp YamsAudio::Config.call.inspect
     end
 
     def call
       Jbuilder.encode do |json|
-        json.yams_player_settings do
+        json.settings do
 
+          json.autoplay options[:autoplay] || false
+          json.random options[:random] || false
+          json.repeat options[:repeat] || nil
+          json.save_interval options[:save_interval] || 1000
+         
           json.service do
             if user     #  Some streams such as Radio stream can be accessed by non signed in visitors
               json.user_token   user.id
@@ -25,14 +32,10 @@ module YamsAudio
             end
           end
 
-          json.settings do
-            json.autoplay options[:autoplay] || true
-          end
-
           json.waveform do
-            json.wave_color     options[:wave_color] || YamsAudio::Config.call.wave_color
+            json.wave_color     options[:wave_color] ||     YamsAudio::Config.call.wave_color
             json.progress_color options[:progress_color] || YamsAudio::Config.call.progress_color
-            json.cursor_color   options[:cursor_color] || YamsAudio::Config.call.cursor_color
+            json.cursor_color   options[:cursor_color] ||   YamsAudio::Config.call.cursor_color
           end
 
         end

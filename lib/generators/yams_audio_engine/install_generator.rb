@@ -5,7 +5,7 @@ module YamsAudio
     class InstallGenerator < Rails::Generators::Base
       source_root File.expand_path("../../templates", __FILE__)
 
-      desc "Creates a DataShift Audio Engine initializer within your parent Rails application."
+      desc "Creates a Yams Audio Engine initializer within your parent Rails application."
       class_option :orm
 
       def copy_initializer

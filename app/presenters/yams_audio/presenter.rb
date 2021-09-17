@@ -3,7 +3,7 @@
 module YamsAudio
   class Presenter < SimpleDelegator
 
-    attr_reader :view_context
+    attr_reader :view
     attr_reader :model
 
     include ActionView::Helpers::TextHelper
@@ -13,17 +13,11 @@ module YamsAudio
     #
     include Rails.application.routes.url_helpers
 
-    # include YamsCore::Engine.routes.url_helpers
-    # extend YamsCore::Engine.routes.url_helpers
-    #
-    # include YamsCore::FormHelper
-    # include YamsCore::BootstrapHelper
+    delegate :polymorphic_path, :link_to, :yams_audio, to: :@view
 
-    delegate :polymorphic_path, :link_to, :yams_audio, to: :@view_context
-
-    def initialize(model, view_context)
+    def initialize(model, view: view_context)
       super(model)
-      @view_context = view_context
+      @view = view
       @model = model
     end
 
@@ -31,8 +25,9 @@ module YamsAudio
       return unless respond_to?(:cover_image)
       cover = cover_image(size: size)
       return unless cover
+      
       options[:class] ||= 'avatar img-fluid rounded'
-      view_context.image_tag(Rails.application.routes.url_helpers.rails_blob_path(cover, only_path: true), options)
+      view.image_tag(rails_blob_path(cover, only_path: true), options)
     end
 
     def sortable_id

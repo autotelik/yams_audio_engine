@@ -1,33 +1,86 @@
 <div id="yams-audio-player"
      data-controller="yams-audio-player"
-     data-yams-audio-player-settings-value="<%= raw yams_player_settings if local_assigns.has_key?(:yams_player_settings) %>"
-     data-yams-audio-player-audio-url-value="<%= rails_blob_path(track.audio, only_path: true) if track.audio.present? %>"
-     class="yams-audio-player yams-audio-bar pt-2 col">
+     data-yams-audio-player-target="player"
+     data-yams-audio-player-list-item-id-value="<%= list_item_id if local_assigns.has_key?(:list_item_id) %>"
+     data-yams-audio-player-settings-value="<%= yams_player_settings %>"
+     data-yams-audio-player-audio-url-value="<%= rails_blob_path(track.audio, only_path: true) if track.try(:audio).present? %>"
+     class="yams-audio-player yams-audio-bar col">
 
   <div id="yams-audio-player-wrapper-row" class="row">
-    <div class="col-3">
+
+    <div class="col-1 d-flex flex-wrap align-items-center" id="yams-audio-player-track_cover">
+        <%= track.cover_image_tag(options: { class: 'img-fluid rounded' } ) %>
+    </div>
+
+    <div class="col-2 d-flex" id="yams-audio-player-track_basic_info" >
+     <div class="row align-items-center">
+        <div class="row"><div class="col" id="yams-audio-player-track-name" ><strong><%= track.track_name %></strong></div></div>
+         
+        <div class="row"><div class="col" id="yams-audio-player-track-artist" ><%= track.artist_name %></div></div>
+        </div>
+    </div>
+
+    <div class="col-9">
+
       <div class="row">
-        <div id="yams-audio-player-track_cover" class="col-5 text-center align-middle">
-          <div id="yams-audio-track-cover-img">
-            <%= image_tag(track.cover_image_path, width: '80px', class: "thumbnail") %>
-          </div>
+       <div class="col-9">
+          <div class="yams-audio-wave-block p-0 m-0" id="waveform"></div> <!-- id provides wave insertion point -->
         </div>
-        <div id="yams-audio-player-track_basic_info" class="col-7 text-center align-middle">
-          <div class="yams-audio-track-basic-info d-inline">
-            <div class="yams-audio-track-name" ><%= track.track_name %></div>
-            <div class="yams-audio-author-name pt-2"><%= track.artist_name %></div>
-          </div>
-
-        </div>
+        <div class="col-3 mx-0"></div>
       </div>
+
+      <div class="row d-flex flex-wrap align-items-center">
+
+        <div class="col-1 pl-0">
+          <div id="yams-player-current-position" class="yams-audio-current-position text-sm-left">00:00</div>
+        </div>
+
+        <div id="yams-audio-wave-controls-section" class="col-7">
+
+          <a data-action="yams-audio-player#previous" id="yams-player-controls-previous">
+            <i class="material-icons">skip_previous</i>
+          </a>
+
+          <a data-action="yams-audio-player#play" id="yams-player-controls-play">
+            <i class="material-icons material-icons-medium">play_circle_outline</i>
+          </a>
+
+          <a data-action="yams-audio-player#pause" id="yams-player-controls-pause" style="display: none;">
+            <i class="material-icons material-icons-medium">pause_circle_outline</i>
+          </a>
+
+          <a data-action="yams-audio-player#next" id="yams-player-controls-next">
+            <i class="material-icons">skip_next</i>
+          </a>
+
+        </div>
+
+        <div class="col-1 text-end pr-0" id="yams-player-current-duration">
+            <%= track.duration %>
+        </div>
+
+         <div class="col-3 mx-0 d-flex flex-wrap align-items-center">
+          <a data-action="yams-audio-player#volumeMute" id="yams-player-controls-volume-mute">
+            <i class="material-icons mx-1">volume_mute</i>
+          </a>
+
+           <a data-action="yams-audio-player#volumeOff" id="yams-player-controls-volume-off" style="display: none;">
+            <i class="material-icons mx-1">volume_off</i>
+          </a>
+          
+          <input type="range" 
+           id="yams-player-controls-volume" 
+           class="yams-audio-controls-volume-range"
+           orient="horizontal" min="0" max="100" value="100" step="1"
+           data-yams-audio-player-target="volumeSlider"
+           data-action="input->yams-audio-player#volumeSliderChange" 
+          >
+        </div>
+
+      </div>
+
     </div>
 
-    <div id="yams-audio-player-wave_block" class="col-6">
-      <%= render partial: 'yams_audio/shared/wave_block.html' %>
-    </div>
 
-    <div id="yams-audio-player-controls" class="col-3">
-      <%= render partial: 'yams_audio/shared/track_volume.html' %>
-    </div>
   </div>
 </div>

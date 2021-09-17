@@ -159,13 +159,3 @@ yams_audio_engine.playlist_onclick = function(item)
 
 	yams_audio_engine.select_from_playlist(this.audio_data.track_idx);
 }
-
-yams_audio_engine.previous = function()
-{
-	yams_audio_engine.select_from_playlist(this.audio_data.track_idx - 1);
-}
-
-yams_audio_engine.next = function()
-{
-	yams_audio_engine.select_from_playlist(this.audio_data.track_idx + 1);
-}
